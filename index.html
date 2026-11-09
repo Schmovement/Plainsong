@@ -39,6 +39,8 @@
     <div class="side-foot">
       <button class="btn primary" data-act="import"><span data-ico="upload" data-s="16"></span>Import music</button>
       <button class="btn" data-act="importDir"><span data-ico="folder" data-s="16"></span>Import folder</button>
+      <button class="btn" data-act="backup"><span data-ico="download" data-s="16"></span>Back up library</button>
+      <button class="btn" data-act="restore"><span data-ico="restore" data-s="16"></span>Restore from backup…</button>
       <div class="readout" id="libStat">0 songs</div>
     </div>
   </aside>
@@ -54,6 +56,10 @@
       <span class="spacer"></span>
       <button class="icon-btn" data-act="import" aria-label="Import music" title="Import music"><span
           data-ico="upload"></span></button>
+      <button class="icon-btn" data-act="backup" aria-label="Back up library" title="Back up library"><span
+          data-ico="download"></span></button>
+      <button class="icon-btn" data-act="restore" aria-label="Restore from backup" title="Restore from backup"><span
+          data-ico="restore"></span></button>
       <button class="icon-btn" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts"><span
           style="font:600 15px var(--f-mono)">?</span></button>
       <button class="icon-btn" id="themeBtn" aria-label="Switch theme" title="Switch theme"></button>
@@ -124,6 +130,7 @@
 
   <input type="file" id="fileIn" accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav" multiple hidden>
   <input type="file" id="dirIn" webkitdirectory multiple hidden>
+  <input type="file" id="restoreIn" accept=".zip,application/zip,application/x-zip-compressed" hidden>
   <div class="menu" id="menu" hidden></div>
   <div class="pop" id="speedPop" hidden></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -144,7 +151,7 @@
     const hue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h % 360; };
     const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
     const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; };
-    const debounce = (f, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => f(...a), ms); }; };
+    const debounce = (f, ms) => { let t = 0; const d = (...a) => { clearTimeout(t); t = setTimeout(() => { t = 0; f(...a); }, ms); }; d.pending = () => !!t; d.cancel = () => { clearTimeout(t); t = 0; }; return d; };
     const wait = ms => new Promise(r => setTimeout(r, ms));
     const bytes = n => n >= 1e9 ? (n / 1e9).toFixed(1) + ' GB' : n >= 1e6 ? (n / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1e3)) + ' KB';
     const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) { } } };
@@ -175,13 +182,16 @@
       mic: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/>',
       folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
       upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+      download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
       edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+      restore: '<path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/>',
       save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>'
     };
     const ico = (n, s = 20) => `<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ''}</svg>`;
 
     const DB = {
-      ok: false, db: null,
+      ok: false, db: null, lock: false,
       open() {
         return new Promise((res, rej) => {
           if (!window.indexedDB) return rej(new Error('IndexedDB unavailable'));
@@ -198,6 +208,7 @@
       req(store, mode, fn) {
         return new Promise((res, rej) => {
           if (!this.ok) return res(undefined);
+          if (this.lock && mode !== 'readonly') return rej(new Error('Writes are paused while a backup file is being restored'));
           try {
             const tx = this.db.transaction(store, mode); const rq = fn(tx.objectStore(store));
             tx.oncomplete = () => res(rq && rq.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
@@ -211,6 +222,24 @@
     };
     const dbPut = (...a) => DB.put(...a).catch(() => { });
     const dbDel = (...a) => DB.del(...a).catch(() => { });
+    /* ---- per-track write coordination (Phase 3B review fix) ----
+       IndexedDB takes its snapshot of a record when put() is CALLED, and every writer of a song (likes, play counter, duration, lyrics, the info editor, the cover editor,
+       removal) shares the one in-memory record. So all writes of ONE track id run strictly one after another, and a queued writer takes its snapshot when it RUNS (not when it was
+       queued): it then sees every earlier change that actually committed and nothing that failed. The info/cover editors do not touch the shared record before their write is durable:
+       they put a CLONE carrying only their own fields, then apply just those fields to the shared record. A failed write therefore leaves nothing to undo, and no other writer's
+       snapshot can carry an uncommitted field. Different tracks never wait for each other. */
+    const trackQ = new Map();
+    function trackWrite(id, task) {
+      const prev = trackQ.get(id);
+      const p = prev ? prev.then(task) : task();   // idle queue: runs immediately (same timing as before); busy: strictly after the earlier writes settled
+      const tail = Promise.resolve(p).then(() => { }, () => { });
+      trackQ.set(id, tail); tail.then(() => { if (trackQ.get(id) === tail) trackQ.delete(id); });
+      return p;
+    }
+    // a plain whole-record write (like, play counter, duration, lyrics, a new web song): snapshot at execution; skipped if the song was removed or the library replaced meanwhile
+    const dbPutTrack = t => trackWrite(t.id, async () => { if (S.tracks.get(t.id) !== t) return; await DB.put('tracks', t); }).catch(() => { });
+    // a queued delete belongs to the library that existed when the song was removed: if a restore replaced the library (epoch changed) while it waited behind an earlier write, it must NOT run (resolves true only when the delete ran)
+    const dbDelTrack = (id, epoch) => trackWrite(id, async () => { if (epoch !== S.epoch) return false; await DB.del('tracks', id); return true; }).catch(() => false);
 
     const ascii = (b, o, n) => { let s = ''; for (let i = 0; i < n && o + i < b.length; i++) s += String.fromCharCode(b[o + i]); return s; };
     const syncsafe = (b, o) => (b[o] << 21) | (b[o + 1] << 14) | (b[o + 2] << 7) | b[o + 3];
@@ -318,7 +347,7 @@
     const curT = () => S.cur ? T(S.cur) : null;
     function reg(t) { const ex = S.tracks.get(t.id) || S.cache.get(t.id); if (ex) return ex; S.cache.set(t.id, t); return t; }
     const strip = t => ({ id: t.id, kind: t.kind, src: t.src, srcId: t.srcId, title: t.title, artist: t.artist, album: t.album, duration: t.duration, cover: t.cover, url: t.url, link: t.link, added: 0, plays: 0, liked: false });
-    function saveWeb(t) { if (t.kind !== 'web' || S.tracks.has(t.id)) return; S.tracks.set(t.id, t); S.cache.delete(t.id); t.added = Date.now(); dbPut('tracks', t); libStat(); }
+    function saveWeb(t) { if (t.kind !== 'web' || S.tracks.has(t.id)) return; S.tracks.set(t.id, t); S.cache.delete(t.id); t.added = Date.now(); dbPutTrack(t); libStat(); }
     async function getBlob(id) { if (S.mem.has(id)) return S.mem.get(id); return DB.get('blobs', id); }
     const albumKey = t => (t.album || 'Unknown album').toLowerCase();
     const artistKey = t => (t.artist || 'Unknown artist').toLowerCase();
@@ -333,6 +362,13 @@
     }
 
     async function importFiles(files) {
+      if (S.backupBusy) { toast('A backup is running. Try the import again when it finishes.', 3200); return; }
+      if (S.restoreBusy) { toast('A restore is in progress. Try the import again when it finishes.', 3200); return; }
+      if (S.importBusy) { toast('An import is already running', 2200); return; }
+      S.importBusy = true;
+      try { await importRun(files); } finally { S.importBusy = false; }
+    }
+    async function importRun(files) {
       files = [...files].filter(f => (f.type && f.type.startsWith('audio/')) || AUDIO_RE.test(f.name));
       if (!files.length) { toast('No audio files found'); return; }
       const have = new Set([...S.tracks.values()].map(t => t.key).filter(Boolean));
@@ -525,7 +561,7 @@
       if (S.npTab === 'lyrics') renderNP();
       saveSession();
     }
-    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) load(t, autoplay); }
+    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) return load(t, autoplay); }
     function togglePlay() {
       if (!S.queue.length) { const first = [...S.tracks.values()]; if (first.length) playList(first.map(t => t.id), 0); else toast('Import music or pick something from Explore'); return; }
       if (!A.getAttribute('src')) { loadCurrent(true); return; }
@@ -602,7 +638,7 @@
         S.counted = true; t.plays = (t.plays || 0) + 1; t.last = Date.now();
         S.hist.unshift({ id: t.id, t: Date.now(), snap: (t.kind === 'web' && !S.tracks.has(t.id)) ? strip(t) : undefined });
         if (S.hist.length > 300) S.hist.length = 300;
-        if (S.tracks.has(t.id)) dbPut('tracks', t);
+        if (S.tracks.has(t.id)) dbPutTrack(t);
         saveHist();
       }
       syncLyrics();
@@ -630,7 +666,7 @@
       el.addEventListener('timeupdate', () => onTime(el));
       el.addEventListener('loadedmetadata', () => {
         if (el !== A) return; const t = curT();
-        if (t && isFinite(el.duration) && el.duration > 0 && Math.abs((t.duration || 0) - el.duration) > 1) { t.duration = el.duration; if (S.tracks.has(t.id)) dbPut('tracks', t); }
+        if (t && isFinite(el.duration) && el.duration > 0 && Math.abs((t.duration || 0) - el.duration) > 1) { t.duration = el.duration; if (S.tracks.has(t.id)) dbPutTrack(t); }
         if (S.resume != null) { try { el.currentTime = S.resume; } catch (e) { } S.resume = null; }
         drawAB(); onTime(el);
       });
@@ -656,15 +692,17 @@
       const left = S.sleep.at - Date.now();
       const el = $('#sleepLeft'); if (el) el.textContent = left > 0 ? `Stops in ${fmt(left / 1000)}` : '';
       if (left <= 0) {
-        S.sleep = null; const el2 = A; for (let i = 10; i >= 0; i--) { el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
+        S.sleep = null; const el2 = A, ep = S.epoch; for (let i = 10; i >= 0; i--) { if (ep !== S.epoch) { applyVol(); return; } el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
+        if (ep !== S.epoch) { applyVol(); return; }
         el2.pause(); applyVol(); toast('Sleep timer: good night'); renderNPIf('sound');
       }
     }, 1000);
 
-    const saveSession = debounce(() => {
+    function sessionData() {
       const webs = [...new Set(S.queue)].map(T).filter(t => t && t.kind === 'web' && !S.tracks.has(t.id)).map(strip);
-      dbPut('kv', { queue: S.queue, orig: S.orig, qi: S.qi, time: A.currentTime || 0, shuffle: S.shuffle, repeat: S.repeat, vol: S.vol, muted: S.muted, rate: S.rate, pitch: S.pitch, eq: S.eq, eqPreset: S.eqPreset, np: document.body.classList.contains('np-open'), npTab: S.npTab, webs }, 'session');
-    }, 700);
+      return { queue: S.queue, orig: S.orig, qi: S.qi, time: A.currentTime || 0, shuffle: S.shuffle, repeat: S.repeat, vol: S.vol, muted: S.muted, rate: S.rate, pitch: S.pitch, eq: S.eq, eqPreset: S.eqPreset, np: document.body.classList.contains('np-open'), npTab: S.npTab, webs };
+    }
+    const saveSession = debounce(() => { dbPut('kv', sessionData(), 'session'); }, 700);
     const saveHist = debounce(() => dbPut('kv', S.hist, 'hist'), 1200);
     const savePlaylists = () => Promise.all(S.playlists.map(p => dbPut('playlists', p)));
 
@@ -741,7 +779,7 @@
       }
       if (r && (r.syncedLyrics || r.plainLyrics)) { t.lrc = r.syncedLyrics || ''; t.lyrics = r.plainLyrics || ''; t.lyricsFrom = 'lrclib'; delete t.noLyrics; }
       else t.noLyrics = Date.now();
-      if (S.tracks.has(t.id)) dbPut('tracks', t);
+      if (S.tracks.has(t.id)) dbPutTrack(t);
     }
 
     function setCover(el, t) {
@@ -920,10 +958,11 @@
       return `<div class="cover ${cls}" style="--h:${h}${img ? `;background-image:url(&quot;${esc(img)}&quot;)` : ''}">${img ? '' : ch}</div>`;
     }
     function row(t, i) {
-      return `<div class="row${S.cur === t.id ? ' playing' : ''}" tabindex="0" data-tid="${esc(t.id)}" data-i="${i}">
+      return `<div class="row has-rate${S.cur === t.id ? ' playing' : ''}" tabindex="0" data-tid="${esc(t.id)}" data-i="${i}">
     <div class="r-cov">${cov(t, 'sm')}<span class="r-btn">${ico('play', 18)}</span><span class="bars"><i></i><i></i><i></i></span></div>
     <div class="r-main"><div class="r-t">${esc(t.title)}</div><div class="r-a">${esc(t.artist)}${t.kind === 'web' ? `<span class="tag">${t.src === 'audius' ? 'Audius' : 'Archive'}</span>` : ''}</div></div>
     <div class="r-alb">${esc(t.album)}</div>
+    <div class="r-rate">${rateWidget(t)}</div>
     <div class="r-dur">${t.duration ? fmt(t.duration) : ''}</div>
     <div class="r-act"><button class="icon-btn like${t.liked ? ' on' : ''}" data-act="like" aria-label="Like" aria-pressed="${!!t.liked}">${ico(t.liked ? 'heartOn' : 'heart', 18)}</button><button class="icon-btn" data-act="more" aria-label="More actions">${ico('more', 18)}</button></div>
   </div>`;
@@ -931,7 +970,7 @@
     function trackList(ts, { play = false, head = false, ctx = '' } = {}) {
       ts = ts.map(reg); const li = S.lists.push(ts.map(t => t.id)) - 1;
       return `${play && ts.length ? `<div class="tl-tools"><button class="btn primary" data-act="playList" data-list="${li}">${ico('play', 16)} Play all</button><button class="btn" data-act="playList" data-list="${li}" data-shuffle="1">${ico('shuffle', 16)} Shuffle</button></div>` : ''}
-  <div class="tlist" data-list="${li}" data-ctx="${esc(ctx)}">${head ? '<div class="row head"><span></span><span>Title</span><span class="r-alb">Album</span><span class="r-dur">Time</span><span></span></div>' : ''}${ts.map((t, i) => row(t, i)).join('')}</div>`;
+  <div class="tlist" data-list="${li}" data-ctx="${esc(ctx)}">${head ? '<div class="row head has-rate"><span></span><span>Title</span><span class="r-alb">Album</span><span class="r-rate">Rating</span><span class="r-dur">Time</span><span></span></div>' : ''}${ts.map((t, i) => row(t, i)).join('')}</div>`;
     }
     function trackCards(ts) {
       ts = ts.map(reg); const li = S.lists.push(ts.map(t => t.id)) - 1;
@@ -952,10 +991,26 @@
     const emptyLib = msg => `<div class="empty">${esc(msg || 'Your library is empty.')}<div class="btn-row"><button class="btn primary" data-act="import">Import music</button><button class="btn" data-act="importDir">Import folder</button></div></div>`;
     const fmtLong = s => { if (s < 60) return `${Math.round(s)} sec`; const h = Math.floor(s / 3600), m = Math.round(s % 3600 / 60); return h ? `${h} h ${m} min` : `${m} min`; };
     const tokens = q => q.toLowerCase().split(/\s+/).filter(Boolean);
-    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album}`.toLowerCase(); return tk.every(x => s.includes(x)); };
+    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album} ${t.genre || ''}`.toLowerCase(); return tk.every(x => s.includes(x)); };
     const uniq = a => [...new Set(a)];
     const byNo = (a, b) => (a.track || 999) - (b.track || 999) || a.title.localeCompare(b.title);
     const SORTS = { added: (a, b) => b.added - a.added, title: (a, b) => a.title.localeCompare(b.title), artist: (a, b) => a.artist.localeCompare(b.artist) || a.album.localeCompare(b.album) || byNo(a, b), album: (a, b) => a.album.localeCompare(b.album) || byNo(a, b), duration: (a, b) => b.duration - a.duration, plays: (a, b) => (b.plays || 0) - (a.plays || 0) };
+    /* ---- Phase 4: ratings ----
+       t.rating is an ADDITIVE optional whole number 1..5. Absent = never rated (legacy songs are not rewritten); 0 = rated once and then cleared. Absent and 0 both mean "unrated" for
+       display, sorting and filtering. A like is a separate field (t.liked) and the two never change each other. Sorting treats unrated as 0 and breaks every tie by title, artist, then id,
+       so the order is deterministic in both directions. */
+    const ratingOf = t => { const r = t && t.rating; return Number.isInteger(r) && r >= 1 && r <= 5 ? r : 0; };
+    const byRateTie = (a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+    SORTS.ratingHigh = (a, b) => ratingOf(b) - ratingOf(a) || byRateTie(a, b);
+    SORTS.ratingLow = (a, b) => ratingOf(a) - ratingOf(b) || byRateTie(a, b);
+    const RATE_FILTERS = [['any', 'Any rating'], ['unrated', 'Unrated'], ['rated', 'Rated (1 star or more)'], ['5', '5 stars'], ['4', '4 stars and up'], ['3', '3 stars and up'], ['2', '2 stars and up']];
+    const rateMatch = (t, f) => { const r = ratingOf(t); return f === 'unrated' ? r === 0 : f === 'rated' ? r >= 1 : f === '5' ? r === 5 : (f === '4' || f === '3' || f === '2') ? r >= +f : true; };
+    const rateStars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+    function rateWidget(t) {
+      if (!S.tracks.has(t.id)) return '';   // only songs that are in the library can be rated (a search result that is not saved cannot)
+      const r = ratingOf(t), f = r || 1;
+      return `<span class="rate${r ? '' : ' unrated'}" role="radiogroup" aria-label="Rating for ${esc(t.title)}">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="${n <= r ? 'f' : ''}" role="radio" data-act="rateSong" data-v="${n}" aria-checked="${n === r}" aria-label="${n} star${n === 1 ? '' : 's'}" title="${n === r ? 'Click again to clear the rating' : `${n} star${n === 1 ? '' : 's'}`}" tabindex="${n === f ? 0 : -1}">${n <= r ? '★' : '☆'}</button>`).join('')}</span>`;
+    }
     function groupBy(keyFn) { const m = new Map(); for (const t of S.tracks.values()) { const k = keyFn(t); if (!m.has(k)) m.set(k, []); m.get(k).push(t); } return m; }
     function libStat() {
       const ts = [...S.tracks.values()], size = ts.reduce((s, t) => s + (t.size || 0), 0), dur = ts.reduce((s, t) => s + (t.duration || 0), 0);
@@ -1019,15 +1074,15 @@
       archSearch(ARCH_PICKS[pick][1], 24).then(r => { if (tok !== S.vtok) return; const n = $('#exArc'); if (n) n.innerHTML = r ? (r.length ? archCards(r, true) : '<div class="empty">No results.</div>') : offlineMsg('the Internet Archive'); });
     };
 
+    const searchLocal = (q, all) => { const local = [...S.tracks.values()].filter(t => matches(t, tokens(q))); return local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'; };
     VIEWS.search = (el, v) => {
       const q = v.q || '', src = v.src || 'all', tok = S.vtok, tk = tokens(q);
       $('#q').value = q;
-      const local = [...S.tracks.values()].filter(t => matches(t, tk));
       const chips = [['all', 'All'], ['library', 'Library'], ['audius', 'Audius'], ['archive', 'Internet Archive']];
       const all = src === 'all';
       el.innerHTML = `<div class="page-h"><h1>Results for “${esc(q)}”</h1></div>
   <div class="chips">${chips.map(([k, l]) => `<button class="chip${k === src ? ' on' : ''}" data-act="searchSrc" data-v="${k}">${l}</button>`).join('')}</div>
-  ${(all || src === 'library') ? `<section class="blk"><div class="shelf-h"><h2>Your library</h2></div>${local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'}</section>` : ''}
+  ${(all || src === 'library') ? `<section class="blk" id="sLib"><div class="shelf-h"><h2>Your library</h2></div><div id="sLibBody">${searchLocal(q, all)}</div></section>` : ''}
   ${(all || src === 'audius') ? `<section class="blk"><div class="shelf-h"><h2>Audius</h2><span class="mono dim">full-length streams</span></div><div id="sAud">${skelRows(5)}</div></section>` : ''}
   ${(all || src === 'archive') ? `<section class="blk"><div class="shelf-h"><h2>Internet Archive</h2><span class="mono dim">free albums and recordings</span></div><div id="sArc">${skelCards()}</div></section>` : ''}`;
       const clean = q.replace(/[^\p{L}\p{N}\s'-]/gu, ' ').trim() || q;
@@ -1040,7 +1095,7 @@
       const tabs = [['songs', 'Songs'], ['albums', 'Albums'], ['artists', 'Artists'], ['playlists', 'Playlists'], ['liked', 'Liked'], ['history', 'History']];
       let body = '';
       if (tab === 'songs') {
-        body = n ? `<div class="toolbar"><input id="libFilter" type="search" placeholder="Filter songs" value="${esc(v.filter || '')}" aria-label="Filter songs"><select id="libSort" aria-label="Sort songs">${[['added', 'Recently added'], ['title', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['plays', 'Most played'], ['duration', 'Longest']].map(([k, l]) => `<option value="${k}"${(v.sort || 'added') === k ? ' selected' : ''}>${l}</option>`).join('')}</select></div><div id="songList"></div>` : emptyLib();
+        body = n ? `<div class="toolbar"><input id="libFilter" type="search" placeholder="Filter songs" value="${esc(v.filter || '')}" aria-label="Filter songs"><select id="libSort" aria-label="Sort songs">${[['added', 'Recently added'], ['title', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['plays', 'Most played'], ['duration', 'Longest'], ['ratingHigh', 'Rating: high to low'], ['ratingLow', 'Rating: low to high']].map(([k, l]) => `<option value="${k}"${(v.sort || 'added') === k ? ' selected' : ''}>${l}</option>`).join('')}</select><select id="libRate" aria-label="Filter by rating">${RATE_FILTERS.map(([k, l]) => `<option value="${k}"${(v.rate || 'any') === k ? ' selected' : ''}>${l}</option>`).join('')}</select></div><p class="sub mono" id="libCount" role="status" aria-live="polite"></p><div id="songList"></div>` : emptyLib();
       } else if (tab === 'albums' || tab === 'artists') {
         const isA = tab === 'albums', m = groupBy(isA ? albumKey : artistKey);
         const items = [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
@@ -1066,8 +1121,13 @@
     };
     function fillSongs() {
       const v = S.view, el = $('#songList'); if (!el) return;
-      const tk = tokens(v.filter || ''); const ts = [...S.tracks.values()].filter(t => matches(t, tk)).sort(SORTS[v.sort || 'added']);
-      el.innerHTML = ts.length ? trackList(ts, { play: true, head: true }) : '<div class="empty">No songs match that filter.</div>';
+      const tk = tokens(v.filter || ''), rf = v.rate || 'any', all = S.tracks.size;
+      const ts = [...S.tracks.values()].filter(t => matches(t, tk) && rateMatch(t, rf)).sort(SORTS[v.sort || 'added'] || SORTS.added);
+      const lab = (RATE_FILTERS.find(x => x[0] === rf) || RATE_FILTERS[0])[1];
+      el.innerHTML = ts.length ? trackList(ts, { play: true, head: true })
+        : rf === 'any' ? '<div class="empty">No songs match that filter.</div>'
+          : `<div class="empty">No songs match “${esc(lab)}”${tk.length ? ` and “${esc(v.filter || '')}”` : ''}.<div class="btn-row"><button class="btn" data-act="libClear">Clear the filters</button></div></div>`;
+      const cn = $('#libCount'); if (cn) cn.textContent = (tk.length || rf !== 'any') ? `${ts.length} of ${all} song${all === 1 ? '' : 's'}` : `${all} song${all === 1 ? '' : 's'}`;
     }
     VIEWS.album = (el, v) => {
       const ts = [...S.tracks.values()].filter(t => albumKey(t) === v.key).sort(byNo);
@@ -1124,11 +1184,13 @@
         { label: 'Add to queue', icon: 'queue', fn: () => enqueue(tid, false) },
         { label: 'Add to playlist…', icon: 'plus', fn: () => { openPlaylistMenu(tid, x, y, ctx); return 'keep'; } },
         { label: t.liked ? 'Remove like' : 'Like', icon: t.liked ? 'heartOn' : 'heart', fn: () => toggleLike(tid) },
+        ...(S.tracks.has(tid) ? [{ label: ratingOf(t) ? `Rating: ${rateStars(ratingOf(t))}…` : 'Rate…', fn: () => { openRatingMenu(tid, x, y, ctx); return 'keep'; } }] : []),
         { sep: true }
       ];
       if (t.kind === 'local') { items.push({ label: 'Go to album', fn: () => go('album', { key: albumKey(t) }) }, { label: 'Go to artist', fn: () => go('artist', { key: artistKey(t) }) }); }
       if (t.link) items.push({ label: 'Open source page', fn: () => window.open(t.link, '_blank', 'noopener') });
       if (ctx.startsWith('pl:')) items.push({ label: 'Remove from this playlist', icon: 'x', fn: () => plRemove(ctx.slice(3), tid) });
+      if (S.tracks.has(tid)) items.push({ label: 'Edit info…', icon: 'edit', fn: () => openMetaEditor(tid) }, { label: 'Edit cover…', icon: 'image', fn: () => openCoverEditor(tid) });
       if (S.tracks.has(tid)) items.push({ label: 'Remove from library', icon: 'trash', danger: true, fn: () => removeTrack(tid) });
       openMenu(items, x, y);
     }
@@ -1155,7 +1217,7 @@
       });
     }
     function showHelp() {
-      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['S', 'Shuffle'], ['R', 'Repeat'], ['A', 'A–B loop: set start, set end, clear'], ['[  ]', 'Slower or faster'], ['\\', 'Normal speed'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
+      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['On a rating star: ← →', 'Move; Space or Enter sets, 1–5 sets, 0 or Delete clears'], ['S', 'Shuffle'], ['R', 'Repeat'], ['A', 'A–B loop: set start, set end, clear'], ['[  ]', 'Slower or faster'], ['\\', 'Normal speed'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
       const d = dialog(`<h3>Keyboard shortcuts</h3><dl class="keys">${k.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><div class="btn-row end"><button class="btn primary" id="dlgOk">Done</button></div>`);
       $('#dlgOk').onclick = () => d.close();
     }
@@ -1163,7 +1225,7 @@
     function toggleLike(id) {
       const t = T(id); if (!t) return;
       t.liked = !t.liked;
-      if (t.kind === 'web' && !S.tracks.has(id) && t.liked) saveWeb(t); else if (S.tracks.has(id)) dbPut('tracks', t);
+      if (t.kind === 'web' && !S.tracks.has(id) && t.liked) saveWeb(t); else if (S.tracks.has(id)) dbPutTrack(t);
       refreshLikeUI(id);
       if (!t.liked && S.view.name === 'library' && S.view.tab === 'liked') refresh();
     }
@@ -1185,14 +1247,1048 @@
       const pl = S.playlists.find(p => p.id === pid); if (!pl) return;
       pl.ids = pl.ids.filter(x => x !== tid); dbPut('playlists', pl); refresh();
     }
+
+    /* ---- Phase 3A: song info editor (title, artist, album, genre) ----
+       The effective values stay in the track record's own title/artist/album/genre fields, so every list, search, sort, queue, backup and older restore keeps working.
+       The FIRST save also stores a one-time snapshot of the values as they were before it in t.origMeta = {title, artist, album, genre} (all text); it is never
+       rewritten afterwards, and "Revert to originals" copies it back. Nothing here touches the audio Blob, the file's own tags, id, url, queue, playlists, likes,
+       plays, timestamps or duration. Saved web songs can be edited too; songs that are only shown (not in the library) cannot. Contract: BACKUP_FORMAT.md. */
+    const META = { fields: ['title', 'artist', 'album', 'genre'], label: { title: 'Title', artist: 'Artist', album: 'Album', genre: 'Genre' }, max: { title: 200, artist: 200, album: 200, genre: 80 }, dflt: { artist: 'Unknown artist', album: 'Unknown album' } };
+    const metaOf = t => ({ title: t.title, artist: t.artist, album: t.album, genre: typeof t.genre === 'string' ? t.genre : '' });
+    const metaEdited = t => !!(t.origMeta && META.fields.some(f => metaOf(t)[f] !== t.origMeta[f]));
+    const metaWell = s => s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '\uFFFD');
+    // control and invisible direction characters become spaces, runs of spaces collapse, ends are trimmed; too long is REFUSED, never silently cut
+    const metaClean = v => metaWell(String(v == null ? '' : v)).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, ' ').replace(/\s+/g, ' ').trim();
+    async function saveMeta(tid, epoch, base, vals) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const cur = metaOf(t);
+      if (epoch !== S.epoch || META.fields.some(f => cur[f] !== base[f])) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+      const next = {};
+      for (const f of META.fields) {
+        next[f] = metaClean(vals[f]);
+        if (next[f].length > META.max[f]) return { ok: false, field: f, msg: `${META.label[f]} is too long (at most ${META.max[f]} characters). Nothing was saved.` };
+      }
+      if (!next.title) return { ok: false, field: 'title', msg: 'Title can’t be empty.' };
+      if (!next.artist) next.artist = META.dflt.artist; if (!next.album) next.album = META.dflt.album;
+      const changed = META.fields.filter(f => next[f] !== cur[f]);
+      if (!changed.length) return { ok: true, none: true };
+      const before = { ...cur };
+      // the same change applied to a CLONE (what is written) and, once that write is durable, to the shared record: only this editor's own fields, never a whole stale copy
+      const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+      const apply = o => { if (!has(o, 'origMeta')) o.origMeta = { ...cur }; o.title = next.title; o.artist = next.artist; o.album = next.album; if (next.genre) o.genre = next.genre; else delete o.genre; };
+      return trackWrite(tid, async () => {
+        // the queue made this wait for earlier writes of the song: re-check that the editor's basis still holds
+        if (S.tracks.get(tid) !== t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        const now = metaOf(t);
+        if (epoch !== S.epoch || META.fields.some(f => now[f] !== base[f])) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the changes (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }   // nothing was applied to the shared record: nothing to undo
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, changed, before, memoryOnly: !DB.ok };
+      });
+    }
+    /* ---- Phase 4: the rating write. It follows the same rules as the info and cover editors: one queue per song, re-validated when it RUNS, a CLONE carrying only the rating is what is
+       written, and the shared record is changed only after that write is durable (so a failed or rejected write leaves nothing to undo and no other writer's snapshot can carry an
+       uncommitted rating). Setting the value a song already has is a no-op and writes nothing; clearing a song that was never rated keeps the field absent. */
+    async function setRating(tid, value) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (!Number.isInteger(value) || value < 0 || value > 5 || Object.is(value, -0)) return { ok: false, msg: 'A rating must be a whole number from 0 to 5. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const epoch = S.epoch;
+      const apply = o => { o.rating = value; };
+      return trackWrite(tid, async () => {
+        if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        const before = ratingOf(t);
+        if (before === value) return { ok: true, none: true, value };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the rating (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, value, before, memoryOnly: !DB.ok };
+      });
+    }
+    function refreshRatingUI(id) {
+      const t = S.tracks.get(id); if (!t) return; const r = ratingOf(t), f = r || 1;
+      $$('.row[data-tid]').forEach(row => {
+        if (row.dataset.tid !== id) return; const g = $('.rate', row); if (!g) return;
+        g.classList.toggle('unrated', !r);
+        $$('button', g).forEach(b => {
+          const n = +b.dataset.v; b.classList.toggle('f', n <= r); b.textContent = n <= r ? '★' : '☆'; b.setAttribute('aria-checked', n === r); b.tabIndex = n === f ? 0 : -1;
+          b.title = n === r ? 'Click again to clear the rating' : `${n} star${n === 1 ? '' : 's'}`;
+        });
+      });
+    }
+    async function applyRating(tid, value) {
+      const t0 = S.tracks.get(tid), act = document.activeElement, inGroup = !!(act && act.closest && act.closest('.rate') && act.dataset.v);
+      const r = await setRating(tid, value);
+      if (!r.ok) { toast(r.msg, 3600); return r; }
+      if (r.none) return r;
+      refreshRatingUI(tid);
+      const v = S.view, t = S.tracks.get(tid);
+      if (v.name === 'library' && (v.tab || 'songs') === 'songs' && $('#songList') && (v.sort === 'ratingHigh' || v.sort === 'ratingLow' || (v.rate && v.rate !== 'any'))) {
+        fillSongs();   // the song may move or drop out of the list: re-read it, and keep the keyboard where it was
+        if (inGroup && t) { const sel = (window.CSS && CSS.escape) ? CSS.escape(tid) : tid.replace(/["\\]/g, '\\$&'); const b = $(`.row[data-tid="${sel}"] .rate button[tabindex="0"]`); if (b) b.focus(); }
+      }
+      toast(value ? `Rated “${(t || t0).title}” ${value} star${value === 1 ? '' : 's'}` : `Cleared the rating of “${(t || t0).title}”`, 1600);
+      return r;
+    }
+    function rateAct(tid, n) { const t = S.tracks.get(tid); if (!t) return; return applyRating(tid, ratingOf(t) === n ? 0 : n); }   // clicking the star a song already has clears it
+    function openRatingMenu(tid, x, y, ctx) {
+      const t = S.tracks.get(tid); if (!t) return; const cur = ratingOf(t);
+      const items = [5, 4, 3, 2, 1].map(n => ({ label: `${rateStars(n)}  ${n} star${n === 1 ? '' : 's'}${n === cur ? '  (current)' : ''}`, fn: () => applyRating(tid, n) }));
+      if (cur) items.push({ sep: true }, { label: 'Clear rating', icon: 'x', fn: () => applyRating(tid, 0) });
+      items.push({ sep: true }, { label: 'Back', icon: 'back', fn: () => { openTrackMenu(tid, x, y, ctx); return 'keep'; } });
+      openMenu(items, x, y);
+    }
+    function metaRefresh(t, before) {
+      const v = S.view, id = t.id;
+      // an album or artist page whose group the edit just emptied follows the song to its new group instead of saying it is gone
+      if (v.name === 'album' && albumKey(t) !== v.key && before.album !== t.album && ![...S.tracks.values()].some(x => albumKey(x) === v.key)) v.key = albumKey(t);
+      if (v.name === 'artist' && artistKey(t) !== v.key && before.artist !== t.artist && ![...S.tracks.values()].some(x => artistKey(x) === v.key)) v.key = artistKey(t);
+      if (['library', 'album', 'artist', 'playlist'].includes(v.name)) render(true);   // local-only views: re-read the records (no network request)
+      else if (v.name === 'search' && $('#sLibBody')) { $('#sLibBody').innerHTML = searchLocal(v.q || '', (v.src || 'all') === 'all'); }
+      const sel = (window.CSS && CSS.escape) ? CSS.escape(id) : id.replace(/["\\]/g, '\\$&');
+      $$(`.row[data-tid="${sel}"]`).forEach(r => {
+        const a = $('.r-t', r); if (a) a.textContent = t.title;
+        const ar = $('.r-a', r); if (ar) { if (ar.firstChild && ar.firstChild.nodeType === 3) ar.firstChild.nodeValue = t.artist; else ar.insertBefore(document.createTextNode(t.artist), ar.firstChild); }
+        const al = $('.r-alb', r); if (al) al.textContent = t.album;
+      });
+      $$(`.card[data-tid="${sel}"]`).forEach(c => { const a = $('.card-t', c); if (a) a.textContent = t.title; });
+      if (S.cur === id) updateNowPlaying(t); else renderNP();   // text, tab title, media session and queue panel only: the audio element is never touched
+    }
+    function openMetaEditor(tid) {
+      const t0 = S.tracks.get(tid); if (!t0) return;
+      if (S.restoreBusy || S.restoring || S.backupBusy) { toast('A backup or restore is running. Try editing again when it finishes.', 3200); return; }
+      const base = metaOf(t0), epoch = S.epoch, orig = t0.origMeta ? { ...t0.origMeta } : null;
+      const d = dialog(`<h3>Edit song info</h3><form id="metaForm" class="meta-form" autocomplete="off" novalidate>${META.fields.map(f => `<label class="meta-l" for="meta_${f}">${META.label[f]}</label><input id="meta_${f}" data-f="${f}" type="text" maxlength="${META.max[f]}" spellcheck="false" autocomplete="off">`).join('')}
+        <p class="meta-note">This only changes how the song is shown in Plainsong. The audio file and the tags inside it are never changed.</p>
+        <div id="metaOrig" class="meta-orig"></div><div id="metaErr" class="meta-err" role="alert" aria-live="assertive"></div>
+        <div class="btn-row meta-btns"><button type="button" class="btn" id="metaRevert">Revert to originals</button><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="submit" class="btn primary" id="metaSave">Save</button></div></form>`);
+      d.onclose = null;   // the shared dialog may still carry another dialog's handler
+      d.addEventListener('close', () => {   // keyboard users land back on this song's ⋯ button (Save, Cancel and Esc alike); the list may have been redrawn, so look it up now
+        const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return;   // focus is still on a hidden dialog button (or nowhere): take it back
+        const b = $(`.row[data-tid="${(window.CSS && CSS.escape) ? CSS.escape(tid) : tid}"] [data-act="more"]`); if (b) b.focus();
+      }, { once: true });
+      const inp = f => $(`#meta_${f}`, d), err = $('#metaErr', d), draft = () => Object.fromEntries(META.fields.map(f => [f, inp(f).value]));
+      META.fields.forEach(f => { inp(f).value = base[f]; });
+      if (orig) $('#metaOrig', d).innerHTML = `<div class="mono dim">Original values (kept from before your first edit)</div><dl class="meta-dl">${META.fields.map(f => `<dt>${META.label[f]}</dt><dd>${orig[f] ? esc(orig[f]) : '<span class="dim">(empty)</span>'}</dd>`).join('')}</dl>`;
+      const rv = $('#metaRevert', d), syncRv = () => { rv.disabled = !orig || META.fields.every(f => inp(f).value === orig[f]); };
+      syncRv(); META.fields.forEach(f => inp(f).addEventListener('input', syncRv));
+      rv.onclick = () => { META.fields.forEach(f => { inp(f).value = orig[f]; }); syncRv(); err.textContent = ''; $('#metaSave', d).focus(); };   // fills the form; Save commits, Cancel discards
+      $('#dlgNo', d).onclick = () => d.close('no');
+      let busy = false;
+      $('#metaForm', d).onsubmit = async e => {
+        e.preventDefault(); if (busy) return; busy = true; $('#metaSave', d).disabled = true; err.textContent = '';
+        let r; try { r = await saveMeta(tid, epoch, base, draft()); } catch (x) { r = { ok: false, msg: 'Couldn’t save the changes. Nothing was changed.' }; }
+        busy = false; $('#metaSave', d).disabled = false;
+        if (!r.ok) { err.textContent = r.msg; const f = r.field && inp(r.field); (f || $('#metaSave', d)).focus(); return; }
+        d.close('ok');
+        const t = S.tracks.get(tid);
+        if (r.none) { toast('No changes'); return; }
+        if (t) metaRefresh(t, r.before);
+        toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Song info saved', 3000);
+      };
+      inp('title').focus(); inp('title').select();
+    }
+
+    /* ---- Phase 3B: custom cover for a library song ----
+       t.cover stays the EFFECTIVE cover (every list, album/artist page, media session and older backup keeps working). The first cover save also stores
+       t.origCover = the cover string as it was before (''/data URL/http URL), once, never rewritten; edited = origCover present and cover !== origCover.
+       The new cover is ONE text field in the same track record, so track+image are one atomic DB.put; no Blob, no audio, no id/order/metadata/plays/likes/queue is touched.
+       An uploaded file is judged by its BYTES (never its name or File.type): size, signature, header dimensions and truncation are checked before it is decoded,
+       then it is decoded and re-encoded through a canvas, which drops metadata, scripts and trailing data. SVG and everything else are refused. No network request. */
+    const COVER = { maxFile: 8 * 1024 ** 2, minSide: 16, maxSide: 8192, maxPixels: 40e6, out: 512, maxData: 700000, accept: 'image/png,image/jpeg,image/gif,image/webp' };
+    const coverCur = t => (typeof t.cover === 'string' ? t.cover : '');
+    const coverOrig = t => (typeof t.origCover === 'string' ? t.origCover : null);
+    const coverEdited = t => coverOrig(t) !== null && coverCur(t) !== coverOrig(t);
+    const COVER_NEW_RE = /^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]*={0,2}$/;
+    // header look at the bytes: { type, w, h } or { err }
+    function coverSniff(u8) {
+      const n = u8.length, be32 = o => ((u8[o] << 24) | (u8[o + 1] << 16) | (u8[o + 2] << 8) | u8[o + 3]) >>> 0, le16 = o => u8[o] | (u8[o + 1] << 8);
+      const le32 = o => (u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) >>> 0;
+      const at = (o, str) => { if (o + str.length > n) return false; for (let i = 0; i < str.length; i++) if (u8[o + i] !== str.charCodeAt(i)) return false; return true; };
+      const cut = { err: 'cut' };
+      if (n >= 8 && u8[0] === 0x89 && at(1, 'PNG') && u8[4] === 0x0D && u8[5] === 0x0A && u8[6] === 0x1A && u8[7] === 0x0A) {
+        if (n < 33 || be32(8) !== 13 || !at(12, 'IHDR')) return cut;
+        let o = 8; for (; ;) {   // walk the chunks: IEND must be there and must end exactly at the end of the file
+          if (o + 12 > n) return cut; const len = be32(o); if (len > n - o - 12) return cut;
+          if (at(o + 4, 'IEND')) return (o + 12 + len === n) ? { type: 'image/png', w: be32(16), h: be32(20) } : { err: 'extra' };
+          o += 12 + len;
+        }
+      }
+      if (n >= 4 && u8[0] === 0xFF && u8[1] === 0xD8 && u8[2] === 0xFF) {
+        let o = 2, dims = null;
+        while (o + 4 <= n) {
+          if (u8[o] !== 0xFF) return cut; while (u8[o] === 0xFF && o < n) o++; const m = u8[o++];
+          if (m === 0xD9) break; if (m === 0x01 || (m >= 0xD0 && m <= 0xD7)) continue;
+          if (o + 2 > n) return cut; const len = (u8[o] << 8) | u8[o + 1]; if (len < 2 || o + len > n) return cut;
+          if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) { if (len < 8) return cut; dims = { h: (u8[o + 3] << 8) | u8[o + 4], w: (u8[o + 5] << 8) | u8[o + 6] }; }
+          if (m === 0xDA) break; o += len;
+        }
+        if (!dims) return cut;
+        if (!(u8[n - 2] === 0xFF && u8[n - 1] === 0xD9)) return cut;   // a JPEG that was cut off does not end with the end-of-image marker
+        return { type: 'image/jpeg', w: dims.w, h: dims.h };
+      }
+      if (at(0, 'GIF87a') || at(0, 'GIF89a')) { if (n < 14) return cut; if (u8[n - 1] !== 0x3B) return cut; return { type: 'image/gif', w: le16(6), h: le16(8) }; }
+      if (at(0, 'RIFF') && at(8, 'WEBP')) {
+        if (n < 30) return cut; if (le32(4) !== n - 8) return cut;
+        if (at(12, 'VP8X')) return { type: 'image/webp', w: 1 + (u8[24] | (u8[25] << 8) | (u8[26] << 16)), h: 1 + (u8[27] | (u8[28] << 8) | (u8[29] << 16)) };
+        if (at(12, 'VP8L')) { if (u8[20] !== 0x2F) return cut; return { type: 'image/webp', w: 1 + (((u8[22] & 0x3F) << 8) | u8[21]), h: 1 + (((u8[24] & 0x0F) << 10) | (u8[23] << 2) | ((u8[22] & 0xC0) >> 6)) }; }
+        if (at(12, 'VP8 ')) { if (!(u8[23] === 0x9D && u8[24] === 0x01 && u8[25] === 0x2A)) return cut; return { type: 'image/webp', w: le16(26) & 0x3FFF, h: le16(28) & 0x3FFF }; }
+        return { err: 'type' };
+      }
+      return { err: 'type' };
+    }
+    // a File -> { ok:true, data } (a png/jpeg data URL, at most COVER.out px) or { ok:false, msg }
+    async function coverFromFile(file) {
+      const MB = x => (x / 1048576).toFixed(1);
+      try {
+        if (!file || typeof file.size !== 'number') return { ok: false, msg: 'No picture was chosen.' };
+        if (file.size === 0) return { ok: false, msg: 'That file is empty.' };
+        if (file.size > COVER.maxFile) return { ok: false, msg: `That file is ${MB(file.size)} MB; the limit is ${MB(COVER.maxFile)} MB.` };
+        const u8 = new Uint8Array(await file.arrayBuffer());
+        if (u8.length > COVER.maxFile) return { ok: false, msg: `That file is ${MB(u8.length)} MB; the limit is ${MB(COVER.maxFile)} MB.` };
+        const sn = coverSniff(u8);
+        if (sn.err === 'type') return { ok: false, msg: 'That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted.' };
+        if (sn.err) return { ok: false, msg: sn.err === 'extra' ? 'That picture has extra data after its end, so it was refused.' : 'That picture looks cut off or damaged.' };
+        if (!(sn.w >= COVER.minSide && sn.h >= COVER.minSide && sn.w <= COVER.maxSide && sn.h <= COVER.maxSide && sn.w * sn.h <= COVER.maxPixels))
+          return { ok: false, msg: `That picture is ${sn.w}×${sn.h} pixels; each side must be ${COVER.minSide} to ${COVER.maxSide} pixels (at most ${COVER.maxPixels / 1e6} megapixels).` };
+        let bmp; try { bmp = await Promise.race([createImageBitmap(new Blob([u8], { type: sn.type })), new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), 20000))]); } catch (e) { return { ok: false, msg: 'That picture couldn’t be read.' }; }
+        try {
+          if (bmp.width !== sn.w || bmp.height !== sn.h) return { ok: false, msg: 'That picture couldn’t be read.' };
+          for (const side of [COVER.out, 384, 256]) {
+            const k = Math.min(1, side / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+            const cx = c.getContext('2d'); cx.drawImage(bmp, 0, 0, c.width, c.height);
+            let alpha = false; const px = cx.getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < px.length; i += 4) if (px[i] < 255) { alpha = true; break; }
+            let d = alpha ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', .85);
+            if (d.length > COVER.maxData && alpha) {   // too big as a transparent PNG: flatten it onto a dark background as a JPEG
+              cx.globalCompositeOperation = 'destination-over'; cx.fillStyle = '#1a1a1a'; cx.fillRect(0, 0, c.width, c.height); d = c.toDataURL('image/jpeg', .85);
+            }
+            if (COVER_NEW_RE.test(d) && d.length <= COVER.maxData) return { ok: true, data: d, w: c.width, h: c.height, from: sn.type };
+          }
+          return { ok: false, msg: 'That picture is too detailed to store. Try a simpler or smaller one.' };
+        } finally { try { bmp.close(); } catch (e) { } }
+      } catch (e) { return { ok: false, msg: 'That picture couldn’t be read.' }; }
+    }
+    // a value that may be committed as t's cover: '' or the stored original (revert), or a fresh png/jpeg data URL made by coverFromFile
+    const coverOk = (v, t) => typeof v === 'string' && (v === coverOrig(t) || (COVER_NEW_RE.test(v) && v.length <= COVER.maxData));
+    async function saveCover(tid, epoch, base, next) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const cur = coverCur(t);
+      if (epoch !== S.epoch || cur !== base) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+      if (next === cur) return { ok: true, none: true };
+      if (!coverOk(next, t)) return { ok: false, msg: 'That cover can’t be saved. Nothing was saved.' };
+      const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+      const apply = o => { if (!has(o, 'origCover')) o.origCover = cur; o.cover = next; };   // the original is captured ONCE, with this first change
+      return trackWrite(tid, async () => {
+        // the queue made this wait for earlier writes of the song: re-check that the editor's basis still holds
+        if (S.tracks.get(tid) !== t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        if (epoch !== S.epoch || coverCur(t) !== base) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);   // only the cover fields differ from the shared record; the write is durable BEFORE the shared record is touched
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the cover (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }   // nothing was applied: nothing to undo
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, memoryOnly: !DB.ok };
+      });
+    }
+    function coverRefresh(t) {
+      const v = S.view, id = t.id;
+      if (['library', 'album', 'artist', 'playlist'].includes(v.name)) render(true);   // local-only views: re-read the records (no network request)
+      else if (v.name === 'search' && $('#sLibBody')) { $('#sLibBody').innerHTML = searchLocal(v.q || '', (v.src || 'all') === 'all'); }
+      const sel = (window.CSS && CSS.escape) ? CSS.escape(id) : id.replace(/["\\]/g, '\\$&');
+      $$(`.row[data-tid="${sel}"] .cover, .card[data-tid="${sel}"] .cover`).forEach(c => setCover(c, t));
+      if (S.cur === id) updateNowPlaying(t); else renderNP();   // art, media session and queue panel only: the audio element is never touched
+    }
+    function openCoverEditor(tid) {
+      const t0 = S.tracks.get(tid); if (!t0) return;
+      if (S.restoreBusy || S.restoring || S.backupBusy) { toast('A backup or restore is running. Try editing again when it finishes.', 3200); return; }
+      const base = coverCur(t0), epoch = S.epoch, orig = coverOrig(t0) !== null ? coverOrig(t0) : base, hadOrig = coverOrig(t0) !== null;
+      const d = dialog(`<h3>Edit cover</h3><div class="cov-ed"><div class="cover xl cov-prev" id="covPrev" role="img" aria-label="Cover preview"></div>
+        <div class="cov-side"><p class="meta-note" style="margin:0">Pick a PNG, JPEG, GIF or WebP picture (up to 8 MB). It is resized to fit 512 pixels and stored inside your library. The audio file and its tags are never changed.</p>
+        <div><button type="button" class="btn" id="covPick">Choose image…</button><input type="file" id="covFile" accept="${COVER.accept}" hidden></div>
+        <div id="covState" class="mono dim" aria-live="polite"></div></div></div>
+        <div id="covOrig" class="meta-orig"></div><div id="covErr" class="meta-err" role="alert" aria-live="assertive"></div>
+        <div class="btn-row meta-btns"><button type="button" class="btn" id="covRevert">Revert to original</button><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="button" class="btn primary" id="covSave">Save</button></div>`);
+      d.onclose = null;
+      let closed = false, tok = 0, draft = base, busy = false, saving = false;
+      d.addEventListener('close', () => {
+        closed = true; tok++;   // a picture still being read when the editor closes is dropped
+        const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return;
+        const b = $(`.row[data-tid="${(window.CSS && CSS.escape) ? CSS.escape(tid) : tid}"] [data-act="more"]`); if (b) b.focus();
+      }, { once: true });
+      const err = $('#covErr', d), st = $('#covState', d), rv = $('#covRevert', d), sv = $('#covSave', d), pk = $('#covPick', d), fi = $('#covFile', d), no = $('#dlgNo', d);
+      const sync = () => {
+        setCover($('#covPrev', d), { ...t0, cover: draft });
+        st.textContent = saving ? 'Saving…' : busy ? 'Reading the picture…' : draft === base ? (draft ? 'Current cover' : 'No cover') : (draft === orig ? 'Original cover (not saved yet)' : 'New cover (not saved yet)');
+        // commit semantics: once Save is pressed the write is in flight and can not be called back, so until it settles NOTHING in the editor can be used (no Cancel, Escape, picker, Revert)
+        rv.disabled = saving || busy || draft === orig; sv.disabled = saving || busy || draft === base; pk.disabled = saving; no.disabled = saving;
+      };
+      d.addEventListener('cancel', e => { if (saving) e.preventDefault(); });   // the dialog's own Escape / close request
+      // Escape is stopped at the window (capture) while saving: when a focused control becomes disabled the focus leaves the dialog, so a listener on the dialog itself would not see the key and the
+      // browser would close the dialog (found by repeating the pending-save test: it failed 2 runs in 3)
+      const escGuard = e => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); } };
+      if (hadOrig) {
+        const o = $('#covOrig', d);
+        if (orig === '') o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="dim">No picture</div>';
+        else if (/^https?:/i.test(orig)) o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="dim">A web picture (its address is kept; it is not loaded here)</div>';
+        else { o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="cover sm cov-orig" id="covOrigImg"></div>'; setCover($('#covOrigImg', o), { ...t0, cover: orig }); }
+      }
+      sync();
+      pk.onclick = () => { if (!saving) fi.click(); };
+      fi.onchange = async () => {
+        const f = fi.files && fi.files[0]; fi.value = ''; if (!f || saving) return;
+        const mine = ++tok; busy = true; err.textContent = ''; sync();
+        let r; try { r = await coverFromFile(f); } catch (e) { r = { ok: false, msg: 'That picture couldn’t be read.' }; }
+        if (closed || mine !== tok || !d.open) return;   // the editor closed or a newer pick started meanwhile: this answer is stale
+        busy = false;
+        if (!r.ok) { err.textContent = r.msg; sync(); pk.focus(); return; }
+        draft = r.data; sync(); sv.focus();
+      };
+      rv.onclick = () => { if (saving) return; tok++; busy = false; draft = orig; err.textContent = ''; sync(); sv.focus(); };   // fills the preview; Save commits, Cancel discards
+      no.onclick = () => { if (!saving) d.close('no'); };
+      sv.onclick = async () => {
+        if (saving || busy) return; saving = true; err.textContent = ''; window.addEventListener('keydown', escGuard, true); sync(); d.tabIndex = -1; d.focus();   // keep the keyboard inside the dialog while its controls are disabled
+        let r; try { r = await saveCover(tid, epoch, base, draft); } catch (x) { r = { ok: false, msg: 'Couldn’t save the cover. Nothing was changed.' }; }
+        saving = false; window.removeEventListener('keydown', escGuard, true); sync();
+        if (!r.ok) { err.textContent = r.msg; sv.focus(); return; }   // the editor stays open with the reason; every control works again
+        d.close('ok');
+        const t = S.tracks.get(tid);
+        if (r.none) { toast('No changes'); return; }
+        if (t) coverRefresh(t);
+        toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Cover saved', 3000);
+      };
+      pk.focus();
+    }
     async function removeTrack(id) {
       const t = S.tracks.get(id); if (!t) return;
       if (!await confirmBox(`Remove “${t.title}” from your library?`, 'Remove')) return;
+      if (S.tracks.get(id) !== t) return;   // the library changed (a restore) while the question was open
+      const epoch = S.epoch;
       S.tracks.delete(id); S.mem.delete(id);
-      await dbDel('tracks', id); await dbDel('blobs', id);
+      await dbDelTrack(id, epoch);
+      if (epoch !== S.epoch) return;   // a restore replaced the library while the delete waited: nothing of this removal may touch the restored one (its song, audio, playlists or queue)
+      await dbDel('blobs', id);
+      if (epoch !== S.epoch) return;   // (same, if the restore came while the audio delete was running)
       S.playlists.forEach(p => { if (p.ids.includes(id)) { p.ids = p.ids.filter(x => x !== id); dbPut('playlists', p); } });
       if (t.kind === 'web') S.cache.set(id, t); else purgeFromQueue(id);
       libStat(); refresh(); toast('Removed from library');
+    }
+
+    /* ---- full backup export (Phase 1) ----
+       Export only. Restoring a backup file is NOT implemented yet.
+       Format: store-only ZIP (see BACKUP_FORMAT.md). Integration credentials are never exported:
+       kv keys starting with "secret:" are skipped and only allow-listed localStorage keys are written. */
+    const BACKUP = { format: 'plainsong-backup', version: 1, stores: ['tracks', 'playlists', 'blobs', 'kv'], lsAllow: ['ps-theme'], secretPrefix: 'secret:' };
+    const BACKUP_LIMITS = { maxBytes: 2 * 1024 ** 3, maxEntries: 60000, chunk: 4 * 1024 * 1024 };
+    class BackupCancel extends Error { }
+    let BK = null;
+    const bkFail = (title, msg, lines) => Object.assign(new Error(msg), { bk: { title, msg, lines: lines || [] } });
+    const hex8 = n => (n >>> 0).toString(16).padStart(8, '0');
+
+    const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+    function crcAdd(crc, u8) { for (let i = 0; i < u8.length; i++) crc = CRC_T[(crc ^ u8[i]) & 255] ^ (crc >>> 8); return crc; }
+    async function crcOfBlob(blob, onBytes, ctl = BK) {
+      let crc = 0xFFFFFFFF, off = 0, last = performance.now();
+      while (off < blob.size) {
+        if (ctl && ctl.cancel) throw new BackupCancel();
+        const end = Math.min(blob.size, off + BACKUP_LIMITS.chunk);
+        const u8 = new Uint8Array(await blob.slice(off, end).arrayBuffer());
+        if (u8.length !== end - off) throw new Error('short read');
+        crc = crcAdd(crc, u8); off = end; if (onBytes) onBytes(u8.length);
+        if (performance.now() - last > 40) { await wait(0); last = performance.now(); }
+      }
+      return (crc ^ 0xFFFFFFFF) >>> 0;
+    }
+
+    function jsonIssues(v, path, out, depth = 0) {
+      if (out.length >= 20) return;
+      const t = typeof v;
+      if (v === null || t === 'string' || t === 'boolean') return;
+      if (t === 'number') { if (!isFinite(v)) out.push(`${path}: not a finite number`); return; }
+      if (t !== 'object') { out.push(`${path}: unsupported ${t}`); return; }
+      if (depth > 40) { out.push(`${path}: nested too deeply`); return; }
+      if (Array.isArray(v)) { v.forEach((x, i) => { if (x === undefined) out.push(`${path}[${i}]: empty list slot`); else jsonIssues(x, `${path}[${i}]`, out, depth + 1); }); return; }
+      const pr = Object.getPrototypeOf(v);
+      if (pr !== Object.prototype && pr !== null) { out.push(`${path}: unsupported ${(v.constructor && v.constructor.name) || 'object'}`); return; }
+      for (const k of Object.keys(v)) if (v[k] !== undefined) jsonIssues(v[k], `${path}.${k}`, out, depth + 1);
+    }
+    function jsonArrayBlob(items) {
+      const parts = ['['];
+      items.forEach((it, i) => parts.push((i ? ',\n' : '\n') + JSON.stringify(it)));
+      parts.push(items.length ? '\n]\n' : ']\n');
+      return new Blob(parts, { type: 'application/json' });
+    }
+
+    // One read-only transaction over all four stores = one consistent snapshot. Blob values are
+    // immutable handles, so later writes cannot change what is exported.
+    function snapshotDB(limit) {
+      return new Promise((resolve, reject) => {
+        const out = { tracks: [], playlists: [], kv: [], blobs: [], tooBig: 0 };
+        let tx; try { tx = DB.db.transaction(BACKUP.stores, 'readonly'); } catch (e) { reject(e); return; }
+        const getAll = name => { const r = tx.objectStore(name).getAll(); r.onsuccess = () => { out[name] = r.result; }; };
+        const walk = (name, fn) => { const r = tx.objectStore(name).openCursor(); r.onsuccess = () => { const c = r.result; if (c && fn(c) !== false) c.continue(); }; };
+        getAll('tracks'); getAll('playlists');
+        walk('kv', c => { out.kv.push({ key: c.key, value: c.value }); });
+        let total = 0;
+        walk('blobs', c => {
+          const b = c.value; total += (b && b.size) || 0; out.blobs.push({ key: c.key, blob: b });
+          if (total > limit) { out.tooBig = total; try { tx.abort(); } catch (e) { } return false; }
+        });
+        tx.oncomplete = () => resolve(out);
+        tx.onabort = () => out.tooBig ? resolve(out) : reject(tx.error || new Error('The library read was interrupted'));
+        tx.onerror = () => { };
+      });
+    }
+    async function settleSession() {
+      try {
+        if (saveSession.pending() || S.queue.length || S.cur) { saveSession.cancel(); await DB.put('kv', sessionData(), 'session'); }
+        if (saveHist.pending()) { saveHist.cancel(); await DB.put('kv', S.hist, 'hist'); }
+      } catch (e) { throw bkFail('Couldn’t save your latest session', `Browser storage refused a write (${(e && e.message) || 'unknown error'}), so a backup might not match what you see. No backup file was created.`); }
+    }
+
+    function zipBlob(entries, when) {
+      const enc = new TextEncoder(), parts = [], cd = [], dt = when.getHours() << 11 | when.getMinutes() << 5 | when.getSeconds() >> 1, dd = (when.getFullYear() - 1980) << 9 | (when.getMonth() + 1) << 5 | when.getDate();
+      let off = 0, expect = 22;
+      for (const e of entries) {
+        const nm = enc.encode(e.name); e.off = off;
+        const h = new DataView(new ArrayBuffer(30));
+        h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true); h.setUint16(10, dt, true); h.setUint16(12, dd, true);
+        h.setUint32(14, e.crc, true); h.setUint32(18, e.size, true); h.setUint32(22, e.size, true); h.setUint16(26, nm.length, true); h.setUint16(28, 0, true);
+        parts.push(h.buffer, nm, e.blob); cd.push([e, nm]); off += 30 + nm.length + e.size; expect += 30 + nm.length + e.size + 46 + nm.length;
+      }
+      if (off > 0xFFFFFFFF) throw new Error('archive too large for the ZIP format used');
+      let cdSize = 0;
+      for (const [e, nm] of cd) {
+        const c = new DataView(new ArrayBuffer(46));
+        c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(10, 0, true); c.setUint16(12, dt, true); c.setUint16(14, dd, true);
+        c.setUint32(16, e.crc, true); c.setUint32(20, e.size, true); c.setUint32(24, e.size, true); c.setUint16(28, nm.length, true); c.setUint32(42, e.off, true);
+        parts.push(c.buffer, nm); cdSize += 46 + nm.length;
+      }
+      const z = new DataView(new ArrayBuffer(22));
+      z.setUint32(0, 0x06054b50, true); z.setUint16(8, entries.length, true); z.setUint16(10, entries.length, true); z.setUint32(12, cdSize, true); z.setUint32(16, off, true);
+      parts.push(z.buffer);
+      return { blob: new Blob(parts, { type: 'application/zip' }), expect };
+    }
+    async function zipSelfCheck(zip, entries, expect) {
+      const bad = m => new Error('internal check failed: ' + m);
+      if (zip.size !== expect) throw bad('archive size');
+      const tail = new DataView(await zip.slice(zip.size - 22).arrayBuffer());
+      if (tail.getUint32(0, true) !== 0x06054b50 || tail.getUint16(10, true) !== entries.length) throw bad('end record');
+      const cdSize = tail.getUint32(12, true), cdOff = tail.getUint32(16, true);
+      if (cdOff + cdSize + 22 !== zip.size) throw bad('directory size');
+      const cd = new DataView(await zip.slice(cdOff, cdOff + cdSize).arrayBuffer()); let p = 0;
+      for (const e of entries) {
+        if (cd.getUint32(p, true) !== 0x02014b50 || cd.getUint32(p + 16, true) !== e.crc || cd.getUint32(p + 24, true) !== e.size || cd.getUint32(p + 42, true) !== e.off) throw bad('directory entry ' + e.name);
+        const lh = new DataView(await zip.slice(e.off, e.off + 30).arrayBuffer());
+        if (lh.getUint32(0, true) !== 0x04034b50 || lh.getUint32(14, true) !== e.crc || lh.getUint32(18, true) !== e.size) throw bad('file header ' + e.name);
+        p += 46 + cd.getUint16(p + 28, true);
+      }
+    }
+
+    function bkShow(html) { const d = $('#dlg'); if (d.open) d.innerHTML = html; else dialog(html); return d; }
+    function bkClose() { const d = $('#dlg'); d.onclose = null; d.oncancel = null; if (d.open) d.close(); }
+    const bkLines = l => l && l.length ? `<ul class="bk-list">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+    function bkProgress(ctl, title = 'Backing up your library', label = 'Backup progress') {
+      const d = bkShow(`<h3>${esc(title)}</h3><p class="note bk-note" id="bkMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar" role="progressbar" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bkFill"></i></div><div class="btn-row end"><button class="btn" id="bkCancel">Cancel</button></div>`);
+      ctl.running = true;
+      const cancel = () => { ctl.cancel = true; const m = $('#bkMsg'); if (m) m.textContent = 'Cancelling…'; const b = $('#bkCancel'); if (b) b.disabled = true; };
+      $('#bkCancel').onclick = cancel; d.oncancel = e => { e.preventDefault(); cancel(); };
+      d.onclose = () => { if (!d.open && ctl.running) ctl.cancel = true; };
+      $('#bkCancel').focus();
+      return (text, frac) => {
+        const m = $('#bkMsg'), f = $('#bkFill'), bar = $('.bk-bar'); if (!m || ctl.cancel) return;
+        m.textContent = text; const pc = Math.round(clamp(frac, 0, 1) * 100); f.style.width = pc + '%'; bar.setAttribute('aria-valuenow', pc);
+      };
+    }
+    function bkAsk(title, msg, lines, buttons) {
+      return new Promise(res => {
+        if (BK) BK.running = false;
+        const d = bkShow(`<h3>${esc(title)}</h3><p class="note bk-note">${esc(msg)}</p>${bkLines(lines)}<div class="btn-row end">${buttons.map(b => `<button class="btn${b.primary ? ' primary' : ''}" data-bk="${b.id}">${esc(b.label)}</button>`).join('')}</div>`);
+        d.oncancel = null; d.onclose = () => { if (!d.open) { d.onclose = null; res('no'); } };
+        d.querySelectorAll('[data-bk]').forEach(b => { b.onclick = () => { d.onclose = null; res(b.dataset.bk); }; });
+        const f = d.querySelector('[data-bk]'); if (f) f.focus();
+      });
+    }
+    const bkInfo = (title, msg, lines) => bkAsk(title, msg, lines, [{ id: 'ok', label: 'OK', primary: true }]).then(() => bkClose());
+
+    async function buildBackup(ctl) {
+      const stop = () => { if (ctl.cancel) throw new BackupCancel(); };
+      let ui = bkProgress(ctl);
+      if (!DB.ok) throw bkFail('Backup isn’t available in this browser mode', 'Your library is only held in memory right now (browser storage is unavailable or blocked, as in some private windows). It disappears when you close the tab, and Plainsong can’t back it up. No backup file was created.');
+      ui('Saving your latest session…', .02); await settleSession(); stop();
+      ui('Reading your library…', .06); const snap = await snapshotDB(BACKUP_LIMITS.maxBytes); stop();
+      if (snap.tooBig) throw bkFail('Your library is too big for one backup file', `This version exports up to ${bytes(BACKUP_LIMITS.maxBytes)} of audio in one file. Your audio is at least ${bytes(snap.tooBig)}. Nothing was written. Splitting a large library across several files isn’t built yet.`);
+      if (!snap.tracks.length && !snap.playlists.length && !snap.blobs.length) throw bkFail('Nothing to back up yet', 'Your library is empty. Import some music first, then back it up.');
+
+      const dbIds = new Set(snap.tracks.map(t => t.id));
+      const unsaved = [...S.tracks.values()].filter(t => !dbIds.has(t.id));
+      if (unsaved.length) throw bkFail('Some songs aren’t saved in browser storage', `${unsaved.length} song${unsaved.length === 1 ? ' is' : 's are'} shown in your library but missing from browser storage, so a backup would silently leave ${unsaved.length === 1 ? 'it' : 'them'} out. No backup file was created.`, unsaved.slice(0, 8).map(t => t.title));
+      const nonStr = [...snap.kv.map(x => x.key), ...snap.blobs.map(x => x.key)].filter(k => typeof k !== 'string');
+      if (nonStr.length) throw bkFail('Unsupported storage keys', `${nonStr.length} stored item${nonStr.length === 1 ? ' has' : 's have'} a key type this backup format can’t represent exactly. No backup file was created.`);
+      const notBlob = snap.blobs.filter(x => !(x.blob instanceof Blob));
+      if (notBlob.length) throw bkFail('Unexpected audio data', `${notBlob.length} stored audio item${notBlob.length === 1 ? ' isn’t' : 's aren’t'} a normal audio file, so the backup can’t copy ${notBlob.length === 1 ? 'it' : 'them'} exactly. No backup file was created.`, notBlob.slice(0, 8).map(x => String(x.key)));
+      const issues = [];
+      snap.tracks.forEach(t => jsonIssues(t, `tracks/${t.id}`, issues)); snap.playlists.forEach(p => jsonIssues(p, `playlists/${p.id}`, issues)); snap.kv.forEach(x => jsonIssues(x.value, `kv/${x.key}`, issues));
+      if (issues.length) throw bkFail('Some saved data can’t be written exactly', 'A saved value uses a type this backup format can’t store without changing it, so no backup file was created.', issues);
+      if (snap.blobs.length + 5 > Math.min(BACKUP_LIMITS.maxEntries, 65535)) throw bkFail('Too many songs for one backup file', `This version exports up to ${Math.min(BACKUP_LIMITS.maxEntries, 65535) - 5} audio files in one backup. You have ${snap.blobs.length}. Nothing was written.`);
+
+      const have = new Map(snap.blobs.map(x => [x.key, x.blob])), titleOf = id => { const t = snap.tracks.find(x => x.id === id); return t ? t.title : id; };
+      const problems = [], warnings = [];
+      for (const t of snap.tracks) {
+        if (t.kind !== 'local') continue;
+        const b = have.get(t.id);
+        if (!b) problems.push({ id: t.id, title: t.title, reason: 'audio missing from browser storage' });
+        else if (!b.size) problems.push({ id: t.id, title: t.title, reason: 'audio file is empty' });
+        else if (t.size && b.size !== t.size) warnings.push(`Audio size differs from the recorded size for track ${t.id} (${b.size} vs ${t.size} bytes)`);
+      }
+      const orphans = snap.blobs.filter(x => !dbIds.has(x.key));
+      if (orphans.length) warnings.push(`${orphans.length} stored audio file${orphans.length === 1 ? ' has' : 's have'} no library entry; included as-is`);
+      let complete = true;
+      if (problems.length) {
+        const ans = await bkAsk('Some songs can’t be fully backed up', `${problems.length} song${problems.length === 1 ? ' has' : 's have'} no usable audio in browser storage. You can cancel and look into it, or export a backup that is clearly marked INCOMPLETE and still contains everything else.`,
+          problems.slice(0, 8).map(p => `${p.title}: ${p.reason}`).concat(problems.length > 8 ? [`…and ${problems.length - 8} more`] : []), [{ id: 'no', label: 'Cancel' }, { id: 'yes', label: 'Export incomplete backup', primary: true }]);
+        if (ans !== 'yes') throw new BackupCancel();
+        complete = false; ctl.cancel = false; ui = bkProgress(ctl);
+      }
+
+      const kvOut = [], kvExcluded = [];
+      for (const x of snap.kv) (x.key.startsWith(BACKUP.secretPrefix) ? kvExcluded : kvOut).push(x);
+      const ls = {};
+      for (const k of BACKUP.lsAllow) {
+        const v = store.get(k); if (v == null) continue;
+        if (k === 'ps-theme' && v !== 'light' && v !== 'dark') { warnings.push('ps-theme had an unrecognized value and was not exported'); continue; }
+        ls[k] = v;
+      }
+      const mk = (name, blob, extra) => ({ name, blob, size: blob.size, crc: 0, ...extra });
+      const data = [mk('data/tracks.json', jsonArrayBlob(snap.tracks)), mk('data/playlists.json', jsonArrayBlob(snap.playlists)), mk('data/kv.json', jsonArrayBlob(kvOut)), mk('data/localstorage.json', new Blob([JSON.stringify(ls, null, 1) + '\n'], { type: 'application/json' }))];
+      const audio = snap.blobs.map((x, i) => mk(`blobs/${String(i + 1).padStart(6, '0')}.bin`, x.blob, { key: x.key, type: x.blob.type || '' }));
+      const body = [...data, ...audio], payload = body.reduce((s, e) => s + e.size, 0), audioBytes = audio.reduce((s, e) => s + e.size, 0);
+      if (payload > BACKUP_LIMITS.maxBytes) throw bkFail('Your library is too big for one backup file', `This version exports up to ${bytes(BACKUP_LIMITS.maxBytes)} in one file; this backup would need ${bytes(payload)}. Nothing was written.`);
+
+      let done = 0, lastUi = 0; const tick = n => { done += n; const now = performance.now(); if (now - lastUi > 80) { lastUi = now; ui(`Checking and packing your library… ${bytes(done)} of ${bytes(payload)}`, .1 + .85 * (done / Math.max(1, payload))); } };
+      for (const e of body) {
+        stop();
+        try { e.crc = await crcOfBlob(e.blob, tick); }
+        catch (err) { if (err instanceof BackupCancel) throw err; throw bkFail('Couldn’t read a song from browser storage', `Reading “${e.key !== undefined ? titleOf(e.key) : e.name}” failed (${(err && err.message) || 'unknown error'}). No backup file was created.`); }
+      }
+      ui('Finishing…', .96); stop();
+      const when = new Date();
+      const man = {
+        format: BACKUP.format, formatVersion: BACKUP.version, createdAt: when.toISOString(), generator: 'Plainsong', complete,
+        source: { database: 'plainsong', databaseVersion: DB.db.version },
+        counts: { tracks: snap.tracks.length, playlists: snap.playlists.length, kv: kvOut.length, blobs: audio.length, localStorage: Object.keys(ls).length },
+        audioBytes, payloadBytes: payload,
+        integrity: { algorithm: 'crc32', note: 'CRC-32 and byte length for every entry. Detects accidental corruption, not tampering.' },
+        files: data.map(e => ({ path: e.name, bytes: e.size, crc32: hex8(e.crc) })),
+        blobs: audio.map(e => ({ key: e.key, path: e.name, bytes: e.size, type: e.type, crc32: hex8(e.crc) })),
+        excluded: { kv: kvExcluded.map(x => x.key), localStorage: `only these keys are exported: ${BACKUP.lsAllow.join(', ')}`, credentials: 'integration credentials are never exported by default' },
+        problems, warnings, limits: { maxBytes: BACKUP_LIMITS.maxBytes, maxEntries: Math.min(BACKUP_LIMITS.maxEntries, 65535) }
+      };
+      const mb = new Blob([JSON.stringify(man, null, 2) + '\n'], { type: 'application/json' }), me = mk('manifest.json', mb); me.crc = await crcOfBlob(mb);
+      const entries = [me, ...body], z = zipBlob(entries, when);
+      await zipSelfCheck(z.blob, entries, z.expect); stop();
+      const p2 = n => String(n).padStart(2, '0');
+      const stamp = `${when.getFullYear()}${p2(when.getMonth() + 1)}${p2(when.getDate())}-${p2(when.getHours())}${p2(when.getMinutes())}${p2(when.getSeconds())}`;
+      return { blob: z.blob, name: `plainsong-backup-${complete ? '' : 'INCOMPLETE-'}${stamp}.zip`, man, problems };
+    }
+    function bkDownload(blob, name) {
+      const url = URL.createObjectURL(blob), a = document.createElement('a');
+      a.href = url; a.download = name; a.hidden = true; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
+    }
+    async function runBackup(opts) {
+      if (S.backupBusy) return;
+      if (S.restoring) { toast('A restore is writing to your library. Back up when it finishes.', 3200); return; }
+      if (S.restoreBusy && !(opts && opts.fromRestore)) { toast('A restore is in progress. Back up when it finishes.', 3200); return; } // only the restore dialog’s own “Back up current library first” may back up meanwhile
+      if (S.importBusy) { toast('Wait for the import to finish, then back up.', 3200); return; }
+      S.backupBusy = true; BK = { cancel: false, running: false };
+      try {
+        const r = await buildBackup(BK);
+        bkDownload(r.blob, r.name);
+        const c = r.man.counts, inc = !r.man.complete;
+        await bkInfo(inc ? 'Incomplete backup downloaded' : 'Backup downloaded',
+          `${c.tracks} song${c.tracks === 1 ? '' : 's'}, ${c.playlists} playlist${c.playlists === 1 ? '' : 's'}, ${bytes(r.blob.size)}. Your browser chooses where it goes, usually the Downloads folder. ${inc ? 'It is marked INCOMPLETE: ' + r.problems.length + ' song(s) had no audio to copy. ' : ''}Keep a copy somewhere outside this browser. “Restore from backup…” can read this file back, but a restore replaces your library, so keep the file until you have checked the result.`);
+      } catch (e) {
+        if (e instanceof BackupCancel) { bkClose(); toast('Backup cancelled. Nothing was saved.', 3200); }
+        else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
+        else { console.error(e); await bkInfo('Backup failed', `Something went wrong while reading your library (${(e && e.message) || e}). No backup file was created.`); }
+      } finally { S.backupBusy = false; BK = null; }
+    }
+
+    /* ---- backup reader (Phase 2A) ----
+       READ-ONLY. Parses and validates a Plainsong backup ZIP (format v1, see BACKUP_FORMAT.md). It never opens a
+       read-write IndexedDB transaction and never touches localStorage. No restore UI is wired to it yet (Phase 2B).
+       The file is untrusted: every header, size, CRC, name, JSON shape and cross-reference is checked before a
+       package is returned, and every refusal carries a machine-readable `code`. Returned audio is a list of lazy
+       Blob slices of the user's file (nothing is copied into memory). */
+    const RESTORE_LIMITS = { maxBytes: BACKUP_LIMITS.maxBytes, maxEntries: Math.min(BACKUP_LIMITS.maxEntries, 65535), maxJson: 256 * 1024 ** 2, maxManifest: 4 * 1024 ** 2, maxName: 64, maxKey: 1024, overhead: 16 * 1024 ** 2 };
+    const RS_DATA = ['data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json'];
+    const RS_BLOB_RE = /^blobs\/\d{6}\.bin$/, RS_CRC_RE = /^[0-9a-f]{8}$/, RS_COVER_RE = /^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]*$/;
+    const RS_TABS = ['queue', 'lyrics', 'sound'];
+    const isSecretKey = k => typeof k === 'string' && k.toLowerCase().startsWith(BACKUP.secretPrefix);
+    const rsBad = (code, msg, lines) => Object.assign(bkFail('This backup can’t be restored', msg + ' Nothing was changed.', lines), { code });
+    const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+    const isNum = v => typeof v === 'number' && isFinite(v);
+    const isUInt = v => Number.isInteger(v) && v >= 0;
+    const isHttpUrl = s => { try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } };
+
+    // Central directory + every local header, strictly. Returns entries in file order.
+    async function rsZipIndex(file, L, ctl, prog) {
+      const size = file.size;
+      if (size > L.maxBytes + L.overhead) throw rsBad('limits', `This file is ${bytes(size)}; this version restores backups up to ${bytes(L.maxBytes)} of data.`);
+      if (size < 22) throw rsBad('not-zip', 'This file is too small to be a Plainsong backup.');
+      const tail = new DataView(await file.slice(size - 22).arrayBuffer());
+      if (tail.getUint32(0, true) !== 0x06054b50) throw rsBad('eocd', 'This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP comment.');
+      const disk = tail.getUint16(4, true), cdDisk = tail.getUint16(6, true), nHere = tail.getUint16(8, true), n = tail.getUint16(10, true), cdSize = tail.getUint32(12, true), cdOff = tail.getUint32(16, true), cmt = tail.getUint16(20, true);
+      if (n === 0xFFFF || cdSize === 0xFFFFFFFF || cdOff === 0xFFFFFFFF) throw rsBad('zip64', 'This archive uses ZIP64, which Plainsong backups never do.');
+      if (disk || cdDisk || nHere !== n) throw rsBad('multidisk', 'This archive is split over several disks, which Plainsong backups never are.');
+      if (cmt) throw rsBad('comment', 'This archive has a ZIP comment; Plainsong backups have none.');
+      if (n < 5) throw rsBad('count', `This archive has only ${n} entries; a Plainsong backup has at least 5.`);
+      if (n > L.maxEntries) throw rsBad('limits', `This archive has ${n} entries; this version restores at most ${L.maxEntries}.`);
+      if (cdOff + cdSize + 22 !== size || cdSize > n * (46 + L.maxName)) throw rsBad('directory', 'The ZIP directory doesn’t line up with the file size, so the file is damaged or has extra data attached.');
+      const cd = new DataView(await file.slice(cdOff, cdOff + cdSize).arrayBuffer());
+      const entries = [], seen = new Set(); let p = 0, expectOff = 0;
+      for (let i = 0; i < n; i++) {
+        if (p + 46 > cd.byteLength || cd.getUint32(p, true) !== 0x02014b50) throw rsBad('cd-entry', `ZIP directory entry ${i + 1} is damaged.`);
+        const ver = cd.getUint16(p + 6, true), flags = cd.getUint16(p + 8, true), method = cd.getUint16(p + 10, true), crc = cd.getUint32(p + 16, true), csize = cd.getUint32(p + 20, true), usize = cd.getUint32(p + 24, true);
+        const nl = cd.getUint16(p + 28, true), xl = cd.getUint16(p + 30, true), cl = cd.getUint16(p + 32, true), dsk = cd.getUint16(p + 34, true), off = cd.getUint32(p + 42, true);
+        if (ver > 20) throw rsBad('flags', 'An entry needs a newer ZIP feature level than Plainsong backups use.');
+        if (flags & ~0x0800) throw rsBad('flags', 'An entry is encrypted or uses data descriptors, which Plainsong backups never do.');
+        if (method !== 0) throw rsBad('method', 'An entry is compressed. Plainsong backups store every entry uncompressed, so this file wasn’t written by Plainsong (or was re-zipped).');
+        if (csize !== usize) throw rsBad('method', 'An entry’s stored and real sizes differ.');
+        if (xl || cl || dsk) throw rsBad('extra', 'An entry has extra fields, comments or a disk number; Plainsong backups have none.');
+        if (nl < 1 || nl > L.maxName || p + 46 + nl > cd.byteLength) throw rsBad('name', 'An entry name has an invalid length.');
+        const nb = new Uint8Array(cd.buffer, cd.byteOffset + p + 46, nl);
+        if (nb.some(b => b < 0x21 || b > 0x7e)) throw rsBad('name', 'An entry name contains characters a Plainsong backup never uses (spaces, control or non-ASCII characters).');
+        const name = String.fromCharCode(...nb);
+        if (seen.has(name)) throw rsBad('duplicate', 'The archive contains the same entry name twice.', [name]);
+        seen.add(name);
+        if (name !== 'manifest.json' && !RS_DATA.includes(name) && !RS_BLOB_RE.test(name)) throw rsBad('unexpected-entry', 'The archive contains an entry Plainsong backups never contain, so it won’t be read.', [name]);
+        if (off !== expectOff) throw rsBad('layout', 'Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back.', [name]);
+        expectOff = off + 30 + nl + usize;
+        entries.push({ name, crc, size: usize, off, nl, flags, nb: Array.from(nb), dataOff: off + 30 + nl });
+        p += 46 + nl;
+      }
+      if (p !== cd.byteLength) throw rsBad('directory', 'The ZIP directory has trailing bytes.');
+      if (expectOff !== cdOff) throw rsBad('layout', 'The entries don’t end exactly where the ZIP directory starts.');
+      // exact documented layout and order
+      const want = ['manifest.json', ...RS_DATA];
+      for (let i = 0; i < want.length; i++) if (entries[i].name !== want[i]) throw rsBad('order', `Entry ${i + 1} should be ${want[i]}.`, [entries[i].name]);
+      for (let i = 5; i < n; i++) if (entries[i].name !== `blobs/${String(i - 4).padStart(6, '0')}.bin`) throw rsBad('order', 'Audio entries must be numbered consecutively from blobs/000001.bin.', [entries[i].name]);
+      let payload = 0;
+      for (const e of entries) {
+        if (e.name === 'manifest.json' && e.size > L.maxManifest) throw rsBad('limits', 'The manifest is unreasonably large.');
+        if (RS_DATA.includes(e.name) && e.size > L.maxJson) throw rsBad('limits', `${e.name} is ${bytes(e.size)}, over the ${bytes(L.maxJson)} this version reads per data file.`);
+        if (e.name !== 'manifest.json') payload += e.size;
+      }
+      if (payload > L.maxBytes) throw rsBad('limits', `The backup holds ${bytes(payload)}; this version restores up to ${bytes(L.maxBytes)}.`);
+      // local headers must agree with the directory
+      for (let i = 0; i < entries.length; i += 128) {
+        if (ctl.cancel) throw new BackupCancel();
+        await Promise.all(entries.slice(i, i + 128).map(async e => {
+          const b = new Uint8Array(await file.slice(e.off, e.off + 30 + e.nl).arrayBuffer());
+          const h = new DataView(b.buffer);
+          const bad = m => rsBad('local-header', `The header of ${e.name} disagrees with the ZIP directory (${m}).`);
+          if (b.length !== 30 + e.nl || h.getUint32(0, true) !== 0x04034b50) throw bad('missing or damaged');
+          if (h.getUint16(6, true) !== e.flags || h.getUint16(8, true) !== 0) throw bad('flags/method');
+          if (h.getUint32(14, true) !== e.crc || h.getUint32(18, true) !== e.size || h.getUint32(22, true) !== e.size) throw bad('CRC or size');
+          if (h.getUint16(26, true) !== e.nl || h.getUint16(28, true) !== 0) throw bad('name or extra length');
+          for (let k = 0; k < e.nl; k++) if (b[30 + k] !== e.nb[k]) throw bad('name');
+        }));
+        prog(`Checking ZIP headers… ${Math.min(entries.length, i + 128)} of ${entries.length}`, .02 + .03 * (i / entries.length));
+      }
+      return { entries, payload };
+    }
+
+    // JSON-only deep scan: depth limit and the one key that can confuse object code.
+    function rsScan(v, path, iss, depth = 0) {
+      if (iss.length >= 20 || v === null || typeof v !== 'object') return;
+      if (depth > 40) { iss.push(`${path}: nested too deeply`); return; }
+      if (Array.isArray(v)) { for (let i = 0; i < v.length; i++) rsScan(v[i], `${path}[${i}]`, iss, depth + 1); return; }
+      for (const k of Object.keys(v)) { if (k === '__proto__') { iss.push(`${path}: forbidden key __proto__`); return; } rsScan(v[k], `${path}.${k}`, iss, depth + 1); }
+    }
+    function rsTrack(t, w, iss, webOnly, L) {
+      const add = m => { if (iss.length < 20) iss.push(`${w}: ${m}`); };
+      if (!isObj(t)) { add('not an object'); return; }
+      if (typeof t.id !== 'string' || !t.id || t.id.length > L.maxKey) add('id must be a non-empty text');
+      if (t.kind !== 'local' && t.kind !== 'web') add('kind must be "local" or "web"'); else if (webOnly && t.kind !== 'web') add('a web snapshot must have kind "web"');
+      for (const k of ['title', 'artist', 'album']) if (typeof t[k] !== 'string') add(`${k} must be text`);
+      for (const k of ['duration', 'added', 'plays', 'size', 'track', 'last']) if (t[k] !== undefined && !(isNum(t[k]) && t[k] >= 0)) add(`${k} must be a non-negative number`);
+      if (t.liked !== undefined && typeof t.liked !== 'boolean') add('liked must be true or false');
+      if (t.rating !== undefined && !(Number.isInteger(t.rating) && t.rating >= 0 && t.rating <= 5 && !Object.is(t.rating, -0))) add('rating must be a whole number from 0 to 5');   // Phase 4, additive and optional
+      for (const k of ['key', 'lyrics', 'lrc', 'lyricsFrom', 'src']) if (t[k] !== undefined && typeof t[k] !== 'string') add(`${k} must be text`);
+      if (t.srcId !== undefined && typeof t.srcId !== 'string' && !isNum(t.srcId)) add('srcId must be text or a number');
+      if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
+      if (t.link !== undefined && !(typeof t.link === 'string' && (t.link === '' || isHttpUrl(t.link)))) add('link must be empty or an http(s) address');
+      if (t.kind === 'web' && !(typeof t.url === 'string' && isHttpUrl(t.url))) add('a web song needs an http(s) url');
+      if (t.genre !== undefined && typeof t.genre !== 'string') add('genre must be text');
+      if (t.origMeta !== undefined) {   // Phase 3A snapshot of the values before the first edit: exactly these four text fields
+        if (!isObj(t.origMeta)) add('origMeta must be an object');
+        else { for (const k of ['title', 'artist', 'album', 'genre']) if (typeof t.origMeta[k] !== 'string') add(`origMeta.${k} must be text`); for (const k of Object.keys(t.origMeta)) if (!['title', 'artist', 'album', 'genre'].includes(k)) add(`origMeta.${k} is not a known field`); }
+      }
+      // Phase 3B: the cover as it was before the first custom-cover edit; the same rule as `cover` itself
+      if (t.origCover !== undefined && !(typeof t.origCover === 'string' && (t.origCover === '' || RS_COVER_RE.test(t.origCover) || isHttpUrl(t.origCover)))) add('origCover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
+    }
+    function rsSession(s, iss, L) {
+      const add = m => { if (iss.length < 20) iss.push(`kv/session: ${m}`); };
+      if (!isObj(s)) { add('not an object'); return; }
+      for (const k of ['queue', 'orig']) if (s[k] !== undefined && !(Array.isArray(s[k]) && s[k].every(x => typeof x === 'string'))) add(`${k} must be a list of ids`);
+      if (s.qi !== undefined && !(Number.isInteger(s.qi) && s.qi >= -1)) add('qi must be a whole number >= -1');
+      if (s.time !== undefined && !(isNum(s.time) && s.time >= 0)) add('time must be a non-negative number');
+      if (s.vol !== undefined && !(isNum(s.vol) && s.vol >= 0 && s.vol <= 1)) add('vol must be between 0 and 1');
+      if (s.rate !== undefined && !(isNum(s.rate) && s.rate >= .25 && s.rate <= 3)) add('rate must be between 0.25 and 3');
+      if (s.repeat !== undefined && ![0, 1, 2].includes(s.repeat)) add('repeat must be 0, 1 or 2');
+      for (const k of ['shuffle', 'muted', 'pitch', 'np']) if (s[k] !== undefined && typeof s[k] !== 'boolean') add(`${k} must be true or false`);
+      if (s.eq !== undefined && !(Array.isArray(s.eq) && s.eq.length === 10 && s.eq.every(x => isNum(x) && Math.abs(x) <= 48))) add('eq must be 10 numbers');
+      if (s.eqPreset !== undefined && !(typeof s.eqPreset === 'string' && s.eqPreset.length <= 64)) add('eqPreset must be short text');
+      if (s.npTab !== undefined && !RS_TABS.includes(s.npTab)) add('npTab is not a known tab');
+      if (s.webs !== undefined) { if (!Array.isArray(s.webs)) add('webs must be a list'); else s.webs.forEach((w, i) => rsTrack(w, `kv/session.webs[${i}]`, iss, true, L)); }
+    }
+    function rsHist(h, iss, L) {
+      if (!Array.isArray(h) || h.length > 100000) { iss.push('kv/hist: must be a list (at most 100000 entries)'); return; }
+      h.forEach((x, i) => {
+        if (iss.length >= 20) return;
+        if (!isObj(x) || typeof x.id !== 'string' || !isNum(x.t) || x.t < 0) { iss.push(`kv/hist[${i}]: needs a text id and a time`); return; }
+        if (x.snap !== undefined) rsTrack(x.snap, `kv/hist[${i}].snap`, iss, true, L);
+      });
+    }
+
+    async function readBackupZip(file, opts = {}) {
+      const L = { ...RESTORE_LIMITS, ...(opts.limits || {}) }, ctl = opts.ctl || { cancel: false }, prog = opts.onProgress || (() => { });
+      if (!(file instanceof Blob)) throw rsBad('not-zip', 'No file was given.');
+      const stop = () => { if (ctl.cancel) throw new BackupCancel(); };
+      prog('Checking the ZIP structure…', .01);
+      const { entries, payload } = await rsZipIndex(file, L, ctl, prog); stop();
+      let done = 0, lastUi = 0;
+      const tick = n => { done += n; const now = performance.now(); if (now - lastUi > 80) { lastUi = now; prog(`Checking every byte… ${bytes(done)} of ${bytes(payload)}`, .06 + .9 * (done / Math.max(1, payload))); } };
+      const slice = (e, type) => file.slice(e.dataOff, e.dataOff + e.size, type);
+      const crcOf = async e => { try { return await crcOfBlob(slice(e), tick, ctl); } catch (err) { if (err instanceof BackupCancel) throw err; throw rsBad('read', `Reading ${e.name} failed (${(err && err.message) || 'unknown error'}); the file may have been moved or changed.`); } };
+      const jsonOf = async (e, what) => {
+        const crc = await crcOf(e); stop();
+        if (crc !== e.crc) throw rsBad('crc', `${what} is damaged (checksum mismatch).`);
+        let txt;
+        try { txt = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(await slice(e).arrayBuffer()); } catch (err) { throw rsBad('utf8', `${what} isn’t valid UTF-8 text.`); }
+        try { return JSON.parse(txt); } catch (err) { throw rsBad(what === 'manifest.json' ? 'manifest-json' : 'json', `${what} isn’t valid JSON.`); }
+      };
+
+      // ---- manifest ----
+      const me = entries[0], man = await jsonOf(me, 'manifest.json');
+      const mbad = (m, lines) => rsBad('manifest-shape', 'manifest.json is inconsistent: ' + m, lines);
+      if (!isObj(man)) throw mbad('it isn’t an object.');
+      if (man.format !== BACKUP.format) throw rsBad('format', 'This isn’t a Plainsong backup (wrong format marker).');
+      if (!Number.isInteger(man.formatVersion)) throw rsBad('version', 'The backup has no usable format version.');
+      if (man.formatVersion !== BACKUP.version) throw rsBad('version', man.formatVersion > BACKUP.version ? `This backup uses format ${man.formatVersion}, made by a newer Plainsong. This version reads format ${BACKUP.version} only. Update Plainsong, then try again.` : `This backup uses format ${man.formatVersion}, which this version doesn’t read (it reads format ${BACKUP.version} only).`);
+      if (typeof man.complete !== 'boolean') throw mbad('complete must be true or false.');
+      if (!isObj(man.source) || man.source.database !== 'plainsong' || man.source.databaseVersion !== 1) throw rsBad('db-version', 'This backup comes from a database layout this version doesn’t know (expected plainsong v1).');
+      if (typeof man.createdAt !== 'string' || man.createdAt.length > 40 || !isFinite(Date.parse(man.createdAt))) throw mbad('createdAt isn’t a valid date.');
+      if (typeof man.generator !== 'string' || man.generator.length > 100) throw mbad('generator must be short text.');
+      if (!isObj(man.counts) || !['tracks', 'playlists', 'kv', 'blobs', 'localStorage'].every(k => isUInt(man.counts[k]))) throw mbad('counts are missing or invalid.');
+      if (!isUInt(man.audioBytes) || !isUInt(man.payloadBytes)) throw mbad('audioBytes/payloadBytes are missing or invalid.');
+      if (!Array.isArray(man.problems) || !man.problems.every(x => isObj(x) && typeof x.id === 'string' && typeof x.title === 'string' && typeof x.reason === 'string')) throw mbad('problems must be a list of {id, title, reason}.');
+      if (!Array.isArray(man.warnings) || !man.warnings.every(x => typeof x === 'string')) throw mbad('warnings must be a list of text.');
+      if (man.complete && man.problems.length) throw mbad('it says the backup is complete but lists problems.');
+      if (!Array.isArray(man.files) || man.files.length !== RS_DATA.length) throw mbad('files must list the four data files.');
+      man.files.forEach((f, i) => {
+        const e = entries[i + 1];
+        if (!isObj(f) || f.path !== RS_DATA[i] || f.bytes !== e.size || f.crc32 !== hex8(e.crc) || !RS_CRC_RE.test(f.crc32)) throw mbad(`the entry for ${RS_DATA[i]} doesn’t match the archive (size or checksum).`);
+      });
+      const blobEntries = entries.slice(5);
+      if (!Array.isArray(man.blobs) || man.blobs.length !== blobEntries.length || man.counts.blobs !== blobEntries.length) throw mbad('the audio list doesn’t match the archive entries.');
+      const bkeys = [];
+      man.blobs.forEach((b, i) => {
+        const e = blobEntries[i];
+        if (!isObj(b) || typeof b.key !== 'string' || b.key.length > L.maxKey) throw mbad(`audio item ${i + 1} has no valid key.`);
+        if (b.path !== e.name || b.bytes !== e.size || !RS_CRC_RE.test(String(b.crc32)) || b.crc32 !== hex8(e.crc)) throw mbad(`audio item ${i + 1} doesn’t match its archive entry (path, size or checksum).`);
+        if (typeof b.type !== 'string' || b.type.length > 255 || !/^[\x20-\x7e]*$/.test(b.type) || b.type !== b.type.toLowerCase()) throw rsBad('blob-type', `Audio item ${i + 1} has a MIME type that can’t be stored exactly.`);
+        if (i && b.key === man.blobs[i - 1].key) throw rsBad('duplicate-key', 'Two audio items share the same key.', [b.key]);
+        if (i && !(man.blobs[i - 1].key < b.key)) throw rsBad('order', 'Audio keys must be in ascending store order.');
+        bkeys.push(b.key);
+      });
+      if (new Set(bkeys).size !== bkeys.length) throw rsBad('duplicate-key', 'Two audio items share the same key.');
+      const audioBytes = blobEntries.reduce((s, e) => s + e.size, 0);
+      if (man.audioBytes !== audioBytes || man.payloadBytes !== payload) throw mbad('audioBytes/payloadBytes don’t add up to the archive contents.');
+      if (man.excluded !== undefined && !(isObj(man.excluded) && (man.excluded.kv === undefined || (Array.isArray(man.excluded.kv) && man.excluded.kv.every(k => typeof k === 'string'))))) throw mbad('excluded is malformed.');
+
+      // ---- data files ----
+      prog('Reading library data…', .06);
+      const data = {};
+      for (let i = 0; i < RS_DATA.length; i++) data[RS_DATA[i]] = await jsonOf(entries[i + 1], RS_DATA[i]);
+      const tracks = data['data/tracks.json'], playlists = data['data/playlists.json'], kv = data['data/kv.json'], ls = data['data/localstorage.json'];
+      const dbad = (code, m, lines) => rsBad(code, m, lines);
+      for (const [v, nm] of [[tracks, 'tracks.json'], [playlists, 'playlists.json'], [kv, 'kv.json']]) if (!Array.isArray(v)) throw dbad('shape', `${nm} must be a list.`);
+      if (!isObj(ls)) throw dbad('shape', 'localstorage.json must be an object.');
+      if (tracks.length !== man.counts.tracks || playlists.length !== man.counts.playlists || kv.length !== man.counts.kv || Object.keys(ls).length !== man.counts.localStorage) throw rsBad('counts', 'The record counts in the manifest don’t match the data files.');
+      const iss = [];
+      for (const [v, nm] of [[tracks, 'tracks'], [playlists, 'playlists'], [kv, 'kv'], [ls, 'localStorage']]) rsScan(v, nm, iss);
+      if (iss.length) throw dbad('shape', 'The data contains content Plainsong never writes.', iss);
+
+      const ascending = (ids, what, code) => {
+        for (let i = 1; i < ids.length; i++) {
+          if (ids[i] === ids[i - 1]) throw rsBad(code, `Two ${what} share the same key.`, [ids[i]]);
+          if (!(ids[i - 1] < ids[i])) throw rsBad('order', `${what} must be in ascending store key order (the order Plainsong writes them).`, [ids[i]]);
+        }
+      };
+      tracks.forEach((t, i) => rsTrack(t, `tracks[${i}]`, iss, false, L));
+      if (iss.length) throw dbad('shape', 'Some songs have invalid fields.', iss);
+      const tids = tracks.map(t => t.id); ascending(tids, 'songs', 'duplicate-id');
+      playlists.forEach((p, i) => {
+        const add = m => { if (iss.length < 20) iss.push(`playlists[${i}]: ${m}`); };
+        if (!isObj(p)) return add('not an object');
+        if (typeof p.id !== 'string' || !p.id || p.id.length > L.maxKey) add('id must be a non-empty text');
+        if (typeof p.name !== 'string') add('name must be text');
+        if (!Array.isArray(p.ids) || !p.ids.every(x => typeof x === 'string')) add('ids must be a list of song ids');
+        if (p.created !== undefined && !(isNum(p.created) && p.created >= 0)) add('created must be a non-negative number');
+      });
+      if (iss.length) throw dbad('shape', 'Some playlists are invalid.', iss);
+      ascending(playlists.map(p => p.id), 'playlists', 'duplicate-id');
+
+      kv.forEach((x, i) => {
+        if (!isObj(x) || typeof x.key !== 'string' || !x.key || x.key.length > L.maxKey || !Object.prototype.hasOwnProperty.call(x, 'value') || Object.keys(x).length !== 2) { if (iss.length < 20) iss.push(`kv[${i}]: must be {key, value}`); }
+      });
+      if (iss.length) throw dbad('shape', 'Some saved settings entries are invalid.', iss);
+      const secrets = kv.filter(x => isSecretKey(x.key)).map(x => x.key);
+      if (secrets.length) throw dbad('secret', 'This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainsong backup.', secrets.slice(0, 8));
+      ascending(kv.map(x => x.key), 'saved settings', 'duplicate-key');
+      for (const x of kv) { if (x.key === 'session') rsSession(x.value, iss, L); else if (x.key === 'hist') rsHist(x.value, iss, L); }
+      if (iss.length) throw dbad('shape', 'The saved session or history is invalid.', iss);
+      for (const k of Object.keys(ls)) {
+        if (!BACKUP.lsAllow.includes(k)) throw dbad('localstorage', 'The file carries a browser-storage key Plainsong doesn’t restore, so it won’t be read.', [k]);
+        if (k === 'ps-theme' && ls[k] !== 'light' && ls[k] !== 'dark') throw dbad('localstorage', 'ps-theme must be "light" or "dark".');
+      }
+
+      // ---- audio bytes ----
+      for (let i = 0; i < blobEntries.length; i++) {
+        stop(); const crc = await crcOf(blobEntries[i]); stop();
+        if (crc !== blobEntries[i].crc) throw rsBad('crc', 'An audio file in the backup is damaged (checksum mismatch).', [`${blobEntries[i].name} (${man.blobs[i].key})`]);
+      }
+
+      // ---- cross references ----
+      const tset = new Set(tids), have = new Map(man.blobs.map((b, i) => [b.key, blobEntries[i]]));
+      const missingLocal = tracks.filter(t => t.kind === 'local' && !(have.has(t.id) && have.get(t.id).size > 0)).map(t => t.id);
+      const problemIds = new Set(man.problems.map(x => x.id));
+      if (man.complete && missingLocal.length) throw rsBad('reference', 'The backup says it is complete, but some songs have no audio in it.', missingLocal.slice(0, 8));
+      if (!man.complete && missingLocal.some(id => !problemIds.has(id))) throw rsBad('reference', 'The backup is marked incomplete but doesn’t account for every song without audio.', missingLocal.filter(id => !problemIds.has(id)).slice(0, 8));
+      const orphans = man.blobs.map(b => b.key).filter(k => !tset.has(k));
+      const warnings = man.warnings.map(w => 'Backup note: ' + w);
+      const dangling = playlists.reduce((s, p) => s + p.ids.filter(id => !tset.has(id)).length, 0);
+      if (dangling) warnings.push(`${dangling} playlist entr${dangling === 1 ? 'y points' : 'ies point'} to songs not in this backup (kept as they are)`);
+      const sess = (kv.find(x => x.key === 'session') || {}).value, hist = (kv.find(x => x.key === 'hist') || {}).value;
+      const blobs = man.blobs.map((b, i) => {
+        const bl = slice(blobEntries[i], b.type);
+        if (bl.type !== b.type || bl.size !== b.bytes) throw rsBad('blob-type', 'An audio entry couldn’t be exposed with its exact size and MIME type.', [b.key]);
+        return { key: b.key, size: b.bytes, type: b.type, crc32: b.crc32, blob: bl };
+      });
+      const pkg = {
+        man, complete: man.complete, tracks, playlists, kv, ls, blobs, orphans, missingLocal, warnings,
+        summary: {
+          createdAt: man.createdAt, generator: man.generator, complete: man.complete, formatVersion: man.formatVersion,
+          local: tracks.filter(t => t.kind === 'local').length, web: tracks.filter(t => t.kind === 'web').length, playlists: playlists.length, kv: kv.length,
+          audioFiles: blobs.length, audioBytes, orphans: orphans.length, queue: sess && Array.isArray(sess.queue) ? sess.queue.length : 0, hasSession: !!sess, history: Array.isArray(hist) ? hist.length : 0,
+          theme: ls['ps-theme'] || null, fileBytes: file.size, problems: man.problems.length
+        }
+      };
+      prog('Backup checked', 1);
+      if (!man.complete && !opts.allowIncomplete) throw Object.assign(rsBad('incomplete', `This backup is marked INCOMPLETE: ${man.problems.length} song${man.problems.length === 1 ? ' has' : 's have'} no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file itself is intact.)`, man.problems.slice(0, 8).map(x => `${x.title}: ${x.reason}`)), { pkg });
+      return pkg;
+    }
+
+    /* ---- safe restore (Phase 2B) ----
+       Replace-only. Order: validate the whole file (readBackupZip, read-only) -> escaped preview -> separate destructive
+       confirmation -> pause + flush + lock -> ONE read-write transaction over all four stores, verified inside the
+       transaction (abort = full rollback) -> rebuild app state without autoplay -> theme (localStorage, separate step). */
+    let RS = null;
+    const rsFail = (title, msg, lines) => bkFail(title, msg, lines);
+    const rsErr = e => (e && e.message) || String(e);
+    function rsDialog(html, buttons) {
+      return new Promise(res => {
+        if (RS) RS.running = false;
+        const d = bkShow(`${html}<div class="btn-row end">${buttons.map(b => `<button class="btn${b.primary ? ' primary' : ''}${b.danger ? ' danger' : ''}" data-bk="${b.id}"${b.focus ? ' data-focus' : ''}${b.disabled ? ' disabled' : ''}>${esc(b.label)}</button>`).join('')}</div>`);
+        d.oncancel = null; d.onclose = () => { if (!d.open) { d.onclose = null; res('no'); } };
+        d.querySelectorAll('[data-bk]').forEach(b => { b.onclick = () => { if (b.disabled) return; d.onclose = null; res(b.dataset.bk); }; });
+        const f = d.querySelector('[data-focus]') || d.querySelector('[data-bk]'); if (f) f.focus();
+      });
+    }
+    const fnv = str => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; };
+    // keys of every store + audio sizes/MIME + a digest of the records, from ONE read-only transaction
+    function rsFingerprint() {
+      return new Promise((resolve, reject) => {
+        let tx; try { tx = DB.db.transaction(BACKUP.stores, 'readonly'); } catch (e) { reject(e); return; }
+        const o = { keys: {}, digest: {}, blobs: [], audioBytes: 0 };
+        for (const n of ['tracks', 'playlists', 'kv']) {
+          const k = tx.objectStore(n).getAllKeys(); k.onsuccess = () => { o.keys[n] = k.result; };
+          const v = tx.objectStore(n).getAll(); v.onsuccess = () => { o.digest[n] = fnv(JSON.stringify(v.result)); };
+        }
+        const r = tx.objectStore('blobs').openCursor();
+        r.onsuccess = () => { const c = r.result; if (c) { const b = c.value; o.blobs.push([c.key, b && b.size, b && b.type]); o.audioBytes += (b && b.size) || 0; c.continue(); } };
+        tx.oncomplete = () => resolve(o); tx.onerror = tx.onabort = () => reject(tx.error || new Error('read failed'));
+      });
+    }
+    const rsSame = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+    function rsHosts(pkg) {
+      const hs = new Set(), add = u => { if (typeof u === 'string' && isHttpUrl(u)) hs.add(new URL(u).host); };
+      const t = x => { add(x.url); add(x.cover); add(x.link); };
+      pkg.tracks.forEach(t); for (const x of pkg.kv) { if (x.key === 'session' && Array.isArray(x.value.webs)) x.value.webs.forEach(t); if (x.key === 'hist') x.value.forEach(h => h.snap && t(h.snap)); }
+      return [...hs].sort();
+    }
+    const rsRows = rows => `<dl class="bk-sum">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+    async function rsQuota(need) {
+      try { if (navigator.storage && navigator.storage.estimate) { const e = await navigator.storage.estimate(); if (e && isFinite(e.quota) && isFinite(e.usage) && need > e.quota - e.usage) return `The browser reports about ${bytes(Math.max(0, e.quota - e.usage))} of free storage, less than the ${bytes(need)} this backup holds. The restore may fail; if it does your current library stays as it is.`; } } catch (e) { }
+      return '';
+    }
+    async function rsPreviewHtml(pkg, file, cur) {
+      const s = pkg.summary, when = new Date(s.createdAt), hosts = rsHosts(pkg), warn = pkg.warnings.slice(), q = await rsQuota(s.audioBytes);
+      if (q) warn.push(q);
+      if (hosts.length) warn.push(`This backup refers to web addresses on ${hosts.length} site${hosts.length === 1 ? '' : 's'}: ${hosts.slice(0, 6).join(', ')}${hosts.length > 6 ? ', …' : ''}. Plainsong contacts them only when you view or play those web songs.`);
+      return `<h3>Restore preview</h3><p class="note bk-note">Nothing has been changed yet. This is what the backup file contains.</p>` + rsRows([
+        ['File', file.name], ['File size', bytes(file.size)], ['Made', isFinite(when) ? when.toLocaleString() : s.createdAt], ['Made by', `${s.generator}, backup format ${s.formatVersion}`],
+        ['Songs', `${s.local + s.web} (${s.local} with audio, ${s.web} saved web)`], ['Playlists', String(s.playlists)], ['Audio files', `${s.audioFiles}, ${bytes(s.audioBytes)}${s.orphans ? `, ${s.orphans} with no song entry (kept)` : ''}`],
+        ['Queue and settings', s.hasSession ? `saved, queue of ${s.queue}` : 'none'], ['Play history', s.history ? `${s.history} plays` : 'none'], ['Theme', s.theme || 'not in this backup, yours stays as it is']
+      ]) + `<p class="note bk-note bk-h">Your library now</p>` + rsRows([['Songs', String(cur.tracks)], ['Playlists', String(cur.playlists)], ['Audio files', cur.blobs ? `${cur.blobs}, ${bytes(cur.audioBytes)}` : '0']]) + bkLines(warn);
+    }
+    function rsConfirmHtml(pkg, cur) {
+      const s = pkg.summary, empty = !cur.tracks && !cur.playlists && !cur.blobs;
+      const body = empty ? `<p class="note bk-note">Your library is empty, so nothing will be lost. The backup’s ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} will be added.</p>`
+        : `<p class="note bk-note">This <b>permanently deletes</b> everything in this browser’s Plainsong library and replaces it with the backup. There is no merge and no undo.</p>${bkLines([`Deleted: ${cur.tracks} song${cur.tracks === 1 ? '' : 's'}, ${cur.playlists} playlist${cur.playlists === 1 ? '' : 's'}, ${cur.blobs} audio file${cur.blobs === 1 ? '' : 's'} (${bytes(cur.audioBytes)}), your queue, play history and saved settings`, `Restored instead: ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'}, ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)})`, 'Kept: logins or keys other services saved in this browser (a backup never contains them)', 'Playback stops; nothing starts playing afterwards'])}`;
+      return `<h3>Replace your library?</h3>${body}<p class="note bk-note">Close any other Plainsong tabs first. The restore is all-or-nothing: if anything fails, your current library stays exactly as it is.</p>${empty ? '' : '<label class="bk-check"><input type="checkbox" id="rsAck"><span>I understand my current library will be erased and replaced.</span></label>'}`;
+    }
+    async function rsCurrent() { const f = await rsFingerprint(); return { tracks: f.keys.tracks.length, playlists: f.keys.playlists.length, blobs: f.blobs.length, audioBytes: f.audioBytes }; }
+
+    // ONE read-write transaction over all four stores. Everything is queued up front (no awaits inside), verified inside
+    // the transaction, and any throw / request error / mismatch aborts = rollback of every store.
+    function rsCommit(pkg) {
+      return new Promise((resolve, reject) => {
+        let tx, why = null, verified = false;
+        try { tx = DB.db.transaction(BACKUP.stores, 'readwrite'); } catch (e) { reject(e); return; }
+        tx.oncomplete = () => { if (verified) resolve(); else reject(why || new Error('The database transaction ended before the restore was verified')); };
+        tx.onabort = () => reject(why || tx.error || new Error('The database transaction was aborted'));
+        tx.onerror = () => { };
+        const fail = e => { why = why || e; try { tx.abort(); } catch (_) { } };
+        try {
+          const st = n => tx.objectStore(n), keep = new Set(pkg.kv.map(x => x.key));
+          st('tracks').clear(); st('playlists').clear(); st('blobs').clear();
+          pkg.tracks.forEach(t => st('tracks').put(t)); pkg.playlists.forEach(p => st('playlists').put(p));
+          pkg.blobs.forEach(b => st('blobs').put(b.blob, b.key)); pkg.kv.forEach(x => st('kv').put(x.value, x.key));
+          const cur = st('kv').openCursor(); const got = {}; let waiting = 4;
+          const check = () => {
+            if (--waiting) return;
+            try {
+              const bad = m => { throw new Error('Verification failed: ' + m); };
+              if (JSON.stringify(got.tracks) !== JSON.stringify(pkg.tracks)) bad('songs differ from the backup');
+              if (JSON.stringify(got.playlists) !== JSON.stringify(pkg.playlists)) bad('playlists differ from the backup');
+              if (JSON.stringify(got.blobs) !== JSON.stringify(pkg.blobs.map(b => [b.key, b.size, b.type]))) bad('audio files differ from the backup (key, size or type)');
+              const mine = new Map(got.kv.map(x => [x.key, x.value]));
+              for (const x of pkg.kv) if (!mine.has(x.key) || JSON.stringify(mine.get(x.key)) !== JSON.stringify(x.value)) bad('saved settings differ from the backup');
+              for (const k of mine.keys()) if (!keep.has(k) && !isSecretKey(k)) bad('an unexpected saved setting remains');
+              verified = true;
+            } catch (e) { fail(e); }
+          };
+          cur.onsuccess = () => {
+            const c = cur.result;
+            if (c) { if (!keep.has(c.key) && !isSecretKey(c.key)) c.delete(); c.continue(); return; }
+            const a = st('tracks').getAll(); a.onsuccess = () => { got.tracks = a.result; check(); };
+            const b = st('playlists').getAll(); b.onsuccess = () => { got.playlists = b.result; check(); };
+            got.kv = []; const k = st('kv').openCursor(); k.onsuccess = () => { const c2 = k.result; if (c2) { got.kv.push({ key: c2.key, value: c2.value }); c2.continue(); } else check(); };
+            got.blobs = []; const l = st('blobs').openCursor(); l.onsuccess = () => { const c3 = l.result; if (c3) { got.blobs.push([c3.key, c3.value && c3.value.size, c3.value && c3.value.type]); c3.continue(); } else check(); };
+          };
+        } catch (e) {
+          // the transaction already ended (aborted from outside): its abort event reports the real reason
+          if (e && (e.name === 'InvalidStateError' || e.name === 'TransactionInactiveError')) { try { tx.abort(); } catch (_) { } } else fail(e);
+        }
+      });
+    }
+
+    function rsTheme(pkg) {
+      const v = pkg.ls['ps-theme'];
+      if (!v) return 'This backup has no saved theme, so your theme setting was left as it is.';
+      store.set('ps-theme', v);
+      const kept = store.get('ps-theme') === v;
+      document.documentElement.dataset.theme = v; themeIcon();
+      return kept ? `Theme set to ${v}. (Saved separately from the library: browsers can’t include it in the database commit.)` : `The browser wouldn’t save the theme setting, so ${v} applies for this visit only. Your library itself was restored.`;
+    }
+    async function rsRebuild() {
+      S.loadTok++; S.epoch = (S.epoch || 0) + 1; S.sleep = null; // a sleep timer set before the restore must not stop the restored session later
+      for (const a of [aL, aW]) { try { a.pause(); a.removeAttribute('src'); a.load(); } catch (e) { } }
+      A = aL; if (S.objUrl) { try { URL.revokeObjectURL(S.objUrl); } catch (e) { } S.objUrl = null; }
+      S.tracks.clear(); S.cache.clear(); S.mem.clear(); S.archTracks = []; S.playlists = []; S.hist = [];
+      S.queue = []; S.orig = []; S.qi = -1; S.cur = null; S.counted = false; S.resume = null; S.errCount = 0; S.seeking = false; S.lists = [];
+      S.lyr = { id: null, lines: [], idx: -1 }; S.stack = []; S.view = { name: 'library' };   // Phase 2C: land on the Library (shows the restored songs, makes NO network request); the Home screen fetches public discover lists whenever it renders
+      abReset(); updateNowPlaying(null);
+      await hydrate(true, true);
+      applyEq(); saveSession.cancel(); saveHist.cancel(); S.lastSave = Date.now(); // nothing queued by the rebuild may overwrite the restored session
+      renderSide(); libStat(); render();
+      if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
+    }
+    async function applyRestore(pkg, status) {
+      status('Pausing playback and saving your latest changes…');
+      for (const a of [aL, aW]) { try { a.pause(); } catch (e) { } }
+      try { await settleSession(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Browser storage refused a write (${rsErr(e.bk ? { message: e.bk.msg } : e)}). Your library was not changed.`); }
+      DB.lock = true; S.restoring = true; saveSession.cancel(); saveHist.cancel(); // no await between flush and lock
+      let before; try { before = await rsFingerprint(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Your current library couldn’t be read (${rsErr(e)}), so it can’t be protected. It was not changed.`); }
+      status('Replacing your library. Keep this tab open…');
+      try { await rsCommit(pkg); }
+      catch (e) {
+        let same = false; try { same = rsSame(before, await rsFingerprint()); } catch (_) { }
+        throw rsFail('The restore failed and was rolled back', `${rsErr(e)}. ` + (same ? 'Checked afterwards: every store holds exactly the songs, playlists, audio files and settings it held before. Your library is unchanged.' : 'Plainsong could not re-check your library afterwards. Reload the page and look at your library before doing anything else.'));
+      }
+      const themeNote = rsTheme(pkg);
+      status('Rebuilding the screen…');
+      try { await rsRebuild(); }
+      catch (e) { throw rsFail('Restored, but the screen needs a reload', `The backup was written to browser storage completely, but refreshing the screen failed (${rsErr(e)}). Reload the page to see it. ${themeNote}`); }
+      DB.lock = false; S.restoring = false;
+      return { themeNote };
+    }
+    async function runRestore(file) {
+      if (S.restoreBusy) return;
+      if (S.backupBusy) { toast('A backup is running. Try the restore when it finishes.', 3200); return; }
+      if (S.importBusy) { toast('Wait for the import to finish, then restore.', 3200); return; }
+      S.restoreBusy = true; RS = { cancel: false, running: false };
+      try {
+        if (!DB.ok) throw rsFail('Restore isn’t available in this browser mode', 'Your library is only held in memory right now (browser storage is unavailable or blocked, as in some private windows), so a restored library would disappear when you close the tab. Nothing was changed.');
+        const ui = bkProgress(RS, 'Checking backup file', 'Backup check progress');
+        const pkg = await readBackupZip(file, { ctl: RS, onProgress: ui });
+        let cur = await rsCurrent();
+        const go = await rsDialog(await rsPreviewHtml(pkg, file, cur), [{ id: 'no', label: 'Cancel', focus: true }, { id: 'go', label: 'Continue…', primary: true }]);
+        if (go !== 'go') throw new BackupCancel();
+        for (; ;) {
+          const p = rsDialog(rsConfirmHtml(pkg, cur), [{ id: 'no', label: 'Cancel', focus: true }, ...(cur.tracks || cur.playlists || cur.blobs ? [{ id: 'backup', label: 'Back up current library first' }] : []), { id: 'replace', label: 'Replace library', danger: true, disabled: !!(cur.tracks || cur.playlists || cur.blobs) }]);
+          const ack = $('#rsAck'), rb = $('#dlg [data-bk="replace"]');
+          if (ack) ack.onchange = () => { rb.disabled = !ack.checked; };
+          const ans = await p;
+          if (ans === 'backup') { await runBackup({ fromRestore: true }); cur = await rsCurrent(); continue; }
+          if (ans !== 'replace') throw new BackupCancel();
+          break;
+        }
+        const d = bkShow(`<h3>Restoring your library</h3><p class="note bk-note" id="rsMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar"><i style="width:100%"></i></div><p class="note bk-note">This can’t be cancelled once it starts, but it is all-or-nothing.</p>`);
+        d.onclose = null; d.oncancel = e => e.preventDefault();
+        const r = await applyRestore(pkg, t => { const m = $('#rsMsg'); if (m) m.textContent = t; });
+        const s = pkg.summary;
+        await bkInfo('Library restored', `${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)}) are now in this browser. Nothing is playing; press play when you are ready. ${r.themeNote}`);
+      } catch (e) {
+        DB.lock = false; S.restoring = false; // never leave writes paused while a message is on screen
+        if (e instanceof BackupCancel) { bkClose(); toast('Restore cancelled. Your library was not changed.', 3600); }
+        else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
+        else { console.error(e); await bkInfo('Restore failed', `Something unexpected went wrong (${rsErr(e)}). Reload the page and check your library before doing anything else.`); }
+      } finally { S.restoreBusy = false; S.restoring = false; DB.lock = false; RS = null; }
     }
 
     const tidOf = a => { const r = a.closest('[data-tid]'); return r && r.dataset.tid; };
@@ -1201,7 +2297,11 @@
       switch (d.act) {
         case 'import': $('#fileIn').click(); break;
         case 'importDir': $('#dirIn').click(); break;
+        case 'backup': runBackup(); break;
+        case 'restore': if (!S.restoreBusy) $('#restoreIn').click(); break;
         case 'like': toggleLike(tidOf(a)); break;
+        case 'rateSong': rateAct(tidOf(a), +d.v); break;   // NOT 'rate': that is the playback-speed preset action below
+        case 'libClear': S.view.filter = ''; S.view.rate = 'any'; render(true); break;
         case 'more': { const r = a.getBoundingClientRect(); const c = a.closest('[data-ctx]'); openTrackMenu(tidOf(a), r.right, r.bottom, c ? c.dataset.ctx : ''); break; }
         case 'playList': { const ids = S.lists[+d.list]; if (ids && ids.length) playList(ids, 0, { shuffle: !!d.shuffle }); break; }
         case 'libTab': S.view.tab = d.tab; render(); break;
@@ -1251,6 +2351,19 @@
       const ll = e.target.closest('.ll[data-t]'); if (ll) { A.currentTime = +ll.dataset.t; return; }
       const r = e.target.closest('[data-tid][data-i]'); if (r) playFromList(r);
     });
+    // Phase 4: a focused star group owns its keys (the global shortcuts would seek or change the volume). Arrow keys/Home/End only MOVE focus; 1-5 set, 0/Delete/Backspace clear;
+    // Space and Enter activate the focused star through its normal click.
+    document.addEventListener('keydown', e => {
+      const b = e.target; if (!b || !b.closest || e.ctrlKey || e.metaKey || e.altKey) return;
+      const g = b.closest('.rate'); if (!g || !b.dataset || !b.dataset.v) return;
+      const k = e.key, btns = [...g.querySelectorAll('button')], i = btns.indexOf(b);
+      let to = -1;
+      if (k === 'ArrowRight' || k === 'ArrowUp') to = Math.min(4, i + 1); else if (k === 'ArrowLeft' || k === 'ArrowDown') to = Math.max(0, i - 1); else if (k === 'Home') to = 0; else if (k === 'End') to = 4;
+      if (to >= 0) { e.preventDefault(); e.stopPropagation(); btns.forEach((x, j) => { x.tabIndex = j === to ? 0 : -1; }); btns[to].focus(); return; }
+      if (/^[1-5]$/.test(k) || k === '0' || k === 'Delete' || k === 'Backspace') {
+        e.preventDefault(); e.stopPropagation(); const row = g.closest('[data-tid]'); if (row) applyRating(row.dataset.tid, /^[1-5]$/.test(k) ? +k : 0);
+      }
+    }, true);
     document.addEventListener('keydown', e => {
       const tg = e.target, typing = tg.matches && tg.matches('input,textarea,select');
       if (e.key === 'Escape') { closeMenu(); closeSpeed(); return; }
@@ -1301,6 +2414,7 @@
     seekEl.addEventListener('change', () => { const t = curT(); const d = isFinite(A.duration) && A.duration > 0 ? A.duration : (t && t.duration) || 0; if (d) A.currentTime = seekEl.value / 1000 * d; S.seeking = false; });
     $('#fileIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
     $('#dirIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
+    $('#restoreIn').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) runRestore(f); });
     document.addEventListener('input', e => {
       const t = e.target;
       if (t.id === 'libFilter') { S.view.filter = t.value; fillSongs(); }
@@ -1315,6 +2429,7 @@
     document.addEventListener('change', e => {
       const t = e.target;
       if (t.id === 'libSort') { S.view.sort = t.value; fillSongs(); }
+      else if (t.id === 'libRate') { S.view.rate = t.value; fillSongs(); }
       else if (t.classList && t.classList.contains('spd-pitch')) { S.pitch = t.checked; applyRate(); syncSpeed(); saveSession(); }
       else if (t.id === 'eqPreset' && EQ_PRESETS[t.value]) {
         S.eqPreset = t.value; S.eq = EQ_PRESETS[t.value].slice(); applyEq(); renderNP(); saveSession();
@@ -1348,8 +2463,20 @@
       S.qi = S.queue.length ? Math.max(0, S.queue.indexOf(curId)) : -1;
       applyVol(); applyRate(); syncSpeed(); syncModes();
       $$('#npTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === S.npTab));
-      if (S.queue.length) { S.resume = ss.time || 0; loadCurrent(false); }
+      let loading;
+      if (S.queue.length) { S.resume = ss.time || 0; loading = loadCurrent(false); }
       if (ss.np && innerWidth > 1100) document.body.classList.add('np-open');
+      return loading;
+    }
+    // Load the library from IndexedDB into S. Used by boot (quiet on failure, as before) and by restore (strict + awaits the load).
+    async function hydrate(strict, reset) {
+      try {
+        const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
+        tracks.forEach(t => S.tracks.set(t.id, t));
+        S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
+        S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
+        if (ss || reset) { const loading = restore(ss || {}); if (reset) await loading; }
+      } catch (e) { if (strict) throw e; }
     }
     (async function boot() {
       $$('[data-ico]').forEach(el => { el.innerHTML = ico(el.dataset.ico, +el.dataset.s || 20); });
@@ -1358,15 +2485,7 @@
       const th = store.get('ps-theme'); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th;
       themeIcon(); applyVol(); syncModes(); syncLikeBtn();
       try { await DB.open(); } catch (e) { toast('This browser mode can’t save a library, so imports last only for this visit.', 7000); }
-      if (DB.ok) {
-        try {
-          const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
-          tracks.forEach(t => S.tracks.set(t.id, t));
-          S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
-          S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
-          if (ss) restore(ss);
-        } catch (e) { }
-      }
+      if (DB.ok) await hydrate();
       renderSide(); libStat(); render();
       if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
     })();
