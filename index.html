@@ -98,14 +98,21 @@
         <button class="play-btn" id="playBtn" aria-label="Play"></button>
         <button class="icon-btn" id="nextBtn" aria-label="Next"></button>
         <button class="icon-btn" id="repeatBtn" aria-label="Repeat" aria-pressed="false"></button>
+        <button class="icon-btn ab-btn" id="abBtn" aria-label="Set loop start" aria-pressed="false" title="Set loop start (A)">A–B</button>
       </div>
       <div class="seek">
         <span class="mono" id="tCur">0:00</span>
-        <input class="rng" id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+        <div class="seekwrap" id="seekWrap">
+          <input class="rng" id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          <i class="abband" id="sbBand" hidden></i>
+          <i class="abm a" id="sbA" hidden title="Loop start"></i>
+          <i class="abm b" id="sbB" hidden title="Loop end"></i>
+        </div>
         <span class="mono" id="tDur">0:00</span>
       </div>
     </div>
     <div class="bar-right">
+      <button class="spd-btn" id="speedBtn" aria-label="Playback speed" aria-haspopup="true" aria-expanded="false" title="Playback speed ( [ and ] )">1×</button>
       <div class="vol">
         <button class="icon-btn" id="muteBtn" aria-label="Mute"></button>
         <input class="rng" id="vol" type="range" min="0" max="100" value="80" aria-label="Volume">
@@ -118,6 +125,7 @@
   <input type="file" id="fileIn" accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav" multiple hidden>
   <input type="file" id="dirIn" webkitdirectory multiple hidden>
   <div class="menu" id="menu" hidden></div>
+  <div class="pop" id="speedPop" hidden></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="drop" id="drop" hidden>
     <div>Drop audio files or folders to add them to your library</div>
@@ -301,7 +309,7 @@
       mem: new Map(),
       playlists: [], hist: [],
       queue: [], orig: [], qi: -1, cur: null, shuffle: false, repeat: 0,
-      vol: .8, muted: false, rate: 1, eq: Array(10).fill(0), eqPreset: 'Flat',
+      vol: .8, muted: false, rate: 1, pitch: true, ab: { a: null, b: null }, eq: Array(10).fill(0), eqPreset: 'Flat',
       view: { name: 'home' }, stack: [], lists: [], vtok: 0, npTab: 'queue',
       sleep: null, counted: false, seeking: false, loadTok: 0, errCount: 0, lastSave: 0, resume: null, objUrl: null,
       lyr: { id: null, lines: [], idx: -1 }, archTracks: []
@@ -386,15 +394,119 @@
       $('#vol').value = Math.round(S.vol * 100); $('#vol').style.setProperty('--p', Math.round(S.vol * 100) + '%');
       $('#muteBtn').innerHTML = ico(S.muted || S.vol === 0 ? 'mute' : 'vol');
     }
-    function applyRate() { [aL, aW].forEach(a => { a.defaultPlaybackRate = S.rate; a.playbackRate = S.rate; a.preservesPitch = true; a.mozPreservesPitch = true; a.webkitPreservesPitch = true; }); }
+    function applyRate() { [aL, aW].forEach(a => { a.defaultPlaybackRate = S.rate; a.playbackRate = S.rate; a.preservesPitch = S.pitch; a.mozPreservesPitch = S.pitch; a.webkitPreservesPitch = S.pitch; }); }
     function applyEq() { if (G) G.bands.forEach((b, i) => b.gain.value = S.eq[i] || 0); }
+
+    /* ---- playback speed ---- */
+    const RATE_MIN = .25, RATE_MAX = 3, RATE_PRESETS = [.5, .75, 1, 1.25, 1.5, 2];
+    const rateTxt = r => `${+r.toFixed(2)}×`;
+    const ratePct = r => ((r - RATE_MIN) / (RATE_MAX - RATE_MIN) * 100) + '%';
+    function setRate(v) {
+      S.rate = clamp(Math.round(v * 20) / 20, RATE_MIN, RATE_MAX);
+      applyRate(); syncSpeed(); saveSession();
+    }
+    function syncSpeed() {
+      const btn = $('#speedBtn'); btn.textContent = rateTxt(S.rate); btn.classList.toggle('on', S.rate !== 1);
+      $$('.spd-slider').forEach(s => { s.value = S.rate; s.style.setProperty('--p', ratePct(S.rate)); });
+      $$('.spd-val').forEach(x => { x.textContent = rateTxt(S.rate); });
+      $$('.spd [data-act="rate"]').forEach(c => c.classList.toggle('on', +c.dataset.v === S.rate));
+      $$('.spd-pitch').forEach(c => { c.checked = S.pitch; });
+    }
+    function speedUI() {
+      return `<div class="spd">
+        <div class="spd-top"><span class="spd-val">${rateTxt(S.rate)}</span><button class="link" data-act="rateReset">Reset to 1×</button></div>
+        <input class="rng spd-slider" type="range" min="${RATE_MIN}" max="${RATE_MAX}" step="0.05" value="${S.rate}" style="--p:${ratePct(S.rate)}" aria-label="Playback speed">
+        <div class="chips">${RATE_PRESETS.map(r => `<button class="chip${r === S.rate ? ' on' : ''}" data-act="rate" data-v="${r}">${r}×</button>`).join('')}</div>
+        <label class="chk"><input type="checkbox" class="spd-pitch"${S.pitch ? ' checked' : ''}> Keep original pitch</label>
+      </div>`;
+    }
+    function openSpeed() {
+      const p = $('#speedPop');
+      p.innerHTML = `<div class="pop-h mono dim">Playback speed</div>${speedUI()}`; p.hidden = false;
+      const r = $('#speedBtn').getBoundingClientRect(), w = p.offsetWidth;
+      p.style.left = clamp(r.right - w, 8, innerWidth - w - 8) + 'px'; p.style.bottom = (innerHeight - r.top + 8) + 'px';
+      $('#speedBtn').setAttribute('aria-expanded', 'true');
+      const sl = $('.spd-slider', p); if (sl) sl.focus();
+    }
+    function closeSpeed() {
+      const p = $('#speedPop'); if (p.hidden) return;
+      p.hidden = true; p.innerHTML = ''; $('#speedBtn').setAttribute('aria-expanded', 'false');
+    }
+    const toggleSpeed = () => { if ($('#speedPop').hidden) openSpeed(); else closeSpeed(); };
+
+    /* ---- A-B loop ---- */
+    const abActive = () => S.ab.a != null && S.ab.b != null && S.ab.b > S.ab.a;
+    const curDur = () => { const t = curT(); return isFinite(A.duration) && A.duration > 0 ? A.duration : (t && t.duration) || 0; };
+    const fmtMs = s => { const k = Math.round(Math.max(0, s) * 10), m = Math.floor(k / 600); return `${m}:${((k % 600) / 10).toFixed(1).padStart(4, '0')}`; };
+    let abRaf = 0;
+    function abCheck() {
+      if (!abActive()) return;
+      const ct = A.currentTime;
+      if (ct >= S.ab.b && ct < S.ab.b + 1.2) A.currentTime = S.ab.a;
+    }
+    function abTick() { abRaf = 0; if (!abActive() || A.paused) return; abCheck(); abRaf = requestAnimationFrame(abTick); }
+    function abKick() { if (!abRaf && abActive() && !A.paused) abRaf = requestAnimationFrame(abTick); }
+    function abReset() { S.ab = { a: null, b: null }; syncAB(); }
+    function abCycle() {
+      if (!S.cur) { toast('Play a song first', 1600); return; }
+      const ab = S.ab, ct = Math.round(A.currentTime * 100) / 100;
+      if (ab.a == null) { ab.a = ct; toast(`Loop start set at ${fmtMs(ct)}`, 1600); }
+      else if (ab.b == null) {
+        if (ct <= ab.a + .3) { toast('Play on a little further, then set the loop end', 2200); return; }
+        ab.b = ct; A.currentTime = ab.a; toast(`Looping ${fmtMs(ab.a)} to ${fmtMs(ab.b)}`, 1800);
+      } else { abReset(); toast('Loop cleared', 1400); return; }
+      syncAB();
+    }
+    function abSet(which) {
+      if (!S.cur) { toast('Play a song first', 1600); return; }
+      const ab = S.ab, ct = Math.round(A.currentTime * 100) / 100;
+      if (which === 'a') { if (ab.b != null && ct >= ab.b - .1) { toast('The loop start must come before the end', 2200); return; } ab.a = ct; }
+      else { if (ab.a == null) { toast('Set the loop start first', 1800); return; } if (ct <= ab.a + .1) { toast('The loop end must come after the start', 2200); return; } ab.b = ct; }
+      syncAB();
+    }
+    function abNudge(which, dt) {
+      const ab = S.ab, d = curDur(); if (ab[which] == null) return;
+      let v = Math.round((ab[which] + dt) * 100) / 100;
+      v = which === 'a' ? clamp(v, 0, ab.b != null ? ab.b - .1 : (d || v)) : clamp(v, ab.a + .1, d || v);
+      ab[which] = v; syncAB();
+      if (abActive()) A.currentTime = which === 'a' ? ab.a : Math.max(ab.a, ab.b - 1.5);
+    }
+    function syncAB() {
+      const ab = S.ab, btn = $('#abBtn'), full = abActive();
+      btn.textContent = ab.a != null && !full ? 'A–' : 'A–B';
+      btn.classList.toggle('on', ab.a != null); btn.classList.toggle('live', full);
+      btn.setAttribute('aria-pressed', ab.a != null);
+      const tip = full ? 'Clear A–B loop (A)' : ab.a != null ? 'Set loop end (A)' : 'Set loop start (A)';
+      btn.title = tip; btn.setAttribute('aria-label', tip);
+      const ta = $('#abA'), tb = $('#abB');
+      if (ta) ta.textContent = ab.a != null ? fmtMs(ab.a) : '–:––';
+      if (tb) tb.textContent = ab.b != null ? fmtMs(ab.b) : '–:––';
+      drawAB(); abKick();
+    }
+    function drawAB() {
+      const d = curDur(), ab = S.ab, pos = v => (d ? clamp(v / d, 0, 1) : 0);
+      const mark = (el, on, x) => { el.hidden = !on; if (on) el.style.setProperty('--x', x); };
+      mark($('#sbA'), ab.a != null && d > 0, pos(ab.a)); mark($('#sbB'), ab.b != null && d > 0, pos(ab.b));
+      const band = $('#sbBand'), on = abActive() && d > 0; band.hidden = !on;
+      if (on) { band.style.setProperty('--x', pos(ab.a)); band.style.setProperty('--y', pos(ab.b)); }
+    }
+    function abUI() {
+      const ab = S.ab;
+      const pt = (k, L) => `<div class="ab-pt"><span class="ab-k mono">${L}</span>
+        <button class="icon-btn" data-act="abNudge" data-w="${k}" data-dt="-0.1" aria-label="Move ${L} 0.1 seconds earlier">−</button>
+        <span class="ab-t mono" id="ab${L}">${ab[k] != null ? fmtMs(ab[k]) : '–:––'}</span>
+        <button class="icon-btn" data-act="abNudge" data-w="${k}" data-dt="0.1" aria-label="Move ${L} 0.1 seconds later">+</button></div>`;
+      return `<div class="ab">${pt('a', 'A')}${pt('b', 'B')}</div>
+        <div class="btn-row"><button class="btn" data-act="abSet" data-w="a">Set A here</button><button class="btn" data-act="abSet" data-w="b">Set B here</button><button class="btn" data-act="abClear">Clear</button></div>
+        <p class="note">Press <span class="mono">A</span> to mark the start, again for the end, and again to clear. Nudge by 0.1 s to land on the beat. The loop clears when the song changes.</p>`;
+    }
 
     async function load(t, autoplay) {
       const my = ++S.loadTok;
       const next = t.kind === 'local' ? aL : aW, prev = A;
       A = next;
       if (prev !== next) { prev.pause(); prev.removeAttribute('src'); try { prev.load(); } catch (e) { } }
-      S.cur = t.id; S.counted = false;
+      S.cur = t.id; S.counted = false; abReset();
       updateNowPlaying(t);
       if (t.kind === 'local') {
         const blob = await getBlob(t.id);
@@ -480,6 +592,7 @@
     function purgeFromQueue(id) { for (let i = S.queue.length - 1; i >= 0; i--) if (S.queue[i] === id) removeFromQueue(i); }
 
     function onTime(el) {
+      if (el === A) abCheck();
       if (el !== A) return;
       const t = curT(); const d = isFinite(A.duration) && A.duration > 0 ? A.duration : (t && t.duration) || 0;
       const seek = $('#seek');
@@ -510,6 +623,7 @@
     }
     function onEnded() {
       if (S.sleep && S.sleep.end) { S.sleep = null; toast('Sleep timer: playback stopped'); renderNPIf('sound'); return; }
+      if (abActive()) { A.currentTime = S.ab.a; A.play().catch(() => { }); return; }
       advance(1, true);
     }
     [aL, aW].forEach(el => {
@@ -518,10 +632,10 @@
         if (el !== A) return; const t = curT();
         if (t && isFinite(el.duration) && el.duration > 0 && Math.abs((t.duration || 0) - el.duration) > 1) { t.duration = el.duration; if (S.tracks.has(t.id)) dbPut('tracks', t); }
         if (S.resume != null) { try { el.currentTime = S.resume; } catch (e) { } S.resume = null; }
-        onTime(el);
+        drawAB(); onTime(el);
       });
       el.addEventListener('progress', () => onProgress(el));
-      el.addEventListener('play', () => { if (el !== A) return; if (el === aL) ensureGraph(); setPlaying(true); });
+      el.addEventListener('play', () => { if (el !== A) return; if (el === aL) ensureGraph(); setPlaying(true); abKick(); });
       el.addEventListener('pause', () => { if (el === A) setPlaying(false); });
       el.addEventListener('ended', () => { if (el === A) onEnded(); });
       el.addEventListener('waiting', () => { if (el === A) document.body.classList.add('buffering'); });
@@ -549,7 +663,7 @@
 
     const saveSession = debounce(() => {
       const webs = [...new Set(S.queue)].map(T).filter(t => t && t.kind === 'web' && !S.tracks.has(t.id)).map(strip);
-      dbPut('kv', { queue: S.queue, orig: S.orig, qi: S.qi, time: A.currentTime || 0, shuffle: S.shuffle, repeat: S.repeat, vol: S.vol, muted: S.muted, rate: S.rate, eq: S.eq, eqPreset: S.eqPreset, np: document.body.classList.contains('np-open'), npTab: S.npTab, webs }, 'session');
+      dbPut('kv', { queue: S.queue, orig: S.orig, qi: S.qi, time: A.currentTime || 0, shuffle: S.shuffle, repeat: S.repeat, vol: S.vol, muted: S.muted, rate: S.rate, pitch: S.pitch, eq: S.eq, eqPreset: S.eqPreset, np: document.body.classList.contains('np-open'), npTab: S.npTab, webs }, 'session');
     }, 700);
     const saveHist = debounce(() => dbPut('kv', S.hist, 'hist'), 1200);
     const savePlaylists = () => Promise.all(S.playlists.map(p => dbPut('playlists', p)));
@@ -752,12 +866,14 @@
     function renderSound(b) {
       const names = Object.keys(EQ_PRESETS).concat(S.eqPreset === 'Custom' ? ['Custom'] : []);
       b.innerHTML = `<div class="snd">
+    <h3>Speed</h3>
+    ${speedUI()}
+    <h3>A–B loop</h3>
+    ${abUI()}
     <h3>Equalizer</h3>
     <div class="snd-row"><select id="eqPreset" aria-label="Equalizer preset">${names.map(n => `<option${n === S.eqPreset ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></div>
     <div class="eq">${EQ_F.map((f, i) => `<label class="eq-c"><span class="eq-v mono" id="ev${i}">${S.eq[i] > 0 ? '+' : ''}${S.eq[i]}</span><span class="eq-s"><input type="range" min="-12" max="12" step="0.5" value="${S.eq[i]}" data-eq="${i}" aria-label="${f} Hz"></span><span class="mono dim">${f >= 1000 ? f / 1000 + 'k' : f}</span></label>`).join('')}</div>
     <p class="note">The equalizer and the level meter work on your own files. Streams play straight from their host and are not processed.</p>
-    <h3>Speed</h3>
-    <div class="chips">${[0.75, 1, 1.25, 1.5, 2].map(r => `<button class="chip${r === S.rate ? ' on' : ''}" data-act="rate" data-v="${r}">${r}×</button>`).join('')}</div>
     <h3>Sleep timer</h3>
     <div class="chips">${[['Off', 0], ['15 min', 15], ['30 min', 30], ['60 min', 60], ['End of song', 'end']].map(([l, v]) => `<button class="chip${sleepOn(v) ? ' on' : ''}" data-act="sleep" data-v="${v}">${l}</button>`).join('')}</div>
     <p class="mono dim" id="sleepLeft" style="margin-top:10px"></p>
@@ -1039,7 +1155,7 @@
       });
     }
     function showHelp() {
-      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['S', 'Shuffle'], ['R', 'Repeat'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
+      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['S', 'Shuffle'], ['R', 'Repeat'], ['A', 'A–B loop: set start, set end, clear'], ['[  ]', 'Slower or faster'], ['\\', 'Normal speed'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
       const d = dialog(`<h3>Keyboard shortcuts</h3><dl class="keys">${k.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><div class="btn-row end"><button class="btn primary" id="dlgOk">Done</button></div>`);
       $('#dlgOk').onclick = () => d.close();
     }
@@ -1106,7 +1222,11 @@
         case 'qrm': removeFromQueue(+a.closest('[data-qi]').dataset.qi); break;
         case 'qclear': { const cur = S.queue[S.qi]; S.queue = cur ? [cur] : []; S.orig = S.queue.slice(); S.qi = cur ? 0 : -1; renderNP(); saveSession(); break; }
         case 'qsave': { const ids = uniq(S.queue); if (!ids.length) break; const stamp = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); const pl = await newPlaylistNamed(`Queue ${stamp}`, ids); if (pl) toast(`Saved as “${pl.name}”`); break; }
-        case 'rate': S.rate = +d.v; applyRate(); renderNPIf('sound'); saveSession(); break;
+        case 'rate': setRate(+d.v); break;
+        case 'rateReset': setRate(1); break;
+        case 'abSet': abSet(d.w); break;
+        case 'abClear': abReset(); break;
+        case 'abNudge': abNudge(d.w, +d.dt); break;
         case 'sleep': setSleep(d.v === 'end' ? 'end' : +d.v); break;
       }
     }
@@ -1133,7 +1253,7 @@
     });
     document.addEventListener('keydown', e => {
       const tg = e.target, typing = tg.matches && tg.matches('input,textarea,select');
-      if (e.key === 'Escape') { closeMenu(); return; }
+      if (e.key === 'Escape') { closeMenu(); closeSpeed(); return; }
       if (e.key === 'Enter' && tg.matches && tg.matches('.row[tabindex],.card[tabindex]')) { e.preventDefault(); tg.click(); return; }
       if (e.key === 'Enter' && tg.id === 'barCover') { toggleNP(true); return; }
       if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -1149,6 +1269,10 @@
       else if (k === 'r' || k === 'R') cycleRepeat();
       else if (k === 'q' || k === 'Q') toggleNP();
       else if (k === '/') { e.preventDefault(); $('#q').focus(); }
+      else if (k === 'a' || k === 'A') abCycle();
+      else if (k === '[') { setRate(S.rate - .05); toast(rateTxt(S.rate), 900); }
+      else if (k === ']') { setRate(S.rate + .05); toast(rateTxt(S.rate), 900); }
+      else if (k === '\\') { setRate(1); toast('Normal speed', 900); }
       else if (k === '?') showHelp();
     });
 
@@ -1157,6 +1281,9 @@
     $('#prevBtn').onclick = () => advance(-1, false);
     $('#shuffleBtn').onclick = toggleShuffle;
     $('#repeatBtn').onclick = cycleRepeat;
+    $('#abBtn').onclick = abCycle;
+    $('#speedBtn').onclick = toggleSpeed;
+    document.addEventListener('click', e => { if (!e.target.closest('#speedPop,#speedBtn')) closeSpeed(); });
     $('#likeBtn').onclick = () => { if (S.cur) toggleLike(S.cur); };
     $('#muteBtn').onclick = () => { S.muted = !S.muted; applyVol(); saveSession(); };
     $('#vol').addEventListener('input', e => { S.vol = +e.target.value / 100; S.muted = false; applyVol(); saveSession(); });
@@ -1177,6 +1304,7 @@
     document.addEventListener('input', e => {
       const t = e.target;
       if (t.id === 'libFilter') { S.view.filter = t.value; fillSongs(); }
+      else if (t.classList && t.classList.contains('spd-slider')) { setRate(+t.value); }
       else if (t.dataset && t.dataset.eq !== undefined) {
         const i = +t.dataset.eq; S.eq[i] = +t.value; if (G) G.bands[i].gain.value = S.eq[i];
         const lab = $('#ev' + i); if (lab) lab.textContent = (S.eq[i] > 0 ? '+' : '') + S.eq[i];
@@ -1187,6 +1315,7 @@
     document.addEventListener('change', e => {
       const t = e.target;
       if (t.id === 'libSort') { S.view.sort = t.value; fillSongs(); }
+      else if (t.classList && t.classList.contains('spd-pitch')) { S.pitch = t.checked; applyRate(); syncSpeed(); saveSession(); }
       else if (t.id === 'eqPreset' && EQ_PRESETS[t.value]) {
         S.eqPreset = t.value; S.eq = EQ_PRESETS[t.value].slice(); applyEq(); renderNP(); saveSession();
       }
@@ -1210,14 +1339,14 @@
     new ResizeObserver(() => document.documentElement.style.setProperty('--bar-h', $('#bar').offsetHeight + 'px')).observe($('#bar'));
 
     function restore(ss) {
-      S.vol = ss.vol == null ? .8 : ss.vol; S.muted = !!ss.muted; S.rate = ss.rate || 1;
+      S.vol = ss.vol == null ? .8 : ss.vol; S.muted = !!ss.muted; S.rate = ss.rate || 1; S.pitch = ss.pitch !== false;
       S.eq = ss.eq && ss.eq.length === 10 ? ss.eq : Array(10).fill(0); S.eqPreset = ss.eqPreset || 'Flat';
       S.shuffle = !!ss.shuffle; S.repeat = ss.repeat || 0; S.npTab = ss.npTab || 'queue';
       (ss.webs || []).forEach(w => S.cache.set(w.id, w));
       const curId = (ss.queue || [])[ss.qi];
       S.queue = (ss.queue || []).filter(id => T(id)); S.orig = (ss.orig || S.queue).filter(id => T(id));
       S.qi = S.queue.length ? Math.max(0, S.queue.indexOf(curId)) : -1;
-      applyVol(); applyRate(); syncModes();
+      applyVol(); applyRate(); syncSpeed(); syncModes();
       $$('#npTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === S.npTab));
       if (S.queue.length) { S.resume = ss.time || 0; loadCurrent(false); }
       if (ss.np && innerWidth > 1100) document.body.classList.add('np-open');

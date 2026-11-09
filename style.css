@@ -1477,3 +1477,185 @@ dialog input {
     transition-duration: .01ms !important
   }
 }
+/* ---------- speed and A-B loop ---------- */
+.seekwrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center
+}
+
+.seekwrap #seek {
+  width: 100%
+}
+
+.abm {
+  position: absolute;
+  top: 50%;
+  left: calc(6px + (100% - 12px) * var(--x, 0));
+  width: 2px;
+  height: 16px;
+  margin: -8px 0 0 -1px;
+  background: var(--led-g);
+  border-radius: 1px;
+  pointer-events: none
+}
+
+.abm::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  border: 4px solid transparent
+}
+
+.abm.a::after {
+  left: 2px;
+  border-top-color: var(--led-g);
+  border-left-color: var(--led-g)
+}
+
+.abm.b::after {
+  right: 2px;
+  border-top-color: var(--led-g);
+  border-right-color: var(--led-g)
+}
+
+.abband {
+  position: absolute;
+  top: calc(50% + 7px);
+  height: 3px;
+  border-radius: 2px;
+  background: var(--led-g);
+  left: calc(6px + (100% - 12px) * var(--x, 0));
+  right: calc(6px + (100% - 12px) * (1 - var(--y, 1)));
+  pointer-events: none
+}
+
+.ab-btn {
+  font: 600 11px var(--f-mono);
+  letter-spacing: -.02em
+}
+
+.ab-btn.on {
+  color: var(--accent-text)
+}
+
+.ab-btn.live {
+  background: var(--sel)
+}
+
+.spd-btn {
+  min-width: 46px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: var(--dim);
+  font: 500 12px var(--f-mono);
+  font-variant-numeric: tabular-nums
+}
+
+.spd-btn:hover {
+  color: var(--fg);
+  background: var(--hover)
+}
+
+.spd-btn.on {
+  color: var(--accent-text)
+}
+
+.pop {
+  position: fixed;
+  z-index: 55;
+  width: min(300px, calc(100vw - 16px));
+  background: var(--raise);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 14px 16px 16px
+}
+
+.pop-h {
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-size: 11px;
+  margin-bottom: 8px
+}
+
+.spd {
+  display: flex;
+  flex-direction: column;
+  gap: 14px
+}
+
+.spd-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline
+}
+
+.spd-val {
+  font: 600 28px/1 var(--f-display);
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums
+}
+
+.spd .rng {
+  flex: none;
+  width: 100%
+}
+
+.chk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dim);
+  cursor: pointer
+}
+
+.chk input {
+  accent-color: var(--accent-text);
+  margin: 0
+}
+
+.ab {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px
+}
+
+.ab-pt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0
+}
+
+.ab-k {
+  width: 14px;
+  font-weight: 500;
+  color: var(--led-g)
+}
+
+.ab-t {
+  min-width: 48px;
+  text-align: center;
+  font-variant-numeric: tabular-nums
+}
+
+.ab-pt .icon-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 18px
+}
+
+.spd .chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px
+}
+
+.spd .chip {
+  text-align: center;
+  padding-inline: 6px
+}
