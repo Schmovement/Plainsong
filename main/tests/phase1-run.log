@@ -1,0 +1,227 @@
+PASS S1 fixture sanity: 3 imported + 2 binary + 1 web track, 2 playlists, orphan blob, secret kv
+PASS S1 both Back up buttons exist with accessible names
+PASS S1 download filename is plainsong-backup-YYYYMMDD-HHMMSS.zip
+PASS S1 success dialog states restore is not built yet and shows counts
+PASS S1 verifier: zip: is a valid ZIP file
+PASS S1 verifier: zip: Python testzip() finds no bad CRC
+PASS S1 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S1 verifier: zip: entry names are unique
+PASS S1 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S1 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S1 verifier: zip: manifest.json is the first entry
+PASS S1 verifier: manifest: format and version
+PASS S1 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S1 verifier: manifest: complete flag is True
+PASS S1 verifier: manifest: source database is plainsong v1
+PASS S1 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S1 verifier: zip: exactly the expected entries, in order
+PASS S1 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S1 verifier: data/tracks.json equals the database records, same order
+PASS S1 verifier: data/playlists.json equals the database records, same order
+PASS S1 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S1 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S1 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S1 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S1 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S1 verifier: manifest: counts match archive contents
+PASS S1 verifier: manifest: audioBytes and payloadBytes add up
+PASS S1 verifier: manifest: excluded kv key names recorded, values absent
+PASS S1 verifier: manifest: states credentials are never exported
+PASS S1 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S1 verifier: manifest: no problems recorded for a complete backup
+PASS S1 verifier: manifest: limits recorded
+PASS S1 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S1 originals preserved: tracks and every audio blob (SHA-256) unchanged by exporting
+PASS S1 manifest: 6 tracks, 6 blobs (incl. orphan), 2 playlists, ps-theme only
+PASS S1 manifest warns about the orphan audio blob
+PASS S1 session captured: queue incl. unsaved web track snapshot, rate 1.25, qi 0
+PASS S1 history captured incl. web snapshot; undefined snap dropped
+PASS S1 artwork data URL, lyrics (plain+LRC, unicode), likes, plays preserved in tracks.json
+PASS S1 app state unaffected: speed 1.25, no A-B, busy flag cleared, nothing playing started
+PASS S2 precondition: session and history saves are pending (not yet in DB)
+PASS S2 settle: archive holds the latest speed, volume, playhead and the pending history entry
+PASS S2 pending timers were consumed, nothing left to overwrite later
+PASS S3 isolation precondition: the racing writes really committed afterwards (test is not vacuous)
+PASS S3 verifier: zip: is a valid ZIP file
+PASS S3 verifier: zip: Python testzip() finds no bad CRC
+PASS S3 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S3 verifier: zip: entry names are unique
+PASS S3 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S3 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S3 verifier: zip: manifest.json is the first entry
+PASS S3 verifier: manifest: format and version
+PASS S3 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S3 verifier: manifest: complete flag is True
+PASS S3 verifier: manifest: source database is plainsong v1
+PASS S3 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S3 verifier: zip: exactly the expected entries, in order
+PASS S3 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S3 verifier: data/tracks.json equals the database records, same order
+PASS S3 verifier: data/playlists.json equals the database records, same order
+PASS S3 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S3 verifier: kv ignored keys are still present in the archive
+PASS S3 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S3 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S3 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S3 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S3 verifier: manifest: counts match archive contents
+PASS S3 verifier: manifest: audioBytes and payloadBytes add up
+PASS S3 verifier: manifest: excluded kv key names recorded, values absent
+PASS S3 verifier: manifest: states credentials are never exported
+PASS S3 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S3 verifier: manifest: no problems recorded for a complete backup
+PASS S3 verifier: manifest: limits recorded
+PASS S3 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S3 snapshot is internally consistent: deleted track AND its audio both still present, old title kept
+PASS S1-S3 no uncaught JS errors
+PASS S4 missing blob: dialog names the song and the reason and offers Cancel / Export incomplete
+PASS S4 choosing Cancel produces no file and says so
+PASS S4 incomplete export is named INCOMPLETE
+PASS S4 final dialog says Incomplete and that 1 song had no audio
+PASS S4 verifier: zip: is a valid ZIP file
+PASS S4 verifier: zip: Python testzip() finds no bad CRC
+PASS S4 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S4 verifier: zip: entry names are unique
+PASS S4 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S4 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S4 verifier: zip: manifest.json is the first entry
+PASS S4 verifier: manifest: format and version
+PASS S4 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S4 verifier: manifest: complete flag is False
+PASS S4 verifier: manifest: source database is plainsong v1
+PASS S4 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S4 verifier: zip: exactly the expected entries, in order
+PASS S4 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S4 verifier: data/tracks.json equals the database records, same order
+PASS S4 verifier: data/playlists.json equals the database records, same order
+PASS S4 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S4 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S4 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S4 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S4 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S4 verifier: manifest: counts match archive contents
+PASS S4 verifier: manifest: audioBytes and payloadBytes add up
+PASS S4 verifier: manifest: excluded kv key names recorded, values absent
+PASS S4 verifier: manifest: states credentials are never exported
+PASS S4 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S4 verifier: manifest: problems list names exactly the broken tracks
+PASS S4 verifier: manifest: limits recorded
+PASS S4 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S4 the surviving song is still fully included
+PASS S4 no JS errors
+PASS S5 limit: audio larger than the limit (aborts the snapshot early) -> clear error, no file
+PASS S5 limit: audio fits but audio+metadata does not -> clear error, no file
+PASS S5 limit: too many entries -> clear error, no file
+PASS S5 library untouched after refused exports
+PASS S5 verifier: zip: is a valid ZIP file
+PASS S5 verifier: zip: Python testzip() finds no bad CRC
+PASS S5 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S5 verifier: zip: entry names are unique
+PASS S5 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S5 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S5 verifier: zip: manifest.json is the first entry
+PASS S5 verifier: manifest: format and version
+PASS S5 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S5 verifier: manifest: complete flag is True
+PASS S5 verifier: manifest: source database is plainsong v1
+PASS S5 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S5 verifier: zip: exactly the expected entries, in order
+PASS S5 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S5 verifier: data/tracks.json equals the database records, same order
+PASS S5 verifier: data/playlists.json equals the database records, same order
+PASS S5 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S5 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S5 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S5 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S5 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S5 verifier: manifest: counts match archive contents
+PASS S5 verifier: manifest: audioBytes and payloadBytes add up
+PASS S5 verifier: manifest: excluded kv key names recorded, values absent
+PASS S5 verifier: manifest: states credentials are never exported
+PASS S5 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S5 verifier: manifest: no problems recorded for a complete backup
+PASS S5 verifier: manifest: limits recorded
+PASS S5 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S5 no JS errors
+PASS S6 precondition: IndexedDB unavailable and the song lives only in memory
+PASS S6 in-memory-only library: refuses with a clear explanation, no file
+PASS S6 app still usable afterwards
+PASS S6 no uncaught JS errors
+PASS S7 empty library: says there is nothing to back up, no file
+PASS S7 empty export attempt wrote nothing to the database
+PASS S7 verifier: zip: is a valid ZIP file
+PASS S7 verifier: zip: Python testzip() finds no bad CRC
+PASS S7 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S7 verifier: zip: entry names are unique
+PASS S7 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S7 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S7 verifier: zip: manifest.json is the first entry
+PASS S7 verifier: manifest: format and version
+PASS S7 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S7 verifier: manifest: complete flag is True
+PASS S7 verifier: manifest: source database is plainsong v1
+PASS S7 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S7 verifier: zip: exactly the expected entries, in order
+PASS S7 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S7 verifier: data/tracks.json equals the database records, same order
+PASS S7 verifier: data/playlists.json equals the database records, same order
+PASS S7 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S7 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S7 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S7 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S7 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S7 verifier: manifest: counts match archive contents
+PASS S7 verifier: manifest: audioBytes and payloadBytes add up
+PASS S7 verifier: manifest: excluded kv key names recorded, values absent
+PASS S7 verifier: manifest: states credentials are never exported
+PASS S7 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S7 verifier: manifest: no problems recorded for a complete backup
+PASS S7 verifier: manifest: limits recorded
+PASS S7 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S7 minimal library: empty playlists/kv/prefs files are valid, bad ps-theme value skipped with a warning
+PASS S7 exporting without playback did not create a session record
+PASS S7 no JS errors
+PASS S9 non-JSON-safe values (NaN, Date): refused, offending paths listed, no file
+PASS S9 no JS errors
+PASS S8 progress dialog is open with a Cancel button and progressbar semantics
+PASS S8 second backup click is ignored; an import is refused with a message while a backup runs
+PASS S8 Cancel button: no file, message shown, library untouched
+PASS S8 Escape key cancels too: no file, state reset
+PASS S8 backup refused while an import is running (toast, no dialog)
+PASS S8 verifier: zip: is a valid ZIP file
+PASS S8 verifier: zip: Python testzip() finds no bad CRC
+PASS S8 verifier: zip: `unzip -t` (independent tool) reports no errors
+PASS S8 verifier: zip: entry names are unique
+PASS S8 verifier: zip: every entry is stored (no compression) with UTF-8 flag
+PASS S8 verifier: zip: no comment, no encryption, no ZIP64 extras
+PASS S8 verifier: zip: manifest.json is the first entry
+PASS S8 verifier: manifest: format and version
+PASS S8 verifier: manifest: createdAt is a recent ISO-8601 UTC time
+PASS S8 verifier: manifest: complete flag is True
+PASS S8 verifier: manifest: source database is plainsong v1
+PASS S8 verifier: manifest: integrity declares crc32 with a plain-language caveat
+PASS S8 verifier: zip: exactly the expected entries, in order
+PASS S8 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)
+PASS S8 verifier: data/tracks.json equals the database records, same order
+PASS S8 verifier: data/playlists.json equals the database records, same order
+PASS S8 verifier: data/kv.json equals the database (credential keys removed), same key order
+PASS S8 verifier: data/localstorage.json equals the allow-listed prefs
+PASS S8 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)
+PASS S8 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest
+PASS S8 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME
+PASS S8 verifier: manifest: counts match archive contents
+PASS S8 verifier: manifest: audioBytes and payloadBytes add up
+PASS S8 verifier: manifest: excluded kv key names recorded, values absent
+PASS S8 verifier: manifest: states credentials are never exported
+PASS S8 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes
+PASS S8 verifier: manifest: no problems recorded for a complete backup
+PASS S8 verifier: manifest: limits recorded
+PASS S8 verifier: order: track ids preserved exactly (strings, no coercion)
+PASS S8 large 64 MiB entry exported byte-exactly (timing recorded)
+PASS S8 no JS errors
+PASS S11 keyboard: focusing the Back up button and pressing Enter starts the export; Escape cancels
+PASS S11 mobile 390px: top-bar Back up button visible, no horizontal overflow, (sidebar copy hidden by existing layout)
+PASS S11 mobile: progress dialog fits the viewport
+PASS S11 no JS errors
+
+TOTAL 225  PASS 225  FAIL 0

@@ -1,0 +1,192 @@
+[
+  {
+    "name": "T1 page boots, no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T1 IndexedDB plainsong v1 with stores tracks/playlists/blobs/kv",
+    "ok": true,
+    "detail": "{\"v\":1,\"stores\":[\"blobs\",\"kv\",\"playlists\",\"tracks\"],\"kp\":{\"blobs\":null,\"kv\":null,\"playlists\":\"id\",\"tracks\":\"id\"}}"
+  },
+  {
+    "name": "T8 offline: Audius shelf shows graceful \"couldn't reach\" message, app alive",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T2 import 3 WAVs: titles/artists from filenames, durations probed",
+    "ok": true,
+    "detail": "[{\"title\":\"Song One\",\"artist\":\"Artist A\",\"dur\":12,\"kind\":\"local\"},{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"dur\":12,\"kind\":\"local\"},{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"dur\":12,\"kind\":\"local\"}]"
+  },
+  {
+    "name": "T2 IndexedDB holds 3 track records + 3 audio blobs",
+    "ok": true,
+    "detail": "tracks=3 blobs=3"
+  },
+  {
+    "name": "T2 re-import is de-duplicated",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T3 local playback starts; Web Audio graph (10 EQ bands) created on aL",
+    "ok": true,
+    "detail": "{\"A\":true,\"G\":true,\"bands\":10,\"st\":\"running\",\"q\":3,\"qi\":0}"
+  },
+  {
+    "name": "T4 speed popover opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T4 slider sets 2x on both elements, button label updates, pitch preserved by default",
+    "ok": true,
+    "detail": "{\"r\":2,\"w\":2,\"d\":2,\"btn\":\"2×\",\"pp\":true}"
+  },
+  {
+    "name": "T4 \"Keep original pitch\" off -> preservesPitch=false",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T4 pitch toggle back on",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T4 preset chip 0.5x",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T4 Escape/outside click closes popover",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T4 keys: \\ resets to 1, ] +0.05, [ -0.05",
+    "ok": true,
+    "detail": "[1,1.05,1.05]"
+  },
+  {
+    "name": "T4 rate clamped to 0.25..3",
+    "ok": true,
+    "detail": "[0.25,3]"
+  },
+  {
+    "name": "T5 A key sets start then end; button live; seek-bar bracket + band shown",
+    "ok": true,
+    "detail": "{\"a\":2,\"b\":4,\"txt\":\"A–B\",\"live\":true,\"lbl\":\"Clear A–B loop (A)\",\"vis\":[true,true,true],\"cur\":2}"
+  },
+  {
+    "name": "T5 setting B jumps playhead back to A",
+    "ok": true,
+    "detail": "cur=2"
+  },
+  {
+    "name": "T5 loop holds playhead inside A..B at 2x for 7s",
+    "ok": true,
+    "detail": "max=4.03 min=2.00 wraps=6"
+  },
+  {
+    "name": "T5 0.1 s nudges move A earlier and B later, readouts update",
+    "ok": true,
+    "detail": "{\"a\":1.9,\"b\":4.1,\"ta\":\"0:01.9\",\"tb\":\"0:04.1\"}"
+  },
+  {
+    "name": "T5 invalid B (before A) is rejected",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T5 third A press clears loop and hides bracket",
+    "ok": true,
+    "detail": "{\"a\":null,\"b\":null,\"txt\":\"A–B\",\"vis\":[false,false,false]}"
+  },
+  {
+    "name": "T5 A–B clears when the song changes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T6 next/prev move through queue (prev <3s goes back)",
+    "ok": true,
+    "detail": "q0=1 q1=2 q2=1"
+  },
+  {
+    "name": "T6 track end auto-advances to next queue item",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T6 repeat off: end of queue stops on last song",
+    "ok": true,
+    "detail": "{\"qi\":2,\"paused\":true}"
+  },
+  {
+    "name": "T6 repeat all: wraps to first song",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T6 repeat one: restarts same song",
+    "ok": true,
+    "detail": "{\"qi\":0,\"t\":1.288707,\"p\":false}"
+  },
+  {
+    "name": "T7 EQ preset applies to biquad gains",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T7 play counter increments past threshold and persists to IndexedDB",
+    "ok": true,
+    "detail": "{\"plays\":2,\"mem\":2}"
+  },
+  {
+    "name": "T7 L key likes song and persists",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T10 session restore: speed/pitch/volume/queue/EQ/likes survive reload",
+    "ok": true,
+    "detail": "{\"rate\":1.5,\"pitch\":false,\"pp\":false,\"pr\":1.5,\"btn\":\"1.5×\",\"vol\":0.55,\"qi\":1,\"ql\":3,\"eq\":\"Bass boost\",\"liked\":1,\"ab\":{\"a\":null,\"b\":null}}"
+  },
+  {
+    "name": "T10 A–B intentionally not persisted",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T12 ID3v2.3 parser reads title/artist/album/track",
+    "ok": true,
+    "detail": "{\"title\":\"Hello Title\",\"artist\":\"Some Artist\",\"album\":\"Some Album\",\"track\":7}"
+  },
+  {
+    "name": "T12 data inventory captured (kv keys, track fields, localStorage)",
+    "ok": true,
+    "detail": "{\"kvKeys\":[\"hist\",\"session\"],\"trackFields\":[\"id\",\"kind\",\"key\",\"title\",\"artist\",\"album\",\"track\",\"duration\",\"cover\",\"lyrics\",\"size\",\"added\",\"plays\",\"liked\"],\"blobType\":\"audio/wav\",\"blobSize\":529244,\"sessionKeys\":[\"queue\",\"orig\",\"qi\",\"time\",\"shuffle\",\"repeat\",\"vol\",\"muted\",\"rate\",\"pitch\",\"eq\",\"eqPreset\",\"np\",\"npTab\",\"webs\"],\"ls\":[]}"
+  },
+  {
+    "name": "T-final no uncaught JS errors across whole desktop run",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "T9 mobile 390px: no horizontal overflow, nav + player bar on screen",
+    "ok": true,
+    "detail": "{\"sw\":390,\"iw\":390,\"navVisible\":true,\"barVisible\":true,\"navButtons\":3}"
+  },
+  {
+    "name": "T9 mobile: speed popover stays inside viewport",
+    "ok": true,
+    "detail": "{\"l\":36,\"r\":336,\"t\":420.875,\"b\":654.0625,\"iw\":390,\"ih\":844}"
+  },
+  {
+    "name": "T9 no uncaught JS errors on mobile run",
+    "ok": true,
+    "detail": ""
+  }
+]

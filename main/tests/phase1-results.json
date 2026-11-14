@@ -1,0 +1,1127 @@
+[
+  {
+    "name": "S1 fixture sanity: 3 imported + 2 binary + 1 web track, 2 playlists, orphan blob, secret kv",
+    "ok": true,
+    "detail": "tracks=6 blobs=6"
+  },
+  {
+    "name": "S1 both Back up buttons exist with accessible names",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 download filename is plainsong-backup-YYYYMMDD-HHMMSS.zip",
+    "ok": true,
+    "detail": "plainsong-backup-20261104-151031.zip"
+  },
+  {
+    "name": "S1 success dialog states restore is not built yet and shows counts",
+    "ok": true,
+    "detail": "Backup downloaded  6 songs, 2 playlists, 5.8 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. Restoring from a backup file isn’t built yet, so don’t delete anything on the strength of it.  OK"
+  },
+  {
+    "name": "S1 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S1 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/main.zip."
+  },
+  {
+    "name": "S1 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S1 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S1 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:31.057Z"
+  },
+  {
+    "name": "S1 verifier: manifest: complete flag is True",
+    "ok": true,
+    "detail": "True"
+  },
+  {
+    "name": "S1 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S1 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin', 'blobs/000002.bin', 'blobs/000003.bin']"
+  },
+  {
+    "name": "S1 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S1 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 6 expected 6"
+  },
+  {
+    "name": "S1 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "['custom:pref', 'hist', 'session']"
+  },
+  {
+    "name": "S1 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{'ps-theme': 'dark'}"
+  },
+  {
+    "name": "S1 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['2b099514-30af-41b9-aad6-0d0ee10a3873', '98e6ce8b-733d-4e51-b7e3-369fc8280aeb', 'bin-1', 'bin-2', 'fb922971-a227-4d99-a9b1-11d2a0760f21', 'orphan/ü key 🎧']"
+  },
+  {
+    "name": "S1 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S1 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 6, 'playlists': 2, 'kv': 3, 'blobs': 6, 'localStorage': 1}"
+  },
+  {
+    "name": "S1 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': ['secret:lastfm'], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S1 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S1 verifier: manifest: no problems recorded for a complete backup",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S1 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S1 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 originals preserved: tracks and every audio blob (SHA-256) unchanged by exporting",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 manifest: 6 tracks, 6 blobs (incl. orphan), 2 playlists, ps-theme only",
+    "ok": true,
+    "detail": "{\"tracks\":6,\"playlists\":2,\"kv\":3,\"blobs\":6,\"localStorage\":1}"
+  },
+  {
+    "name": "S1 manifest warns about the orphan audio blob",
+    "ok": true,
+    "detail": "[\"1 stored audio file has no library entry; included as-is\"]"
+  },
+  {
+    "name": "S1 session captured: queue incl. unsaved web track snapshot, rate 1.25, qi 0",
+    "ok": true,
+    "detail": "{\"rate\":1.25,\"q\":4,\"webs\":1}"
+  },
+  {
+    "name": "S1 history captured incl. web snapshot; undefined snap dropped",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 artwork data URL, lyrics (plain+LRC, unicode), likes, plays preserved in tracks.json",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1 app state unaffected: speed 1.25, no A-B, busy flag cleared, nothing playing started",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S2 precondition: session and history saves are pending (not yet in DB)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S2 settle: archive holds the latest speed, volume, playhead and the pending history entry",
+    "ok": true,
+    "detail": "{\"r\":1.75,\"v\":0.33,\"t\":7.3,\"n\":4}"
+  },
+  {
+    "name": "S2 pending timers were consumed, nothing left to overwrite later",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 isolation precondition: the racing writes really committed afterwards (test is not vacuous)",
+    "ok": true,
+    "detail": "{\"gone\":true,\"late\":true}"
+  },
+  {
+    "name": "S3 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S3 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/isolation.zip."
+  },
+  {
+    "name": "S3 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S3 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S3 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:32.032Z"
+  },
+  {
+    "name": "S3 verifier: manifest: complete flag is True",
+    "ok": true,
+    "detail": "True"
+  },
+  {
+    "name": "S3 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S3 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin', 'blobs/000002.bin', 'blobs/000003.bin']"
+  },
+  {
+    "name": "S3 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S3 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 6 expected 6"
+  },
+  {
+    "name": "S3 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "['custom:pref', 'hist', 'session']"
+  },
+  {
+    "name": "S3 verifier: kv ignored keys are still present in the archive",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{'ps-theme': 'dark'}"
+  },
+  {
+    "name": "S3 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['2b099514-30af-41b9-aad6-0d0ee10a3873', '98e6ce8b-733d-4e51-b7e3-369fc8280aeb', 'bin-1', 'bin-2', 'fb922971-a227-4d99-a9b1-11d2a0760f21', 'orphan/ü key 🎧']"
+  },
+  {
+    "name": "S3 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S3 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 6, 'playlists': 2, 'kv': 3, 'blobs': 6, 'localStorage': 1}"
+  },
+  {
+    "name": "S3 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': ['secret:lastfm'], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S3 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S3 verifier: manifest: no problems recorded for a complete backup",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S3 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S3 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S3 snapshot is internally consistent: deleted track AND its audio both still present, old title kept",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S1-S3 no uncaught JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 missing blob: dialog names the song and the reason and offers Cancel / Export incomplete",
+    "ok": true,
+    "detail": "Some songs can’t be fully backed up  1 song has no usable audio in browser storage. You can cancel and look into it, or export a backup that is clearly marked INCOMPLETE and still contains everything else.  Song One: audio missing from browser storage Cancel Export incomplete backup"
+  },
+  {
+    "name": "S4 choosing Cancel produces no file and says so",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 incomplete export is named INCOMPLETE",
+    "ok": true,
+    "detail": "plainsong-backup-INCOMPLETE-20261104-151035.zip"
+  },
+  {
+    "name": "S4 final dialog says Incomplete and that 1 song had no audio",
+    "ok": true,
+    "detail": "Incomplete backup downloaded  2 songs, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. It is marked INCOMPLETE: 1 song(s) had no audio to copy. Keep a copy somewhere outside this browser. Restoring from a backup file isn’t built yet, so don’t delete anything on the strength of it.  OK"
+  },
+  {
+    "name": "S4 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S4 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/incomplete.zip."
+  },
+  {
+    "name": "S4 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S4 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S4 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:35.678Z"
+  },
+  {
+    "name": "S4 verifier: manifest: complete flag is False",
+    "ok": true,
+    "detail": "False"
+  },
+  {
+    "name": "S4 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S4 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin']"
+  },
+  {
+    "name": "S4 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S4 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 2 expected 2"
+  },
+  {
+    "name": "S4 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S4 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{}"
+  },
+  {
+    "name": "S4 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['3c959ae6-5b08-4c15-bc04-eb7a81499572']"
+  },
+  {
+    "name": "S4 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S4 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 2, 'playlists': 0, 'kv': 0, 'blobs': 1, 'localStorage': 0}"
+  },
+  {
+    "name": "S4 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': [], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S4 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S4 verifier: manifest: problems list names exactly the broken tracks",
+    "ok": true,
+    "detail": "[{'id': 'f0ae7632-5282-4395-8408-5a03806eaec4', 'title': 'Song One', 'reason': 'audio missing from browser storage'}]"
+  },
+  {
+    "name": "S4 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S4 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 the surviving song is still fully included",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S4 no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 limit: audio larger than the limit (aborts the snapshot early) -> clear error, no file",
+    "ok": true,
+    "detail": "Your library is too big for one backup file  This version exports up to 1 KB of audio in one file. Your audio is at least 529 KB. Nothing was written. Splitting a large library across several files isn’t built yet.  OK"
+  },
+  {
+    "name": "S5 limit: audio fits but audio+metadata does not -> clear error, no file",
+    "ok": true,
+    "detail": "Your library is too big for one backup file  This version exports up to 1.1 MB in one file; this backup would need 1.1 MB. Nothing was written.  OK"
+  },
+  {
+    "name": "S5 limit: too many entries -> clear error, no file",
+    "ok": true,
+    "detail": "Too many songs for one backup file  This version exports up to 1 audio files in one backup. You have 2. Nothing was written.  OK"
+  },
+  {
+    "name": "S5 library untouched after refused exports",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S5 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/afterlimit.zip."
+  },
+  {
+    "name": "S5 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S5 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S5 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:37.606Z"
+  },
+  {
+    "name": "S5 verifier: manifest: complete flag is True",
+    "ok": true,
+    "detail": "True"
+  },
+  {
+    "name": "S5 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S5 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin', 'blobs/000002.bin']"
+  },
+  {
+    "name": "S5 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S5 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 2 expected 2"
+  },
+  {
+    "name": "S5 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S5 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{}"
+  },
+  {
+    "name": "S5 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['30d37774-23e3-4385-9ca8-406e6a4f2552', 'c3dd62b5-73b2-4b48-a1d2-11402f43a758']"
+  },
+  {
+    "name": "S5 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S5 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 2, 'playlists': 0, 'kv': 0, 'blobs': 2, 'localStorage': 0}"
+  },
+  {
+    "name": "S5 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': [], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S5 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S5 verifier: manifest: no problems recorded for a complete backup",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S5 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S5 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S5 no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S6 precondition: IndexedDB unavailable and the song lives only in memory",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S6 in-memory-only library: refuses with a clear explanation, no file",
+    "ok": true,
+    "detail": "Backup isn’t available in this browser mode  Your library is only held in memory right now (browser storage is unavailable or blocked, as in some private windows). It disappears when you close the tab, and Plainsong can’t back it up. No backup file was created.  OK"
+  },
+  {
+    "name": "S6 app still usable afterwards",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S6 no uncaught JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 empty library: says there is nothing to back up, no file",
+    "ok": true,
+    "detail": "Nothing to back up yet  Your library is empty. Import some music first, then back it up.  OK"
+  },
+  {
+    "name": "S7 empty export attempt wrote nothing to the database",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S7 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/minimal.zip."
+  },
+  {
+    "name": "S7 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S7 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S7 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:40.421Z"
+  },
+  {
+    "name": "S7 verifier: manifest: complete flag is True",
+    "ok": true,
+    "detail": "True"
+  },
+  {
+    "name": "S7 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S7 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin']"
+  },
+  {
+    "name": "S7 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S7 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 1 expected 1"
+  },
+  {
+    "name": "S7 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S7 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{}"
+  },
+  {
+    "name": "S7 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['7a0b23b9-9c3a-4e18-8ff1-ede8d43d2908']"
+  },
+  {
+    "name": "S7 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S7 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 1, 'playlists': 0, 'kv': 0, 'blobs': 1, 'localStorage': 0}"
+  },
+  {
+    "name": "S7 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': [], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S7 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S7 verifier: manifest: no problems recorded for a complete backup",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S7 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S7 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 minimal library: empty playlists/kv/prefs files are valid, bad ps-theme value skipped with a warning",
+    "ok": true,
+    "detail": "[\"ps-theme had an unrecognized value and was not exported\"]"
+  },
+  {
+    "name": "S7 exporting without playback did not create a session record",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S7 no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S9 non-JSON-safe values (NaN, Date): refused, offending paths listed, no file",
+    "ok": true,
+    "detail": "Some saved data can’t be written exactly  A saved value uses a type this backup format can’t store without changing it, so no backup file was created.  tracks/bad-1.duration: not a finite number tracks/bad-1.when: unsupported Date OK"
+  },
+  {
+    "name": "S9 no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 progress dialog is open with a Cancel button and progressbar semantics",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 second backup click is ignored; an import is refused with a message while a backup runs",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 Cancel button: no file, message shown, library untouched",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 Escape key cancels too: no file, state reset",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 backup refused while an import is running (toast, no dialog)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: is a valid ZIP file",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: Python testzip() finds no bad CRC",
+    "ok": true,
+    "detail": "None"
+  },
+  {
+    "name": "S8 verifier: zip: `unzip -t` (independent tool) reports no errors",
+    "ok": true,
+    "detail": "No errors detected in compressed data of /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/p1work/large.zip."
+  },
+  {
+    "name": "S8 verifier: zip: entry names are unique",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: every entry is stored (no compression) with UTF-8 flag",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: no comment, no encryption, no ZIP64 extras",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: manifest.json is the first entry",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json']"
+  },
+  {
+    "name": "S8 verifier: manifest: format and version",
+    "ok": true,
+    "detail": "('plainsong-backup', 1)"
+  },
+  {
+    "name": "S8 verifier: manifest: createdAt is a recent ISO-8601 UTC time",
+    "ok": true,
+    "detail": "2026-11-04T08:10:47.298Z"
+  },
+  {
+    "name": "S8 verifier: manifest: complete flag is True",
+    "ok": true,
+    "detail": "True"
+  },
+  {
+    "name": "S8 verifier: manifest: source database is plainsong v1",
+    "ok": true,
+    "detail": "{'database': 'plainsong', 'databaseVersion': 1}"
+  },
+  {
+    "name": "S8 verifier: manifest: integrity declares crc32 with a plain-language caveat",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: zip: exactly the expected entries, in order",
+    "ok": true,
+    "detail": "['manifest.json', 'data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json', 'blobs/000001.bin', 'blobs/000002.bin']"
+  },
+  {
+    "name": "S8 verifier: manifest: data file sizes and CRC-32 match the archive (recomputed here)",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S8 verifier: data/tracks.json equals the database records, same order",
+    "ok": true,
+    "detail": "got 2 expected 2"
+  },
+  {
+    "name": "S8 verifier: data/playlists.json equals the database records, same order",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: data/kv.json equals the database (credential keys removed), same key order",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S8 verifier: data/localstorage.json equals the allow-listed prefs",
+    "ok": true,
+    "detail": "{}"
+  },
+  {
+    "name": "S8 verifier: manifest: blob keys equal the database blob keys in store order (exact strings)",
+    "ok": true,
+    "detail": "['528c6b93-788f-4b64-9463-cb0c8911625c', 'big-1']"
+  },
+  {
+    "name": "S8 verifier: every audio entry: byte-identical (SHA-256), same size, same MIME, CRC-32 matches manifest",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S8 verifier: exercise: at least one blob is binary non-audio-looking data, one has empty MIME",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: manifest: counts match archive contents",
+    "ok": true,
+    "detail": "{'tracks': 2, 'playlists': 0, 'kv': 0, 'blobs': 2, 'localStorage': 0}"
+  },
+  {
+    "name": "S8 verifier: manifest: audioBytes and payloadBytes add up",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: manifest: excluded kv key names recorded, values absent",
+    "ok": true,
+    "detail": "{'kv': [], 'localStorage': 'only these keys are exported: ps-theme', 'credentials': 'integration credentials are never exported by default'}"
+  },
+  {
+    "name": "S8 verifier: manifest: states credentials are never exported",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 verifier: no credential / non-allow-listed secret strings anywhere in the archive bytes",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S8 verifier: manifest: no problems recorded for a complete backup",
+    "ok": true,
+    "detail": "[]"
+  },
+  {
+    "name": "S8 verifier: manifest: limits recorded",
+    "ok": true,
+    "detail": "{'maxBytes': 2147483648, 'maxEntries': 60000}"
+  },
+  {
+    "name": "S8 verifier: order: track ids preserved exactly (strings, no coercion)",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S8 large 64 MiB entry exported byte-exactly (timing recorded)",
+    "ok": true,
+    "detail": "1861 ms"
+  },
+  {
+    "name": "S8 no JS errors",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S11 keyboard: focusing the Back up button and pressing Enter starts the export; Escape cancels",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "S11 mobile 390px: top-bar Back up button visible, no horizontal overflow, (sidebar copy hidden by existing layout)",
+    "ok": true,
+    "detail": "{\"sw\":390,\"iw\":390,\"btn\":true,\"side\":\"none\"}"
+  },
+  {
+    "name": "S11 mobile: progress dialog fits the viewport",
+    "ok": true,
+    "detail": "{\"l\":17,\"r\":373,\"t\":333.109375,\"b\":510.890625,\"iw\":390,\"ih\":844}"
+  },
+  {
+    "name": "S11 no JS errors",
+    "ok": true,
+    "detail": ""
+  }
+]

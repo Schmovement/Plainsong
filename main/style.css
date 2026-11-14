@@ -1659,3 +1659,40 @@ dialog input {
   text-align: center;
   padding-inline: 6px
 }
+
+/* ---------- backup export ---------- */
+.bk-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+  margin: 14px 0 4px
+}
+
+.bk-bar i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width .12s linear
+}
+
+.bk-note {
+  max-width: none;
+  margin-top: 0;
+  color: var(--fg);
+  overflow-wrap: anywhere
+}
+
+.bk-list {
+  margin: 10px 0 0;
+  padding: 8px 10px 8px 26px;
+  max-height: 160px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--dim);
+  font: 400 12px/1.5 var(--f-mono);
+  overflow-wrap: anywhere
+}

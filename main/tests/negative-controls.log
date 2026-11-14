@@ -1,0 +1,12 @@
+PASS control baseline: the undamaged archive is accepted
+PASS verifier rejects: one audio byte flipped (CRC/SHA mismatch)
+PASS verifier rejects: one byte flipped inside tracks.json
+PASS verifier rejects: archive truncated (end record lost)
+PASS verifier rejects: empty file
+PASS verifier rejects: manifest CRC-32 disagrees with the audio entry (forged manifest)
+PASS verifier rejects: an audio entry removed from the archive
+PASS verifier rejects: entries compressed instead of stored (format violation)
+PASS verifier rejects: a forbidden (secret) string present in the archive
+PASS verifier rejects: audio bytes differ from the originals recorded in the database
+PASS verifier rejects: track order differs from the database key order
+NEGATIVE CONTROLS OK
