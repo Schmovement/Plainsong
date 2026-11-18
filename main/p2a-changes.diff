@@ -1,0 +1,291 @@
+--- /tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/base-p1/index.html	2026-11-04 15:09:42.294545376 +0700
++++ index.html	2026-11-05 01:04:02.169275447 +0700
+@@ -1219,10 +1219,10 @@
+ 
+     const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+     function crcAdd(crc, u8) { for (let i = 0; i < u8.length; i++) crc = CRC_T[(crc ^ u8[i]) & 255] ^ (crc >>> 8); return crc; }
+-    async function crcOfBlob(blob, onBytes) {
++    async function crcOfBlob(blob, onBytes, ctl = BK) {
+       let crc = 0xFFFFFFFF, off = 0, last = performance.now();
+       while (off < blob.size) {
+-        if (BK && BK.cancel) throw new BackupCancel();
++        if (ctl && ctl.cancel) throw new BackupCancel();
+         const end = Math.min(blob.size, off + BACKUP_LIMITS.chunk);
+         const u8 = new Uint8Array(await blob.slice(off, end).arrayBuffer());
+         if (u8.length !== end - off) throw new Error('short read');
+@@ -1445,6 +1445,275 @@
+       } finally { S.backupBusy = false; BK = null; }
+     }
+ 
++    /* ---- backup reader (Phase 2A) ----
++       READ-ONLY. Parses and validates a Plainsong backup ZIP (format v1, see BACKUP_FORMAT.md). It never opens a
++       read-write IndexedDB transaction and never touches localStorage. No restore UI is wired to it yet (Phase 2B).
++       The file is untrusted: every header, size, CRC, name, JSON shape and cross-reference is checked before a
++       package is returned, and every refusal carries a machine-readable `code`. Returned audio is a list of lazy
++       Blob slices of the user's file (nothing is copied into memory). */
++    const RESTORE_LIMITS = { maxBytes: BACKUP_LIMITS.maxBytes, maxEntries: Math.min(BACKUP_LIMITS.maxEntries, 65535), maxJson: 256 * 1024 ** 2, maxManifest: 4 * 1024 ** 2, maxName: 64, maxKey: 1024, overhead: 16 * 1024 ** 2 };
++    const RS_DATA = ['data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json'];
++    const RS_BLOB_RE = /^blobs\/\d{6}\.bin$/, RS_CRC_RE = /^[0-9a-f]{8}$/, RS_COVER_RE = /^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]*$/;
++    const RS_TABS = ['queue', 'lyrics', 'sound'];
++    const isSecretKey = k => typeof k === 'string' && k.toLowerCase().startsWith(BACKUP.secretPrefix);
++    const rsBad = (code, msg, lines) => Object.assign(bkFail('This backup can’t be restored', msg + ' Nothing was changed.', lines), { code });
++    const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v);
++    const isNum = v => typeof v === 'number' && isFinite(v);
++    const isUInt = v => Number.isInteger(v) && v >= 0;
++    const isHttpUrl = s => { try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } };
++
++    // Central directory + every local header, strictly. Returns entries in file order.
++    async function rsZipIndex(file, L, ctl, prog) {
++      const size = file.size;
++      if (size > L.maxBytes + L.overhead) throw rsBad('limits', `This file is ${bytes(size)}; this version restores backups up to ${bytes(L.maxBytes)} of data.`);
++      if (size < 22) throw rsBad('not-zip', 'This file is too small to be a Plainsong backup.');
++      const tail = new DataView(await file.slice(size - 22).arrayBuffer());
++      if (tail.getUint32(0, true) !== 0x06054b50) throw rsBad('eocd', 'This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP comment.');
++      const disk = tail.getUint16(4, true), cdDisk = tail.getUint16(6, true), nHere = tail.getUint16(8, true), n = tail.getUint16(10, true), cdSize = tail.getUint32(12, true), cdOff = tail.getUint32(16, true), cmt = tail.getUint16(20, true);
++      if (n === 0xFFFF || cdSize === 0xFFFFFFFF || cdOff === 0xFFFFFFFF) throw rsBad('zip64', 'This archive uses ZIP64, which Plainsong backups never do.');
++      if (disk || cdDisk || nHere !== n) throw rsBad('multidisk', 'This archive is split over several disks, which Plainsong backups never are.');
++      if (cmt) throw rsBad('comment', 'This archive has a ZIP comment; Plainsong backups have none.');
++      if (n < 5) throw rsBad('count', `This archive has only ${n} entries; a Plainsong backup has at least 5.`);
++      if (n > L.maxEntries) throw rsBad('limits', `This archive has ${n} entries; this version restores at most ${L.maxEntries}.`);
++      if (cdOff + cdSize + 22 !== size || cdSize > n * (46 + L.maxName)) throw rsBad('directory', 'The ZIP directory doesn’t line up with the file size, so the file is damaged or has extra data attached.');
++      const cd = new DataView(await file.slice(cdOff, cdOff + cdSize).arrayBuffer());
++      const entries = [], seen = new Set(); let p = 0, expectOff = 0;
++      for (let i = 0; i < n; i++) {
++        if (p + 46 > cd.byteLength || cd.getUint32(p, true) !== 0x02014b50) throw rsBad('cd-entry', `ZIP directory entry ${i + 1} is damaged.`);
++        const ver = cd.getUint16(p + 6, true), flags = cd.getUint16(p + 8, true), method = cd.getUint16(p + 10, true), crc = cd.getUint32(p + 16, true), csize = cd.getUint32(p + 20, true), usize = cd.getUint32(p + 24, true);
++        const nl = cd.getUint16(p + 28, true), xl = cd.getUint16(p + 30, true), cl = cd.getUint16(p + 32, true), dsk = cd.getUint16(p + 34, true), off = cd.getUint32(p + 42, true);
++        if (ver > 20) throw rsBad('flags', 'An entry needs a newer ZIP feature level than Plainsong backups use.');
++        if (flags & ~0x0800) throw rsBad('flags', 'An entry is encrypted or uses data descriptors, which Plainsong backups never do.');
++        if (method !== 0) throw rsBad('method', 'An entry is compressed. Plainsong backups store every entry uncompressed, so this file wasn’t written by Plainsong (or was re-zipped).');
++        if (csize !== usize) throw rsBad('method', 'An entry’s stored and real sizes differ.');
++        if (xl || cl || dsk) throw rsBad('extra', 'An entry has extra fields, comments or a disk number; Plainsong backups have none.');
++        if (nl < 1 || nl > L.maxName || p + 46 + nl > cd.byteLength) throw rsBad('name', 'An entry name has an invalid length.');
++        const nb = new Uint8Array(cd.buffer, cd.byteOffset + p + 46, nl);
++        if (nb.some(b => b < 0x21 || b > 0x7e)) throw rsBad('name', 'An entry name contains characters a Plainsong backup never uses (spaces, control or non-ASCII characters).');
++        const name = String.fromCharCode(...nb);
++        if (seen.has(name)) throw rsBad('duplicate', 'The archive contains the same entry name twice.', [name]);
++        seen.add(name);
++        if (name !== 'manifest.json' && !RS_DATA.includes(name) && !RS_BLOB_RE.test(name)) throw rsBad('unexpected-entry', 'The archive contains an entry Plainsong backups never contain, so it won’t be read.', [name]);
++        if (off !== expectOff) throw rsBad('layout', 'Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back.', [name]);
++        expectOff = off + 30 + nl + usize;
++        entries.push({ name, crc, size: usize, off, nl, flags, nb: Array.from(nb), dataOff: off + 30 + nl });
++        p += 46 + nl;
++      }
++      if (p !== cd.byteLength) throw rsBad('directory', 'The ZIP directory has trailing bytes.');
++      if (expectOff !== cdOff) throw rsBad('layout', 'The entries don’t end exactly where the ZIP directory starts.');
++      // exact documented layout and order
++      const want = ['manifest.json', ...RS_DATA];
++      for (let i = 0; i < want.length; i++) if (entries[i].name !== want[i]) throw rsBad('order', `Entry ${i + 1} should be ${want[i]}.`, [entries[i].name]);
++      for (let i = 5; i < n; i++) if (entries[i].name !== `blobs/${String(i - 4).padStart(6, '0')}.bin`) throw rsBad('order', 'Audio entries must be numbered consecutively from blobs/000001.bin.', [entries[i].name]);
++      let payload = 0;
++      for (const e of entries) {
++        if (e.name === 'manifest.json' && e.size > L.maxManifest) throw rsBad('limits', 'The manifest is unreasonably large.');
++        if (RS_DATA.includes(e.name) && e.size > L.maxJson) throw rsBad('limits', `${e.name} is ${bytes(e.size)}, over the ${bytes(L.maxJson)} this version reads per data file.`);
++        if (e.name !== 'manifest.json') payload += e.size;
++      }
++      if (payload > L.maxBytes) throw rsBad('limits', `The backup holds ${bytes(payload)}; this version restores up to ${bytes(L.maxBytes)}.`);
++      // local headers must agree with the directory
++      for (let i = 0; i < entries.length; i += 128) {
++        if (ctl.cancel) throw new BackupCancel();
++        await Promise.all(entries.slice(i, i + 128).map(async e => {
++          const b = new Uint8Array(await file.slice(e.off, e.off + 30 + e.nl).arrayBuffer());
++          const h = new DataView(b.buffer);
++          const bad = m => rsBad('local-header', `The header of ${e.name} disagrees with the ZIP directory (${m}).`);
++          if (b.length !== 30 + e.nl || h.getUint32(0, true) !== 0x04034b50) throw bad('missing or damaged');
++          if (h.getUint16(6, true) !== e.flags || h.getUint16(8, true) !== 0) throw bad('flags/method');
++          if (h.getUint32(14, true) !== e.crc || h.getUint32(18, true) !== e.size || h.getUint32(22, true) !== e.size) throw bad('CRC or size');
++          if (h.getUint16(26, true) !== e.nl || h.getUint16(28, true) !== 0) throw bad('name or extra length');
++          for (let k = 0; k < e.nl; k++) if (b[30 + k] !== e.nb[k]) throw bad('name');
++        }));
++        prog(`Checking ZIP headers… ${Math.min(entries.length, i + 128)} of ${entries.length}`, .02 + .03 * (i / entries.length));
++      }
++      return { entries, payload };
++    }
++
++    // JSON-only deep scan: depth limit and the one key that can confuse object code.
++    function rsScan(v, path, iss, depth = 0) {
++      if (iss.length >= 20 || v === null || typeof v !== 'object') return;
++      if (depth > 40) { iss.push(`${path}: nested too deeply`); return; }
++      if (Array.isArray(v)) { for (let i = 0; i < v.length; i++) rsScan(v[i], `${path}[${i}]`, iss, depth + 1); return; }
++      for (const k of Object.keys(v)) { if (k === '__proto__') { iss.push(`${path}: forbidden key __proto__`); return; } rsScan(v[k], `${path}.${k}`, iss, depth + 1); }
++    }
++    function rsTrack(t, w, iss, webOnly, L) {
++      const add = m => { if (iss.length < 20) iss.push(`${w}: ${m}`); };
++      if (!isObj(t)) { add('not an object'); return; }
++      if (typeof t.id !== 'string' || !t.id || t.id.length > L.maxKey) add('id must be a non-empty text');
++      if (t.kind !== 'local' && t.kind !== 'web') add('kind must be "local" or "web"'); else if (webOnly && t.kind !== 'web') add('a web snapshot must have kind "web"');
++      for (const k of ['title', 'artist', 'album']) if (typeof t[k] !== 'string') add(`${k} must be text`);
++      for (const k of ['duration', 'added', 'plays', 'size', 'track', 'last']) if (t[k] !== undefined && !(isNum(t[k]) && t[k] >= 0)) add(`${k} must be a non-negative number`);
++      if (t.liked !== undefined && typeof t.liked !== 'boolean') add('liked must be true or false');
++      for (const k of ['key', 'lyrics', 'lrc', 'lyricsFrom', 'src']) if (t[k] !== undefined && typeof t[k] !== 'string') add(`${k} must be text`);
++      if (t.srcId !== undefined && typeof t.srcId !== 'string' && !isNum(t.srcId)) add('srcId must be text or a number');
++      if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
++      if (t.link !== undefined && !(typeof t.link === 'string' && (t.link === '' || isHttpUrl(t.link)))) add('link must be empty or an http(s) address');
++      if (t.kind === 'web' && !(typeof t.url === 'string' && isHttpUrl(t.url))) add('a web song needs an http(s) url');
++    }
++    function rsSession(s, iss, L) {
++      const add = m => { if (iss.length < 20) iss.push(`kv/session: ${m}`); };
++      if (!isObj(s)) { add('not an object'); return; }
++      for (const k of ['queue', 'orig']) if (s[k] !== undefined && !(Array.isArray(s[k]) && s[k].every(x => typeof x === 'string'))) add(`${k} must be a list of ids`);
++      if (s.qi !== undefined && !(Number.isInteger(s.qi) && s.qi >= -1)) add('qi must be a whole number >= -1');
++      if (s.time !== undefined && !(isNum(s.time) && s.time >= 0)) add('time must be a non-negative number');
++      if (s.vol !== undefined && !(isNum(s.vol) && s.vol >= 0 && s.vol <= 1)) add('vol must be between 0 and 1');
++      if (s.rate !== undefined && !(isNum(s.rate) && s.rate >= .25 && s.rate <= 3)) add('rate must be between 0.25 and 3');
++      if (s.repeat !== undefined && ![0, 1, 2].includes(s.repeat)) add('repeat must be 0, 1 or 2');
++      for (const k of ['shuffle', 'muted', 'pitch', 'np']) if (s[k] !== undefined && typeof s[k] !== 'boolean') add(`${k} must be true or false`);
++      if (s.eq !== undefined && !(Array.isArray(s.eq) && s.eq.length === 10 && s.eq.every(x => isNum(x) && Math.abs(x) <= 48))) add('eq must be 10 numbers');
++      if (s.eqPreset !== undefined && !(typeof s.eqPreset === 'string' && s.eqPreset.length <= 64)) add('eqPreset must be short text');
++      if (s.npTab !== undefined && !RS_TABS.includes(s.npTab)) add('npTab is not a known tab');
++      if (s.webs !== undefined) { if (!Array.isArray(s.webs)) add('webs must be a list'); else s.webs.forEach((w, i) => rsTrack(w, `kv/session.webs[${i}]`, iss, true, L)); }
++    }
++    function rsHist(h, iss, L) {
++      if (!Array.isArray(h) || h.length > 100000) { iss.push('kv/hist: must be a list (at most 100000 entries)'); return; }
++      h.forEach((x, i) => {
++        if (iss.length >= 20) return;
++        if (!isObj(x) || typeof x.id !== 'string' || !isNum(x.t) || x.t < 0) { iss.push(`kv/hist[${i}]: needs a text id and a time`); return; }
++        if (x.snap !== undefined) rsTrack(x.snap, `kv/hist[${i}].snap`, iss, true, L);
++      });
++    }
++
++    async function readBackupZip(file, opts = {}) {
++      const L = { ...RESTORE_LIMITS, ...(opts.limits || {}) }, ctl = opts.ctl || { cancel: false }, prog = opts.onProgress || (() => { });
++      if (!(file instanceof Blob)) throw rsBad('not-zip', 'No file was given.');
++      const stop = () => { if (ctl.cancel) throw new BackupCancel(); };
++      prog('Checking the ZIP structure…', .01);
++      const { entries, payload } = await rsZipIndex(file, L, ctl, prog); stop();
++      let done = 0, lastUi = 0;
++      const tick = n => { done += n; const now = performance.now(); if (now - lastUi > 80) { lastUi = now; prog(`Checking every byte… ${bytes(done)} of ${bytes(payload)}`, .06 + .9 * (done / Math.max(1, payload))); } };
++      const slice = (e, type) => file.slice(e.dataOff, e.dataOff + e.size, type);
++      const crcOf = async e => { try { return await crcOfBlob(slice(e), tick, ctl); } catch (err) { if (err instanceof BackupCancel) throw err; throw rsBad('read', `Reading ${e.name} failed (${(err && err.message) || 'unknown error'}); the file may have been moved or changed.`); } };
++      const jsonOf = async (e, what) => {
++        const crc = await crcOf(e); stop();
++        if (crc !== e.crc) throw rsBad('crc', `${what} is damaged (checksum mismatch).`);
++        let txt;
++        try { txt = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(await slice(e).arrayBuffer()); } catch (err) { throw rsBad('utf8', `${what} isn’t valid UTF-8 text.`); }
++        try { return JSON.parse(txt); } catch (err) { throw rsBad(what === 'manifest.json' ? 'manifest-json' : 'json', `${what} isn’t valid JSON.`); }
++      };
++
++      // ---- manifest ----
++      const me = entries[0], man = await jsonOf(me, 'manifest.json');
++      const mbad = (m, lines) => rsBad('manifest-shape', 'manifest.json is inconsistent: ' + m, lines);
++      if (!isObj(man)) throw mbad('it isn’t an object.');
++      if (man.format !== BACKUP.format) throw rsBad('format', 'This isn’t a Plainsong backup (wrong format marker).');
++      if (!Number.isInteger(man.formatVersion)) throw rsBad('version', 'The backup has no usable format version.');
++      if (man.formatVersion !== BACKUP.version) throw rsBad('version', man.formatVersion > BACKUP.version ? `This backup uses format ${man.formatVersion}, made by a newer Plainsong. This version reads format ${BACKUP.version} only. Update Plainsong, then try again.` : `This backup uses format ${man.formatVersion}, which this version doesn’t read (it reads format ${BACKUP.version} only).`);
++      if (typeof man.complete !== 'boolean') throw mbad('complete must be true or false.');
++      if (!isObj(man.source) || man.source.database !== 'plainsong' || man.source.databaseVersion !== 1) throw rsBad('db-version', 'This backup comes from a database layout this version doesn’t know (expected plainsong v1).');
++      if (typeof man.createdAt !== 'string' || man.createdAt.length > 40 || !isFinite(Date.parse(man.createdAt))) throw mbad('createdAt isn’t a valid date.');
++      if (typeof man.generator !== 'string' || man.generator.length > 100) throw mbad('generator must be short text.');
++      if (!isObj(man.counts) || !['tracks', 'playlists', 'kv', 'blobs', 'localStorage'].every(k => isUInt(man.counts[k]))) throw mbad('counts are missing or invalid.');
++      if (!isUInt(man.audioBytes) || !isUInt(man.payloadBytes)) throw mbad('audioBytes/payloadBytes are missing or invalid.');
++      if (!Array.isArray(man.problems) || !man.problems.every(x => isObj(x) && typeof x.id === 'string' && typeof x.title === 'string' && typeof x.reason === 'string')) throw mbad('problems must be a list of {id, title, reason}.');
++      if (!Array.isArray(man.warnings) || !man.warnings.every(x => typeof x === 'string')) throw mbad('warnings must be a list of text.');
++      if (man.complete && man.problems.length) throw mbad('it says the backup is complete but lists problems.');
++      if (!Array.isArray(man.files) || man.files.length !== RS_DATA.length) throw mbad('files must list the four data files.');
++      man.files.forEach((f, i) => {
++        const e = entries[i + 1];
++        if (!isObj(f) || f.path !== RS_DATA[i] || f.bytes !== e.size || f.crc32 !== hex8(e.crc) || !RS_CRC_RE.test(f.crc32)) throw mbad(`the entry for ${RS_DATA[i]} doesn’t match the archive (size or checksum).`);
++      });
++      const blobEntries = entries.slice(5);
++      if (!Array.isArray(man.blobs) || man.blobs.length !== blobEntries.length || man.counts.blobs !== blobEntries.length) throw mbad('the audio list doesn’t match the archive entries.');
++      const bkeys = [];
++      man.blobs.forEach((b, i) => {
++        const e = blobEntries[i];
++        if (!isObj(b) || typeof b.key !== 'string' || b.key.length > L.maxKey) throw mbad(`audio item ${i + 1} has no valid key.`);
++        if (b.path !== e.name || b.bytes !== e.size || !RS_CRC_RE.test(String(b.crc32)) || b.crc32 !== hex8(e.crc)) throw mbad(`audio item ${i + 1} doesn’t match its archive entry (path, size or checksum).`);
++        if (typeof b.type !== 'string' || b.type.length > 255 || !/^[\x20-\x7e]*$/.test(b.type) || b.type !== b.type.toLowerCase()) throw rsBad('blob-type', `Audio item ${i + 1} has a MIME type that can’t be stored exactly.`);
++        if (i && b.key === man.blobs[i - 1].key) throw rsBad('duplicate-key', 'Two audio items share the same key.', [b.key]);
++        if (i && !(man.blobs[i - 1].key < b.key)) throw rsBad('order', 'Audio keys must be in ascending store order.');
++        bkeys.push(b.key);
++      });
++      if (new Set(bkeys).size !== bkeys.length) throw rsBad('duplicate-key', 'Two audio items share the same key.');
++      const audioBytes = blobEntries.reduce((s, e) => s + e.size, 0);
++      if (man.audioBytes !== audioBytes || man.payloadBytes !== payload) throw mbad('audioBytes/payloadBytes don’t add up to the archive contents.');
++      if (man.excluded !== undefined && !(isObj(man.excluded) && (man.excluded.kv === undefined || (Array.isArray(man.excluded.kv) && man.excluded.kv.every(k => typeof k === 'string'))))) throw mbad('excluded is malformed.');
++
++      // ---- data files ----
++      prog('Reading library data…', .06);
++      const data = {};
++      for (let i = 0; i < RS_DATA.length; i++) data[RS_DATA[i]] = await jsonOf(entries[i + 1], RS_DATA[i]);
++      const tracks = data['data/tracks.json'], playlists = data['data/playlists.json'], kv = data['data/kv.json'], ls = data['data/localstorage.json'];
++      const dbad = (code, m, lines) => rsBad(code, m, lines);
++      for (const [v, nm] of [[tracks, 'tracks.json'], [playlists, 'playlists.json'], [kv, 'kv.json']]) if (!Array.isArray(v)) throw dbad('shape', `${nm} must be a list.`);
++      if (!isObj(ls)) throw dbad('shape', 'localstorage.json must be an object.');
++      if (tracks.length !== man.counts.tracks || playlists.length !== man.counts.playlists || kv.length !== man.counts.kv || Object.keys(ls).length !== man.counts.localStorage) throw rsBad('counts', 'The record counts in the manifest don’t match the data files.');
++      const iss = [];
++      for (const [v, nm] of [[tracks, 'tracks'], [playlists, 'playlists'], [kv, 'kv'], [ls, 'localStorage']]) rsScan(v, nm, iss);
++      if (iss.length) throw dbad('shape', 'The data contains content Plainsong never writes.', iss);
++
++      const ascending = (ids, what, code) => {
++        for (let i = 1; i < ids.length; i++) {
++          if (ids[i] === ids[i - 1]) throw rsBad(code, `Two ${what} share the same key.`, [ids[i]]);
++          if (!(ids[i - 1] < ids[i])) throw rsBad('order', `${what} must be in ascending store key order (the order Plainsong writes them).`, [ids[i]]);
++        }
++      };
++      tracks.forEach((t, i) => rsTrack(t, `tracks[${i}]`, iss, false, L));
++      if (iss.length) throw dbad('shape', 'Some songs have invalid fields.', iss);
++      const tids = tracks.map(t => t.id); ascending(tids, 'songs', 'duplicate-id');
++      playlists.forEach((p, i) => {
++        const add = m => { if (iss.length < 20) iss.push(`playlists[${i}]: ${m}`); };
++        if (!isObj(p)) return add('not an object');
++        if (typeof p.id !== 'string' || !p.id || p.id.length > L.maxKey) add('id must be a non-empty text');
++        if (typeof p.name !== 'string') add('name must be text');
++        if (!Array.isArray(p.ids) || !p.ids.every(x => typeof x === 'string')) add('ids must be a list of song ids');
++        if (p.created !== undefined && !(isNum(p.created) && p.created >= 0)) add('created must be a non-negative number');
++      });
++      if (iss.length) throw dbad('shape', 'Some playlists are invalid.', iss);
++      ascending(playlists.map(p => p.id), 'playlists', 'duplicate-id');
++
++      kv.forEach((x, i) => {
++        if (!isObj(x) || typeof x.key !== 'string' || !x.key || x.key.length > L.maxKey || !Object.prototype.hasOwnProperty.call(x, 'value') || Object.keys(x).length !== 2) { if (iss.length < 20) iss.push(`kv[${i}]: must be {key, value}`); }
++      });
++      if (iss.length) throw dbad('shape', 'Some saved settings entries are invalid.', iss);
++      const secrets = kv.filter(x => isSecretKey(x.key)).map(x => x.key);
++      if (secrets.length) throw dbad('secret', 'This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainsong backup.', secrets.slice(0, 8));
++      ascending(kv.map(x => x.key), 'saved settings', 'duplicate-key');
++      for (const x of kv) { if (x.key === 'session') rsSession(x.value, iss, L); else if (x.key === 'hist') rsHist(x.value, iss, L); }
++      if (iss.length) throw dbad('shape', 'The saved session or history is invalid.', iss);
++      for (const k of Object.keys(ls)) {
++        if (!BACKUP.lsAllow.includes(k)) throw dbad('localstorage', 'The file carries a browser-storage key Plainsong doesn’t restore, so it won’t be read.', [k]);
++        if (k === 'ps-theme' && ls[k] !== 'light' && ls[k] !== 'dark') throw dbad('localstorage', 'ps-theme must be "light" or "dark".');
++      }
++
++      // ---- audio bytes ----
++      for (let i = 0; i < blobEntries.length; i++) {
++        stop(); const crc = await crcOf(blobEntries[i]); stop();
++        if (crc !== blobEntries[i].crc) throw rsBad('crc', 'An audio file in the backup is damaged (checksum mismatch).', [`${blobEntries[i].name} (${man.blobs[i].key})`]);
++      }
++
++      // ---- cross references ----
++      const tset = new Set(tids), have = new Map(man.blobs.map((b, i) => [b.key, blobEntries[i]]));
++      const missingLocal = tracks.filter(t => t.kind === 'local' && !(have.has(t.id) && have.get(t.id).size > 0)).map(t => t.id);
++      const problemIds = new Set(man.problems.map(x => x.id));
++      if (man.complete && missingLocal.length) throw rsBad('reference', 'The backup says it is complete, but some songs have no audio in it.', missingLocal.slice(0, 8));
++      if (!man.complete && missingLocal.some(id => !problemIds.has(id))) throw rsBad('reference', 'The backup is marked incomplete but doesn’t account for every song without audio.', missingLocal.filter(id => !problemIds.has(id)).slice(0, 8));
++      const orphans = man.blobs.map(b => b.key).filter(k => !tset.has(k));
++      const warnings = man.warnings.map(w => 'Backup note: ' + w);
++      const dangling = playlists.reduce((s, p) => s + p.ids.filter(id => !tset.has(id)).length, 0);
++      if (dangling) warnings.push(`${dangling} playlist entr${dangling === 1 ? 'y points' : 'ies point'} to songs not in this backup (kept as they are)`);
++      const sess = (kv.find(x => x.key === 'session') || {}).value, hist = (kv.find(x => x.key === 'hist') || {}).value;
++      const blobs = man.blobs.map((b, i) => {
++        const bl = slice(blobEntries[i], b.type);
++        if (bl.type !== b.type || bl.size !== b.bytes) throw rsBad('blob-type', 'An audio entry couldn’t be exposed with its exact size and MIME type.', [b.key]);
++        return { key: b.key, size: b.bytes, type: b.type, crc32: b.crc32, blob: bl };
++      });
++      const pkg = {
++        man, complete: man.complete, tracks, playlists, kv, ls, blobs, orphans, missingLocal, warnings,
++        summary: {
++          createdAt: man.createdAt, generator: man.generator, complete: man.complete, formatVersion: man.formatVersion,
++          local: tracks.filter(t => t.kind === 'local').length, web: tracks.filter(t => t.kind === 'web').length, playlists: playlists.length, kv: kv.length,
++          audioFiles: blobs.length, audioBytes, orphans: orphans.length, queue: sess && Array.isArray(sess.queue) ? sess.queue.length : 0, hasSession: !!sess, history: Array.isArray(hist) ? hist.length : 0,
++          theme: ls['ps-theme'] || null, fileBytes: file.size, problems: man.problems.length
++        }
++      };
++      prog('Backup checked', 1);
++      if (!man.complete && !opts.allowIncomplete) throw Object.assign(rsBad('incomplete', `This backup is marked INCOMPLETE: ${man.problems.length} song${man.problems.length === 1 ? ' has' : 's have'} no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file itself is intact.)`, man.problems.slice(0, 8).map(x => `${x.title}: ${x.reason}`)), { pkg });
++      return pkg;
++    }
++
+     const tidOf = a => { const r = a.closest('[data-tid]'); return r && r.dataset.tid; };
+     async function handleAct(a, e) {
+       const d = a.dataset;

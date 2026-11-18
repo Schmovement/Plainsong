@@ -1,0 +1,40 @@
+PASS test library is quiescent (two snapshots 1.8 s apart identical)
+PASS library has 3 songs, 3 audio blobs, secret key, custom key, theme light
+PASS restore buttons exist: sidebar and top bar, with accessible names
+PASS sidebar "Restore from backup…" opens exactly one file chooser (zip only)
+PASS preview says nothing has changed and lists file, songs (5 with audio + 1 web), 2 playlists, 6 audio files, orphan, queue, history, theme
+PASS preview shows the current library (3 songs, 1 playlist) and the web hosts the backup refers to
+PASS preview: Cancel is focused first; there is no destructive button yet
+PASS preview stage: zero writes so far
+PASS preview stage: database and localStorage byte-identical
+PASS confirmation is a separate step naming what is deleted (3 songs, 1 playlist, 3 audio files, queue/history/settings), what replaces it, what is kept, and warns about other tabs
+PASS confirmation: Cancel focused; "Replace library" disabled until the checkbox is ticked
+PASS clicking the disabled Replace button does nothing
+PASS ticking the checkbox enables Replace
+PASS result dialog: restored counts, "Nothing is playing", theme set to dark and described as a separate step
+PASS restore into populated library: songs identical to the backup (every field, key order)
+PASS restore into populated library: playlists identical (ids order kept)
+PASS restore into populated library: saved settings identical (session, history, custom keys)
+PASS restore into populated library: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS restore into populated library: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS old songs, old playlist, old custom setting and old audio are gone
+PASS ps-theme: backup value dark applied to localStorage AFTER the database commit
+PASS rebuilt app state: 6 songs, playlists [pl-1,pl-2], queue and index from the session, volume from the session, home view
+PASS NO AUTOPLAY: both audio elements paused and zero media play events since the restore started (autoplay was allowed in this browser)
+PASS restored current track is loaded (not playing) and shown in the bar
+PASS locks released: DB.lock false, no busy flags, library counter shows 6 songs
+PASS exactly one read-write transaction touched the database during the restore besides the pre-commit session flush
+PASS nothing wrote over the restored data afterwards (snapshot 1.5 s later identical)
+PASS restored local song plays from the restored audio bytes (currentTime advances)
+PASS normal writes work again after the restore (lock lifted)
+PASS page errors during the whole happy path
+PASS keyboard: ONE Enter on the focused "Restore from backup…" button opens exactly one file chooser
+PASS keyboard: preview opens with focus on Cancel; Tab reaches Continue; Escape cancels
+PASS keyboard: Tab moves to Continue…
+PASS keyboard: Enter on Continue… reaches the confirmation, focus on Cancel (safe default)
+PASS keyboard: confirmation focus order reaches the checkbox, Cancel and Back-up-first, and skips the disabled Replace button
+PASS keyboard: Replace is skipped by Tab order while disabled, and Space on the checkbox enables it
+PASS keyboard-only restore completes
+PASS keyboard scenarios: no page errors
+
+PHASE 2B: 38 / 38 pass

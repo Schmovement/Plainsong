@@ -1,0 +1,10 @@
+FAIL (a) backup requested during VALIDATION: refused with "A restore is in progress", no download, no backup state left set  :: {"toast":"Added 3 songs","dl":1,"busy":true,"rb":true}
+FAIL (a) backup requested during the PREVIEW: refused, no download, no backup state left set  :: {"toast":"Added 3 songs","dl":1,"busy":true,"rb":true}
+page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#dlg [data-bk="go"]')[22m
+
+    at /home/claude/plainsong/tests/phase2b.test.js:502:16 {
+  log: [ `  - waiting for locator('#dlg [data-bk="go"]')` ],
+  name: 'TimeoutError'
+}

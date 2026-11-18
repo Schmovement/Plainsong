@@ -1,0 +1,76 @@
+{
+ "total": 14,
+ "failed": 4,
+ "results": [
+  {
+   "name": "(a) backup requested during VALIDATION: refused with \"A restore is in progress\", no download, no backup state left set",
+   "ok": true,
+   "detail": "{\"toast\":\"A restore is in progress. Back up when it finishes.\",\"dl\":0,\"busy\":false,\"rb\":true}"
+  },
+  {
+   "name": "(a) backup requested during the PREVIEW: refused, no download, no backup state left set",
+   "ok": true,
+   "detail": "{\"toast\":\"A restore is in progress. Back up when it finishes.\",\"dl\":0,\"busy\":false,\"rb\":true}"
+  },
+  {
+   "name": "(a) backup requested during the CONFIRMATION: refused, no download, no backup state left set",
+   "ok": true,
+   "detail": "{\"toast\":\"A restore is in progress. Back up when it finishes.\",\"dl\":0,\"busy\":false,\"rb\":true}"
+  },
+  {
+   "name": "(a) the dialog's own \"Back up current library first\" is the one intended exception: it downloads and returns to the confirmation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "(a) after cancelling: restoreBusy is cleared and the library is byte-identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "(a) after cancelling, a normal backup works again (one download) and clears its busy flag",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "(a) backup requested inside the locked write window: refused with \"A restore is writing\", no download",
+   "ok": true,
+   "detail": "{\"toast\":\"A restore is writing to your library. Back up when it finishes.\",\"dl\":0,\"busy\":false,\"rb\":true}"
+  },
+  {
+   "name": "(b) restore clears the old timed sleep timer (S.sleep null) and starts no playback",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "(b) restored playback started after the restore is still playing, at its normal volume, long after the old deadline (not stopped, not faded)",
+   "ok": false,
+   "detail": "{\"paused\":true,\"vol\":0.38422030210494995,\"want\":0.38422029683805425,\"toast\":\"Sleep timer: good night\"}"
+  },
+  {
+   "name": "(b) restore clears an \"after this song\" sleep timer",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "(b) the restored session, when a song ends, advances normally instead of \"Sleep timer: playback stopped\"",
+   "ok": false,
+   "detail": "{\"qi0\":1,\"qi\":1,\"n\":3,\"toast\":\"Sleep timer: playback stopped\"}"
+  },
+  {
+   "name": "(b) in-flight fade-out was running (volume below normal) when the rebuild happened",
+   "ok": true,
+   "detail": "0.3073762357234955"
+  },
+  {
+   "name": "(b) after the rebuild the abandoned fade does not pause the player or leave the volume lowered, and says no \"good night\"",
+   "ok": true,
+   "detail": "{\"paused\":false,\"vol\":0.38422030210494995,\"want\":0.38422029683805425,\"toast\":\"Sleep timer: playback stopped\"}"
+  },
+  {
+   "name": "(a)(b) scenarios: no page errors",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

@@ -40,6 +40,7 @@
       <button class="btn primary" data-act="import"><span data-ico="upload" data-s="16"></span>Import music</button>
       <button class="btn" data-act="importDir"><span data-ico="folder" data-s="16"></span>Import folder</button>
       <button class="btn" data-act="backup"><span data-ico="download" data-s="16"></span>Back up library</button>
+      <button class="btn" data-act="restore"><span data-ico="restore" data-s="16"></span>Restore from backup…</button>
       <div class="readout" id="libStat">0 songs</div>
     </div>
   </aside>
@@ -57,6 +58,8 @@
           data-ico="upload"></span></button>
       <button class="icon-btn" data-act="backup" aria-label="Back up library" title="Back up library"><span
           data-ico="download"></span></button>
+      <button class="icon-btn" data-act="restore" aria-label="Restore from backup" title="Restore from backup"><span
+          data-ico="restore"></span></button>
       <button class="icon-btn" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts"><span
           style="font:600 15px var(--f-mono)">?</span></button>
       <button class="icon-btn" id="themeBtn" aria-label="Switch theme" title="Switch theme"></button>
@@ -127,6 +130,7 @@
 
   <input type="file" id="fileIn" accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav" multiple hidden>
   <input type="file" id="dirIn" webkitdirectory multiple hidden>
+  <input type="file" id="restoreIn" accept=".zip,application/zip,application/x-zip-compressed" hidden>
   <div class="menu" id="menu" hidden></div>
   <div class="pop" id="speedPop" hidden></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -180,12 +184,13 @@
       upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
       download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
       edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      restore: '<path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/>',
       save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>'
     };
     const ico = (n, s = 20) => `<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ''}</svg>`;
 
     const DB = {
-      ok: false, db: null,
+      ok: false, db: null, lock: false,
       open() {
         return new Promise((res, rej) => {
           if (!window.indexedDB) return rej(new Error('IndexedDB unavailable'));
@@ -202,6 +207,7 @@
       req(store, mode, fn) {
         return new Promise((res, rej) => {
           if (!this.ok) return res(undefined);
+          if (this.lock && mode !== 'readonly') return rej(new Error('Writes are paused while a backup file is being restored'));
           try {
             const tx = this.db.transaction(store, mode); const rq = fn(tx.objectStore(store));
             tx.oncomplete = () => res(rq && rq.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
@@ -338,6 +344,7 @@
 
     async function importFiles(files) {
       if (S.backupBusy) { toast('A backup is running. Try the import again when it finishes.', 3200); return; }
+      if (S.restoreBusy) { toast('A restore is in progress. Try the import again when it finishes.', 3200); return; }
       if (S.importBusy) { toast('An import is already running', 2200); return; }
       S.importBusy = true;
       try { await importRun(files); } finally { S.importBusy = false; }
@@ -535,7 +542,7 @@
       if (S.npTab === 'lyrics') renderNP();
       saveSession();
     }
-    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) load(t, autoplay); }
+    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) return load(t, autoplay); }
     function togglePlay() {
       if (!S.queue.length) { const first = [...S.tracks.values()]; if (first.length) playList(first.map(t => t.id), 0); else toast('Import music or pick something from Explore'); return; }
       if (!A.getAttribute('src')) { loadCurrent(true); return; }
@@ -666,7 +673,8 @@
       const left = S.sleep.at - Date.now();
       const el = $('#sleepLeft'); if (el) el.textContent = left > 0 ? `Stops in ${fmt(left / 1000)}` : '';
       if (left <= 0) {
-        S.sleep = null; const el2 = A; for (let i = 10; i >= 0; i--) { el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
+        S.sleep = null; const el2 = A, ep = S.epoch; for (let i = 10; i >= 0; i--) { if (ep !== S.epoch) { applyVol(); return; } el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
+        if (ep !== S.epoch) { applyVol(); return; }
         el2.pause(); applyVol(); toast('Sleep timer: good night'); renderNPIf('sound');
       }
     }, 1000);
@@ -1219,10 +1227,10 @@
 
     const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
     function crcAdd(crc, u8) { for (let i = 0; i < u8.length; i++) crc = CRC_T[(crc ^ u8[i]) & 255] ^ (crc >>> 8); return crc; }
-    async function crcOfBlob(blob, onBytes) {
+    async function crcOfBlob(blob, onBytes, ctl = BK) {
       let crc = 0xFFFFFFFF, off = 0, last = performance.now();
       while (off < blob.size) {
-        if (BK && BK.cancel) throw new BackupCancel();
+        if (ctl && ctl.cancel) throw new BackupCancel();
         const end = Math.min(blob.size, off + BACKUP_LIMITS.chunk);
         const u8 = new Uint8Array(await blob.slice(off, end).arrayBuffer());
         if (u8.length !== end - off) throw new Error('short read');
@@ -1320,8 +1328,8 @@
     function bkShow(html) { const d = $('#dlg'); if (d.open) d.innerHTML = html; else dialog(html); return d; }
     function bkClose() { const d = $('#dlg'); d.onclose = null; d.oncancel = null; if (d.open) d.close(); }
     const bkLines = l => l && l.length ? `<ul class="bk-list">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
-    function bkProgress(ctl) {
-      const d = bkShow(`<h3>Backing up your library</h3><p class="note bk-note" id="bkMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar" role="progressbar" aria-label="Backup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bkFill"></i></div><div class="btn-row end"><button class="btn" id="bkCancel">Cancel</button></div>`);
+    function bkProgress(ctl, title = 'Backing up your library', label = 'Backup progress') {
+      const d = bkShow(`<h3>${esc(title)}</h3><p class="note bk-note" id="bkMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar" role="progressbar" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bkFill"></i></div><div class="btn-row end"><button class="btn" id="bkCancel">Cancel</button></div>`);
       ctl.running = true;
       const cancel = () => { ctl.cancel = true; const m = $('#bkMsg'); if (m) m.textContent = 'Cancelling…'; const b = $('#bkCancel'); if (b) b.disabled = true; };
       $('#bkCancel').onclick = cancel; d.oncancel = e => { e.preventDefault(); cancel(); };
@@ -1428,8 +1436,10 @@
       a.href = url; a.download = name; a.hidden = true; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
     }
-    async function runBackup() {
+    async function runBackup(opts) {
       if (S.backupBusy) return;
+      if (S.restoring) { toast('A restore is writing to your library. Back up when it finishes.', 3200); return; }
+      if (S.restoreBusy && !(opts && opts.fromRestore)) { toast('A restore is in progress. Back up when it finishes.', 3200); return; } // only the restore dialog’s own “Back up current library first” may back up meanwhile
       if (S.importBusy) { toast('Wait for the import to finish, then back up.', 3200); return; }
       S.backupBusy = true; BK = { cancel: false, running: false };
       try {
@@ -1437,12 +1447,461 @@
         bkDownload(r.blob, r.name);
         const c = r.man.counts, inc = !r.man.complete;
         await bkInfo(inc ? 'Incomplete backup downloaded' : 'Backup downloaded',
-          `${c.tracks} song${c.tracks === 1 ? '' : 's'}, ${c.playlists} playlist${c.playlists === 1 ? '' : 's'}, ${bytes(r.blob.size)}. Your browser chooses where it goes, usually the Downloads folder. ${inc ? 'It is marked INCOMPLETE: ' + r.problems.length + ' song(s) had no audio to copy. ' : ''}Keep a copy somewhere outside this browser. Restoring from a backup file isn’t built yet, so don’t delete anything on the strength of it.`);
+          `${c.tracks} song${c.tracks === 1 ? '' : 's'}, ${c.playlists} playlist${c.playlists === 1 ? '' : 's'}, ${bytes(r.blob.size)}. Your browser chooses where it goes, usually the Downloads folder. ${inc ? 'It is marked INCOMPLETE: ' + r.problems.length + ' song(s) had no audio to copy. ' : ''}Keep a copy somewhere outside this browser. “Restore from backup…” can read this file back, but a restore replaces your library, so keep the file until you have checked the result.`);
       } catch (e) {
         if (e instanceof BackupCancel) { bkClose(); toast('Backup cancelled. Nothing was saved.', 3200); }
         else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
         else { console.error(e); await bkInfo('Backup failed', `Something went wrong while reading your library (${(e && e.message) || e}). No backup file was created.`); }
       } finally { S.backupBusy = false; BK = null; }
+    }
+
+    /* ---- backup reader (Phase 2A) ----
+       READ-ONLY. Parses and validates a Plainsong backup ZIP (format v1, see BACKUP_FORMAT.md). It never opens a
+       read-write IndexedDB transaction and never touches localStorage. No restore UI is wired to it yet (Phase 2B).
+       The file is untrusted: every header, size, CRC, name, JSON shape and cross-reference is checked before a
+       package is returned, and every refusal carries a machine-readable `code`. Returned audio is a list of lazy
+       Blob slices of the user's file (nothing is copied into memory). */
+    const RESTORE_LIMITS = { maxBytes: BACKUP_LIMITS.maxBytes, maxEntries: Math.min(BACKUP_LIMITS.maxEntries, 65535), maxJson: 256 * 1024 ** 2, maxManifest: 4 * 1024 ** 2, maxName: 64, maxKey: 1024, overhead: 16 * 1024 ** 2 };
+    const RS_DATA = ['data/tracks.json', 'data/playlists.json', 'data/kv.json', 'data/localstorage.json'];
+    const RS_BLOB_RE = /^blobs\/\d{6}\.bin$/, RS_CRC_RE = /^[0-9a-f]{8}$/, RS_COVER_RE = /^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]*$/;
+    const RS_TABS = ['queue', 'lyrics', 'sound'];
+    const isSecretKey = k => typeof k === 'string' && k.toLowerCase().startsWith(BACKUP.secretPrefix);
+    const rsBad = (code, msg, lines) => Object.assign(bkFail('This backup can’t be restored', msg + ' Nothing was changed.', lines), { code });
+    const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v);
+    const isNum = v => typeof v === 'number' && isFinite(v);
+    const isUInt = v => Number.isInteger(v) && v >= 0;
+    const isHttpUrl = s => { try { const u = new URL(s); return u.protocol === 'http:' || u.protocol === 'https:'; } catch (e) { return false; } };
+
+    // Central directory + every local header, strictly. Returns entries in file order.
+    async function rsZipIndex(file, L, ctl, prog) {
+      const size = file.size;
+      if (size > L.maxBytes + L.overhead) throw rsBad('limits', `This file is ${bytes(size)}; this version restores backups up to ${bytes(L.maxBytes)} of data.`);
+      if (size < 22) throw rsBad('not-zip', 'This file is too small to be a Plainsong backup.');
+      const tail = new DataView(await file.slice(size - 22).arrayBuffer());
+      if (tail.getUint32(0, true) !== 0x06054b50) throw rsBad('eocd', 'This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP comment.');
+      const disk = tail.getUint16(4, true), cdDisk = tail.getUint16(6, true), nHere = tail.getUint16(8, true), n = tail.getUint16(10, true), cdSize = tail.getUint32(12, true), cdOff = tail.getUint32(16, true), cmt = tail.getUint16(20, true);
+      if (n === 0xFFFF || cdSize === 0xFFFFFFFF || cdOff === 0xFFFFFFFF) throw rsBad('zip64', 'This archive uses ZIP64, which Plainsong backups never do.');
+      if (disk || cdDisk || nHere !== n) throw rsBad('multidisk', 'This archive is split over several disks, which Plainsong backups never are.');
+      if (cmt) throw rsBad('comment', 'This archive has a ZIP comment; Plainsong backups have none.');
+      if (n < 5) throw rsBad('count', `This archive has only ${n} entries; a Plainsong backup has at least 5.`);
+      if (n > L.maxEntries) throw rsBad('limits', `This archive has ${n} entries; this version restores at most ${L.maxEntries}.`);
+      if (cdOff + cdSize + 22 !== size || cdSize > n * (46 + L.maxName)) throw rsBad('directory', 'The ZIP directory doesn’t line up with the file size, so the file is damaged or has extra data attached.');
+      const cd = new DataView(await file.slice(cdOff, cdOff + cdSize).arrayBuffer());
+      const entries = [], seen = new Set(); let p = 0, expectOff = 0;
+      for (let i = 0; i < n; i++) {
+        if (p + 46 > cd.byteLength || cd.getUint32(p, true) !== 0x02014b50) throw rsBad('cd-entry', `ZIP directory entry ${i + 1} is damaged.`);
+        const ver = cd.getUint16(p + 6, true), flags = cd.getUint16(p + 8, true), method = cd.getUint16(p + 10, true), crc = cd.getUint32(p + 16, true), csize = cd.getUint32(p + 20, true), usize = cd.getUint32(p + 24, true);
+        const nl = cd.getUint16(p + 28, true), xl = cd.getUint16(p + 30, true), cl = cd.getUint16(p + 32, true), dsk = cd.getUint16(p + 34, true), off = cd.getUint32(p + 42, true);
+        if (ver > 20) throw rsBad('flags', 'An entry needs a newer ZIP feature level than Plainsong backups use.');
+        if (flags & ~0x0800) throw rsBad('flags', 'An entry is encrypted or uses data descriptors, which Plainsong backups never do.');
+        if (method !== 0) throw rsBad('method', 'An entry is compressed. Plainsong backups store every entry uncompressed, so this file wasn’t written by Plainsong (or was re-zipped).');
+        if (csize !== usize) throw rsBad('method', 'An entry’s stored and real sizes differ.');
+        if (xl || cl || dsk) throw rsBad('extra', 'An entry has extra fields, comments or a disk number; Plainsong backups have none.');
+        if (nl < 1 || nl > L.maxName || p + 46 + nl > cd.byteLength) throw rsBad('name', 'An entry name has an invalid length.');
+        const nb = new Uint8Array(cd.buffer, cd.byteOffset + p + 46, nl);
+        if (nb.some(b => b < 0x21 || b > 0x7e)) throw rsBad('name', 'An entry name contains characters a Plainsong backup never uses (spaces, control or non-ASCII characters).');
+        const name = String.fromCharCode(...nb);
+        if (seen.has(name)) throw rsBad('duplicate', 'The archive contains the same entry name twice.', [name]);
+        seen.add(name);
+        if (name !== 'manifest.json' && !RS_DATA.includes(name) && !RS_BLOB_RE.test(name)) throw rsBad('unexpected-entry', 'The archive contains an entry Plainsong backups never contain, so it won’t be read.', [name]);
+        if (off !== expectOff) throw rsBad('layout', 'Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back.', [name]);
+        expectOff = off + 30 + nl + usize;
+        entries.push({ name, crc, size: usize, off, nl, flags, nb: Array.from(nb), dataOff: off + 30 + nl });
+        p += 46 + nl;
+      }
+      if (p !== cd.byteLength) throw rsBad('directory', 'The ZIP directory has trailing bytes.');
+      if (expectOff !== cdOff) throw rsBad('layout', 'The entries don’t end exactly where the ZIP directory starts.');
+      // exact documented layout and order
+      const want = ['manifest.json', ...RS_DATA];
+      for (let i = 0; i < want.length; i++) if (entries[i].name !== want[i]) throw rsBad('order', `Entry ${i + 1} should be ${want[i]}.`, [entries[i].name]);
+      for (let i = 5; i < n; i++) if (entries[i].name !== `blobs/${String(i - 4).padStart(6, '0')}.bin`) throw rsBad('order', 'Audio entries must be numbered consecutively from blobs/000001.bin.', [entries[i].name]);
+      let payload = 0;
+      for (const e of entries) {
+        if (e.name === 'manifest.json' && e.size > L.maxManifest) throw rsBad('limits', 'The manifest is unreasonably large.');
+        if (RS_DATA.includes(e.name) && e.size > L.maxJson) throw rsBad('limits', `${e.name} is ${bytes(e.size)}, over the ${bytes(L.maxJson)} this version reads per data file.`);
+        if (e.name !== 'manifest.json') payload += e.size;
+      }
+      if (payload > L.maxBytes) throw rsBad('limits', `The backup holds ${bytes(payload)}; this version restores up to ${bytes(L.maxBytes)}.`);
+      // local headers must agree with the directory
+      for (let i = 0; i < entries.length; i += 128) {
+        if (ctl.cancel) throw new BackupCancel();
+        await Promise.all(entries.slice(i, i + 128).map(async e => {
+          const b = new Uint8Array(await file.slice(e.off, e.off + 30 + e.nl).arrayBuffer());
+          const h = new DataView(b.buffer);
+          const bad = m => rsBad('local-header', `The header of ${e.name} disagrees with the ZIP directory (${m}).`);
+          if (b.length !== 30 + e.nl || h.getUint32(0, true) !== 0x04034b50) throw bad('missing or damaged');
+          if (h.getUint16(6, true) !== e.flags || h.getUint16(8, true) !== 0) throw bad('flags/method');
+          if (h.getUint32(14, true) !== e.crc || h.getUint32(18, true) !== e.size || h.getUint32(22, true) !== e.size) throw bad('CRC or size');
+          if (h.getUint16(26, true) !== e.nl || h.getUint16(28, true) !== 0) throw bad('name or extra length');
+          for (let k = 0; k < e.nl; k++) if (b[30 + k] !== e.nb[k]) throw bad('name');
+        }));
+        prog(`Checking ZIP headers… ${Math.min(entries.length, i + 128)} of ${entries.length}`, .02 + .03 * (i / entries.length));
+      }
+      return { entries, payload };
+    }
+
+    // JSON-only deep scan: depth limit and the one key that can confuse object code.
+    function rsScan(v, path, iss, depth = 0) {
+      if (iss.length >= 20 || v === null || typeof v !== 'object') return;
+      if (depth > 40) { iss.push(`${path}: nested too deeply`); return; }
+      if (Array.isArray(v)) { for (let i = 0; i < v.length; i++) rsScan(v[i], `${path}[${i}]`, iss, depth + 1); return; }
+      for (const k of Object.keys(v)) { if (k === '__proto__') { iss.push(`${path}: forbidden key __proto__`); return; } rsScan(v[k], `${path}.${k}`, iss, depth + 1); }
+    }
+    function rsTrack(t, w, iss, webOnly, L) {
+      const add = m => { if (iss.length < 20) iss.push(`${w}: ${m}`); };
+      if (!isObj(t)) { add('not an object'); return; }
+      if (typeof t.id !== 'string' || !t.id || t.id.length > L.maxKey) add('id must be a non-empty text');
+      if (t.kind !== 'local' && t.kind !== 'web') add('kind must be "local" or "web"'); else if (webOnly && t.kind !== 'web') add('a web snapshot must have kind "web"');
+      for (const k of ['title', 'artist', 'album']) if (typeof t[k] !== 'string') add(`${k} must be text`);
+      for (const k of ['duration', 'added', 'plays', 'size', 'track', 'last']) if (t[k] !== undefined && !(isNum(t[k]) && t[k] >= 0)) add(`${k} must be a non-negative number`);
+      if (t.liked !== undefined && typeof t.liked !== 'boolean') add('liked must be true or false');
+      for (const k of ['key', 'lyrics', 'lrc', 'lyricsFrom', 'src']) if (t[k] !== undefined && typeof t[k] !== 'string') add(`${k} must be text`);
+      if (t.srcId !== undefined && typeof t.srcId !== 'string' && !isNum(t.srcId)) add('srcId must be text or a number');
+      if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
+      if (t.link !== undefined && !(typeof t.link === 'string' && (t.link === '' || isHttpUrl(t.link)))) add('link must be empty or an http(s) address');
+      if (t.kind === 'web' && !(typeof t.url === 'string' && isHttpUrl(t.url))) add('a web song needs an http(s) url');
+    }
+    function rsSession(s, iss, L) {
+      const add = m => { if (iss.length < 20) iss.push(`kv/session: ${m}`); };
+      if (!isObj(s)) { add('not an object'); return; }
+      for (const k of ['queue', 'orig']) if (s[k] !== undefined && !(Array.isArray(s[k]) && s[k].every(x => typeof x === 'string'))) add(`${k} must be a list of ids`);
+      if (s.qi !== undefined && !(Number.isInteger(s.qi) && s.qi >= -1)) add('qi must be a whole number >= -1');
+      if (s.time !== undefined && !(isNum(s.time) && s.time >= 0)) add('time must be a non-negative number');
+      if (s.vol !== undefined && !(isNum(s.vol) && s.vol >= 0 && s.vol <= 1)) add('vol must be between 0 and 1');
+      if (s.rate !== undefined && !(isNum(s.rate) && s.rate >= .25 && s.rate <= 3)) add('rate must be between 0.25 and 3');
+      if (s.repeat !== undefined && ![0, 1, 2].includes(s.repeat)) add('repeat must be 0, 1 or 2');
+      for (const k of ['shuffle', 'muted', 'pitch', 'np']) if (s[k] !== undefined && typeof s[k] !== 'boolean') add(`${k} must be true or false`);
+      if (s.eq !== undefined && !(Array.isArray(s.eq) && s.eq.length === 10 && s.eq.every(x => isNum(x) && Math.abs(x) <= 48))) add('eq must be 10 numbers');
+      if (s.eqPreset !== undefined && !(typeof s.eqPreset === 'string' && s.eqPreset.length <= 64)) add('eqPreset must be short text');
+      if (s.npTab !== undefined && !RS_TABS.includes(s.npTab)) add('npTab is not a known tab');
+      if (s.webs !== undefined) { if (!Array.isArray(s.webs)) add('webs must be a list'); else s.webs.forEach((w, i) => rsTrack(w, `kv/session.webs[${i}]`, iss, true, L)); }
+    }
+    function rsHist(h, iss, L) {
+      if (!Array.isArray(h) || h.length > 100000) { iss.push('kv/hist: must be a list (at most 100000 entries)'); return; }
+      h.forEach((x, i) => {
+        if (iss.length >= 20) return;
+        if (!isObj(x) || typeof x.id !== 'string' || !isNum(x.t) || x.t < 0) { iss.push(`kv/hist[${i}]: needs a text id and a time`); return; }
+        if (x.snap !== undefined) rsTrack(x.snap, `kv/hist[${i}].snap`, iss, true, L);
+      });
+    }
+
+    async function readBackupZip(file, opts = {}) {
+      const L = { ...RESTORE_LIMITS, ...(opts.limits || {}) }, ctl = opts.ctl || { cancel: false }, prog = opts.onProgress || (() => { });
+      if (!(file instanceof Blob)) throw rsBad('not-zip', 'No file was given.');
+      const stop = () => { if (ctl.cancel) throw new BackupCancel(); };
+      prog('Checking the ZIP structure…', .01);
+      const { entries, payload } = await rsZipIndex(file, L, ctl, prog); stop();
+      let done = 0, lastUi = 0;
+      const tick = n => { done += n; const now = performance.now(); if (now - lastUi > 80) { lastUi = now; prog(`Checking every byte… ${bytes(done)} of ${bytes(payload)}`, .06 + .9 * (done / Math.max(1, payload))); } };
+      const slice = (e, type) => file.slice(e.dataOff, e.dataOff + e.size, type);
+      const crcOf = async e => { try { return await crcOfBlob(slice(e), tick, ctl); } catch (err) { if (err instanceof BackupCancel) throw err; throw rsBad('read', `Reading ${e.name} failed (${(err && err.message) || 'unknown error'}); the file may have been moved or changed.`); } };
+      const jsonOf = async (e, what) => {
+        const crc = await crcOf(e); stop();
+        if (crc !== e.crc) throw rsBad('crc', `${what} is damaged (checksum mismatch).`);
+        let txt;
+        try { txt = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(await slice(e).arrayBuffer()); } catch (err) { throw rsBad('utf8', `${what} isn’t valid UTF-8 text.`); }
+        try { return JSON.parse(txt); } catch (err) { throw rsBad(what === 'manifest.json' ? 'manifest-json' : 'json', `${what} isn’t valid JSON.`); }
+      };
+
+      // ---- manifest ----
+      const me = entries[0], man = await jsonOf(me, 'manifest.json');
+      const mbad = (m, lines) => rsBad('manifest-shape', 'manifest.json is inconsistent: ' + m, lines);
+      if (!isObj(man)) throw mbad('it isn’t an object.');
+      if (man.format !== BACKUP.format) throw rsBad('format', 'This isn’t a Plainsong backup (wrong format marker).');
+      if (!Number.isInteger(man.formatVersion)) throw rsBad('version', 'The backup has no usable format version.');
+      if (man.formatVersion !== BACKUP.version) throw rsBad('version', man.formatVersion > BACKUP.version ? `This backup uses format ${man.formatVersion}, made by a newer Plainsong. This version reads format ${BACKUP.version} only. Update Plainsong, then try again.` : `This backup uses format ${man.formatVersion}, which this version doesn’t read (it reads format ${BACKUP.version} only).`);
+      if (typeof man.complete !== 'boolean') throw mbad('complete must be true or false.');
+      if (!isObj(man.source) || man.source.database !== 'plainsong' || man.source.databaseVersion !== 1) throw rsBad('db-version', 'This backup comes from a database layout this version doesn’t know (expected plainsong v1).');
+      if (typeof man.createdAt !== 'string' || man.createdAt.length > 40 || !isFinite(Date.parse(man.createdAt))) throw mbad('createdAt isn’t a valid date.');
+      if (typeof man.generator !== 'string' || man.generator.length > 100) throw mbad('generator must be short text.');
+      if (!isObj(man.counts) || !['tracks', 'playlists', 'kv', 'blobs', 'localStorage'].every(k => isUInt(man.counts[k]))) throw mbad('counts are missing or invalid.');
+      if (!isUInt(man.audioBytes) || !isUInt(man.payloadBytes)) throw mbad('audioBytes/payloadBytes are missing or invalid.');
+      if (!Array.isArray(man.problems) || !man.problems.every(x => isObj(x) && typeof x.id === 'string' && typeof x.title === 'string' && typeof x.reason === 'string')) throw mbad('problems must be a list of {id, title, reason}.');
+      if (!Array.isArray(man.warnings) || !man.warnings.every(x => typeof x === 'string')) throw mbad('warnings must be a list of text.');
+      if (man.complete && man.problems.length) throw mbad('it says the backup is complete but lists problems.');
+      if (!Array.isArray(man.files) || man.files.length !== RS_DATA.length) throw mbad('files must list the four data files.');
+      man.files.forEach((f, i) => {
+        const e = entries[i + 1];
+        if (!isObj(f) || f.path !== RS_DATA[i] || f.bytes !== e.size || f.crc32 !== hex8(e.crc) || !RS_CRC_RE.test(f.crc32)) throw mbad(`the entry for ${RS_DATA[i]} doesn’t match the archive (size or checksum).`);
+      });
+      const blobEntries = entries.slice(5);
+      if (!Array.isArray(man.blobs) || man.blobs.length !== blobEntries.length || man.counts.blobs !== blobEntries.length) throw mbad('the audio list doesn’t match the archive entries.');
+      const bkeys = [];
+      man.blobs.forEach((b, i) => {
+        const e = blobEntries[i];
+        if (!isObj(b) || typeof b.key !== 'string' || b.key.length > L.maxKey) throw mbad(`audio item ${i + 1} has no valid key.`);
+        if (b.path !== e.name || b.bytes !== e.size || !RS_CRC_RE.test(String(b.crc32)) || b.crc32 !== hex8(e.crc)) throw mbad(`audio item ${i + 1} doesn’t match its archive entry (path, size or checksum).`);
+        if (typeof b.type !== 'string' || b.type.length > 255 || !/^[\x20-\x7e]*$/.test(b.type) || b.type !== b.type.toLowerCase()) throw rsBad('blob-type', `Audio item ${i + 1} has a MIME type that can’t be stored exactly.`);
+        if (i && b.key === man.blobs[i - 1].key) throw rsBad('duplicate-key', 'Two audio items share the same key.', [b.key]);
+        if (i && !(man.blobs[i - 1].key < b.key)) throw rsBad('order', 'Audio keys must be in ascending store order.');
+        bkeys.push(b.key);
+      });
+      if (new Set(bkeys).size !== bkeys.length) throw rsBad('duplicate-key', 'Two audio items share the same key.');
+      const audioBytes = blobEntries.reduce((s, e) => s + e.size, 0);
+      if (man.audioBytes !== audioBytes || man.payloadBytes !== payload) throw mbad('audioBytes/payloadBytes don’t add up to the archive contents.');
+      if (man.excluded !== undefined && !(isObj(man.excluded) && (man.excluded.kv === undefined || (Array.isArray(man.excluded.kv) && man.excluded.kv.every(k => typeof k === 'string'))))) throw mbad('excluded is malformed.');
+
+      // ---- data files ----
+      prog('Reading library data…', .06);
+      const data = {};
+      for (let i = 0; i < RS_DATA.length; i++) data[RS_DATA[i]] = await jsonOf(entries[i + 1], RS_DATA[i]);
+      const tracks = data['data/tracks.json'], playlists = data['data/playlists.json'], kv = data['data/kv.json'], ls = data['data/localstorage.json'];
+      const dbad = (code, m, lines) => rsBad(code, m, lines);
+      for (const [v, nm] of [[tracks, 'tracks.json'], [playlists, 'playlists.json'], [kv, 'kv.json']]) if (!Array.isArray(v)) throw dbad('shape', `${nm} must be a list.`);
+      if (!isObj(ls)) throw dbad('shape', 'localstorage.json must be an object.');
+      if (tracks.length !== man.counts.tracks || playlists.length !== man.counts.playlists || kv.length !== man.counts.kv || Object.keys(ls).length !== man.counts.localStorage) throw rsBad('counts', 'The record counts in the manifest don’t match the data files.');
+      const iss = [];
+      for (const [v, nm] of [[tracks, 'tracks'], [playlists, 'playlists'], [kv, 'kv'], [ls, 'localStorage']]) rsScan(v, nm, iss);
+      if (iss.length) throw dbad('shape', 'The data contains content Plainsong never writes.', iss);
+
+      const ascending = (ids, what, code) => {
+        for (let i = 1; i < ids.length; i++) {
+          if (ids[i] === ids[i - 1]) throw rsBad(code, `Two ${what} share the same key.`, [ids[i]]);
+          if (!(ids[i - 1] < ids[i])) throw rsBad('order', `${what} must be in ascending store key order (the order Plainsong writes them).`, [ids[i]]);
+        }
+      };
+      tracks.forEach((t, i) => rsTrack(t, `tracks[${i}]`, iss, false, L));
+      if (iss.length) throw dbad('shape', 'Some songs have invalid fields.', iss);
+      const tids = tracks.map(t => t.id); ascending(tids, 'songs', 'duplicate-id');
+      playlists.forEach((p, i) => {
+        const add = m => { if (iss.length < 20) iss.push(`playlists[${i}]: ${m}`); };
+        if (!isObj(p)) return add('not an object');
+        if (typeof p.id !== 'string' || !p.id || p.id.length > L.maxKey) add('id must be a non-empty text');
+        if (typeof p.name !== 'string') add('name must be text');
+        if (!Array.isArray(p.ids) || !p.ids.every(x => typeof x === 'string')) add('ids must be a list of song ids');
+        if (p.created !== undefined && !(isNum(p.created) && p.created >= 0)) add('created must be a non-negative number');
+      });
+      if (iss.length) throw dbad('shape', 'Some playlists are invalid.', iss);
+      ascending(playlists.map(p => p.id), 'playlists', 'duplicate-id');
+
+      kv.forEach((x, i) => {
+        if (!isObj(x) || typeof x.key !== 'string' || !x.key || x.key.length > L.maxKey || !Object.prototype.hasOwnProperty.call(x, 'value') || Object.keys(x).length !== 2) { if (iss.length < 20) iss.push(`kv[${i}]: must be {key, value}`); }
+      });
+      if (iss.length) throw dbad('shape', 'Some saved settings entries are invalid.', iss);
+      const secrets = kv.filter(x => isSecretKey(x.key)).map(x => x.key);
+      if (secrets.length) throw dbad('secret', 'This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainsong backup.', secrets.slice(0, 8));
+      ascending(kv.map(x => x.key), 'saved settings', 'duplicate-key');
+      for (const x of kv) { if (x.key === 'session') rsSession(x.value, iss, L); else if (x.key === 'hist') rsHist(x.value, iss, L); }
+      if (iss.length) throw dbad('shape', 'The saved session or history is invalid.', iss);
+      for (const k of Object.keys(ls)) {
+        if (!BACKUP.lsAllow.includes(k)) throw dbad('localstorage', 'The file carries a browser-storage key Plainsong doesn’t restore, so it won’t be read.', [k]);
+        if (k === 'ps-theme' && ls[k] !== 'light' && ls[k] !== 'dark') throw dbad('localstorage', 'ps-theme must be "light" or "dark".');
+      }
+
+      // ---- audio bytes ----
+      for (let i = 0; i < blobEntries.length; i++) {
+        stop(); const crc = await crcOf(blobEntries[i]); stop();
+        if (crc !== blobEntries[i].crc) throw rsBad('crc', 'An audio file in the backup is damaged (checksum mismatch).', [`${blobEntries[i].name} (${man.blobs[i].key})`]);
+      }
+
+      // ---- cross references ----
+      const tset = new Set(tids), have = new Map(man.blobs.map((b, i) => [b.key, blobEntries[i]]));
+      const missingLocal = tracks.filter(t => t.kind === 'local' && !(have.has(t.id) && have.get(t.id).size > 0)).map(t => t.id);
+      const problemIds = new Set(man.problems.map(x => x.id));
+      if (man.complete && missingLocal.length) throw rsBad('reference', 'The backup says it is complete, but some songs have no audio in it.', missingLocal.slice(0, 8));
+      if (!man.complete && missingLocal.some(id => !problemIds.has(id))) throw rsBad('reference', 'The backup is marked incomplete but doesn’t account for every song without audio.', missingLocal.filter(id => !problemIds.has(id)).slice(0, 8));
+      const orphans = man.blobs.map(b => b.key).filter(k => !tset.has(k));
+      const warnings = man.warnings.map(w => 'Backup note: ' + w);
+      const dangling = playlists.reduce((s, p) => s + p.ids.filter(id => !tset.has(id)).length, 0);
+      if (dangling) warnings.push(`${dangling} playlist entr${dangling === 1 ? 'y points' : 'ies point'} to songs not in this backup (kept as they are)`);
+      const sess = (kv.find(x => x.key === 'session') || {}).value, hist = (kv.find(x => x.key === 'hist') || {}).value;
+      const blobs = man.blobs.map((b, i) => {
+        const bl = slice(blobEntries[i], b.type);
+        if (bl.type !== b.type || bl.size !== b.bytes) throw rsBad('blob-type', 'An audio entry couldn’t be exposed with its exact size and MIME type.', [b.key]);
+        return { key: b.key, size: b.bytes, type: b.type, crc32: b.crc32, blob: bl };
+      });
+      const pkg = {
+        man, complete: man.complete, tracks, playlists, kv, ls, blobs, orphans, missingLocal, warnings,
+        summary: {
+          createdAt: man.createdAt, generator: man.generator, complete: man.complete, formatVersion: man.formatVersion,
+          local: tracks.filter(t => t.kind === 'local').length, web: tracks.filter(t => t.kind === 'web').length, playlists: playlists.length, kv: kv.length,
+          audioFiles: blobs.length, audioBytes, orphans: orphans.length, queue: sess && Array.isArray(sess.queue) ? sess.queue.length : 0, hasSession: !!sess, history: Array.isArray(hist) ? hist.length : 0,
+          theme: ls['ps-theme'] || null, fileBytes: file.size, problems: man.problems.length
+        }
+      };
+      prog('Backup checked', 1);
+      if (!man.complete && !opts.allowIncomplete) throw Object.assign(rsBad('incomplete', `This backup is marked INCOMPLETE: ${man.problems.length} song${man.problems.length === 1 ? ' has' : 's have'} no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file itself is intact.)`, man.problems.slice(0, 8).map(x => `${x.title}: ${x.reason}`)), { pkg });
+      return pkg;
+    }
+
+    /* ---- safe restore (Phase 2B) ----
+       Replace-only. Order: validate the whole file (readBackupZip, read-only) -> escaped preview -> separate destructive
+       confirmation -> pause + flush + lock -> ONE read-write transaction over all four stores, verified inside the
+       transaction (abort = full rollback) -> rebuild app state without autoplay -> theme (localStorage, separate step). */
+    let RS = null;
+    const rsFail = (title, msg, lines) => bkFail(title, msg, lines);
+    const rsErr = e => (e && e.message) || String(e);
+    function rsDialog(html, buttons) {
+      return new Promise(res => {
+        if (RS) RS.running = false;
+        const d = bkShow(`${html}<div class="btn-row end">${buttons.map(b => `<button class="btn${b.primary ? ' primary' : ''}${b.danger ? ' danger' : ''}" data-bk="${b.id}"${b.focus ? ' data-focus' : ''}${b.disabled ? ' disabled' : ''}>${esc(b.label)}</button>`).join('')}</div>`);
+        d.oncancel = null; d.onclose = () => { if (!d.open) { d.onclose = null; res('no'); } };
+        d.querySelectorAll('[data-bk]').forEach(b => { b.onclick = () => { if (b.disabled) return; d.onclose = null; res(b.dataset.bk); }; });
+        const f = d.querySelector('[data-focus]') || d.querySelector('[data-bk]'); if (f) f.focus();
+      });
+    }
+    const fnv = str => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; };
+    // keys of every store + audio sizes/MIME + a digest of the records, from ONE read-only transaction
+    function rsFingerprint() {
+      return new Promise((resolve, reject) => {
+        let tx; try { tx = DB.db.transaction(BACKUP.stores, 'readonly'); } catch (e) { reject(e); return; }
+        const o = { keys: {}, digest: {}, blobs: [], audioBytes: 0 };
+        for (const n of ['tracks', 'playlists', 'kv']) {
+          const k = tx.objectStore(n).getAllKeys(); k.onsuccess = () => { o.keys[n] = k.result; };
+          const v = tx.objectStore(n).getAll(); v.onsuccess = () => { o.digest[n] = fnv(JSON.stringify(v.result)); };
+        }
+        const r = tx.objectStore('blobs').openCursor();
+        r.onsuccess = () => { const c = r.result; if (c) { const b = c.value; o.blobs.push([c.key, b && b.size, b && b.type]); o.audioBytes += (b && b.size) || 0; c.continue(); } };
+        tx.oncomplete = () => resolve(o); tx.onerror = tx.onabort = () => reject(tx.error || new Error('read failed'));
+      });
+    }
+    const rsSame = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+    function rsHosts(pkg) {
+      const hs = new Set(), add = u => { if (typeof u === 'string' && isHttpUrl(u)) hs.add(new URL(u).host); };
+      const t = x => { add(x.url); add(x.cover); add(x.link); };
+      pkg.tracks.forEach(t); for (const x of pkg.kv) { if (x.key === 'session' && Array.isArray(x.value.webs)) x.value.webs.forEach(t); if (x.key === 'hist') x.value.forEach(h => h.snap && t(h.snap)); }
+      return [...hs].sort();
+    }
+    const rsRows = rows => `<dl class="bk-sum">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+    async function rsQuota(need) {
+      try { if (navigator.storage && navigator.storage.estimate) { const e = await navigator.storage.estimate(); if (e && isFinite(e.quota) && isFinite(e.usage) && need > e.quota - e.usage) return `The browser reports about ${bytes(Math.max(0, e.quota - e.usage))} of free storage, less than the ${bytes(need)} this backup holds. The restore may fail; if it does your current library stays as it is.`; } } catch (e) { }
+      return '';
+    }
+    async function rsPreviewHtml(pkg, file, cur) {
+      const s = pkg.summary, when = new Date(s.createdAt), hosts = rsHosts(pkg), warn = pkg.warnings.slice(), q = await rsQuota(s.audioBytes);
+      if (q) warn.push(q);
+      if (hosts.length) warn.push(`This backup refers to web addresses on ${hosts.length} site${hosts.length === 1 ? '' : 's'}: ${hosts.slice(0, 6).join(', ')}${hosts.length > 6 ? ', …' : ''}. Plainsong contacts them only when you view or play those web songs.`);
+      return `<h3>Restore preview</h3><p class="note bk-note">Nothing has been changed yet. This is what the backup file contains.</p>` + rsRows([
+        ['File', file.name], ['File size', bytes(file.size)], ['Made', isFinite(when) ? when.toLocaleString() : s.createdAt], ['Made by', `${s.generator}, backup format ${s.formatVersion}`],
+        ['Songs', `${s.local + s.web} (${s.local} with audio, ${s.web} saved web)`], ['Playlists', String(s.playlists)], ['Audio files', `${s.audioFiles}, ${bytes(s.audioBytes)}${s.orphans ? `, ${s.orphans} with no song entry (kept)` : ''}`],
+        ['Queue and settings', s.hasSession ? `saved, queue of ${s.queue}` : 'none'], ['Play history', s.history ? `${s.history} plays` : 'none'], ['Theme', s.theme || 'not in this backup, yours stays as it is']
+      ]) + `<p class="note bk-note bk-h">Your library now</p>` + rsRows([['Songs', String(cur.tracks)], ['Playlists', String(cur.playlists)], ['Audio files', cur.blobs ? `${cur.blobs}, ${bytes(cur.audioBytes)}` : '0']]) + bkLines(warn);
+    }
+    function rsConfirmHtml(pkg, cur) {
+      const s = pkg.summary, empty = !cur.tracks && !cur.playlists && !cur.blobs;
+      const body = empty ? `<p class="note bk-note">Your library is empty, so nothing will be lost. The backup’s ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} will be added.</p>`
+        : `<p class="note bk-note">This <b>permanently deletes</b> everything in this browser’s Plainsong library and replaces it with the backup. There is no merge and no undo.</p>${bkLines([`Deleted: ${cur.tracks} song${cur.tracks === 1 ? '' : 's'}, ${cur.playlists} playlist${cur.playlists === 1 ? '' : 's'}, ${cur.blobs} audio file${cur.blobs === 1 ? '' : 's'} (${bytes(cur.audioBytes)}), your queue, play history and saved settings`, `Restored instead: ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'}, ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)})`, 'Kept: logins or keys other services saved in this browser (a backup never contains them)', 'Playback stops; nothing starts playing afterwards'])}`;
+      return `<h3>Replace your library?</h3>${body}<p class="note bk-note">Close any other Plainsong tabs first. The restore is all-or-nothing: if anything fails, your current library stays exactly as it is.</p>${empty ? '' : '<label class="bk-check"><input type="checkbox" id="rsAck"><span>I understand my current library will be erased and replaced.</span></label>'}`;
+    }
+    async function rsCurrent() { const f = await rsFingerprint(); return { tracks: f.keys.tracks.length, playlists: f.keys.playlists.length, blobs: f.blobs.length, audioBytes: f.audioBytes }; }
+
+    // ONE read-write transaction over all four stores. Everything is queued up front (no awaits inside), verified inside
+    // the transaction, and any throw / request error / mismatch aborts = rollback of every store.
+    function rsCommit(pkg) {
+      return new Promise((resolve, reject) => {
+        let tx, why = null, verified = false;
+        try { tx = DB.db.transaction(BACKUP.stores, 'readwrite'); } catch (e) { reject(e); return; }
+        tx.oncomplete = () => { if (verified) resolve(); else reject(why || new Error('The database transaction ended before the restore was verified')); };
+        tx.onabort = () => reject(why || tx.error || new Error('The database transaction was aborted'));
+        tx.onerror = () => { };
+        const fail = e => { why = why || e; try { tx.abort(); } catch (_) { } };
+        try {
+          const st = n => tx.objectStore(n), keep = new Set(pkg.kv.map(x => x.key));
+          st('tracks').clear(); st('playlists').clear(); st('blobs').clear();
+          pkg.tracks.forEach(t => st('tracks').put(t)); pkg.playlists.forEach(p => st('playlists').put(p));
+          pkg.blobs.forEach(b => st('blobs').put(b.blob, b.key)); pkg.kv.forEach(x => st('kv').put(x.value, x.key));
+          const cur = st('kv').openCursor(); const got = {}; let waiting = 4;
+          const check = () => {
+            if (--waiting) return;
+            try {
+              const bad = m => { throw new Error('Verification failed: ' + m); };
+              if (JSON.stringify(got.tracks) !== JSON.stringify(pkg.tracks)) bad('songs differ from the backup');
+              if (JSON.stringify(got.playlists) !== JSON.stringify(pkg.playlists)) bad('playlists differ from the backup');
+              if (JSON.stringify(got.blobs) !== JSON.stringify(pkg.blobs.map(b => [b.key, b.size, b.type]))) bad('audio files differ from the backup (key, size or type)');
+              const mine = new Map(got.kv.map(x => [x.key, x.value]));
+              for (const x of pkg.kv) if (!mine.has(x.key) || JSON.stringify(mine.get(x.key)) !== JSON.stringify(x.value)) bad('saved settings differ from the backup');
+              for (const k of mine.keys()) if (!keep.has(k) && !isSecretKey(k)) bad('an unexpected saved setting remains');
+              verified = true;
+            } catch (e) { fail(e); }
+          };
+          cur.onsuccess = () => {
+            const c = cur.result;
+            if (c) { if (!keep.has(c.key) && !isSecretKey(c.key)) c.delete(); c.continue(); return; }
+            const a = st('tracks').getAll(); a.onsuccess = () => { got.tracks = a.result; check(); };
+            const b = st('playlists').getAll(); b.onsuccess = () => { got.playlists = b.result; check(); };
+            got.kv = []; const k = st('kv').openCursor(); k.onsuccess = () => { const c2 = k.result; if (c2) { got.kv.push({ key: c2.key, value: c2.value }); c2.continue(); } else check(); };
+            got.blobs = []; const l = st('blobs').openCursor(); l.onsuccess = () => { const c3 = l.result; if (c3) { got.blobs.push([c3.key, c3.value && c3.value.size, c3.value && c3.value.type]); c3.continue(); } else check(); };
+          };
+        } catch (e) {
+          // the transaction already ended (aborted from outside): its abort event reports the real reason
+          if (e && (e.name === 'InvalidStateError' || e.name === 'TransactionInactiveError')) { try { tx.abort(); } catch (_) { } } else fail(e);
+        }
+      });
+    }
+
+    function rsTheme(pkg) {
+      const v = pkg.ls['ps-theme'];
+      if (!v) return 'This backup has no saved theme, so your theme setting was left as it is.';
+      store.set('ps-theme', v);
+      const kept = store.get('ps-theme') === v;
+      document.documentElement.dataset.theme = v; themeIcon();
+      return kept ? `Theme set to ${v}. (Saved separately from the library: browsers can’t include it in the database commit.)` : `The browser wouldn’t save the theme setting, so ${v} applies for this visit only. Your library itself was restored.`;
+    }
+    async function rsRebuild() {
+      S.loadTok++; S.epoch = (S.epoch || 0) + 1; S.sleep = null; // a sleep timer set before the restore must not stop the restored session later
+      for (const a of [aL, aW]) { try { a.pause(); a.removeAttribute('src'); a.load(); } catch (e) { } }
+      A = aL; if (S.objUrl) { try { URL.revokeObjectURL(S.objUrl); } catch (e) { } S.objUrl = null; }
+      S.tracks.clear(); S.cache.clear(); S.mem.clear(); S.archTracks = []; S.playlists = []; S.hist = [];
+      S.queue = []; S.orig = []; S.qi = -1; S.cur = null; S.counted = false; S.resume = null; S.errCount = 0; S.seeking = false; S.lists = [];
+      S.lyr = { id: null, lines: [], idx: -1 }; S.stack = []; S.view = { name: 'library' };   // Phase 2C: land on the Library (shows the restored songs, makes NO network request); the Home screen fetches public discover lists whenever it renders
+      abReset(); updateNowPlaying(null);
+      await hydrate(true, true);
+      applyEq(); saveSession.cancel(); saveHist.cancel(); S.lastSave = Date.now(); // nothing queued by the rebuild may overwrite the restored session
+      renderSide(); libStat(); render();
+      if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
+    }
+    async function applyRestore(pkg, status) {
+      status('Pausing playback and saving your latest changes…');
+      for (const a of [aL, aW]) { try { a.pause(); } catch (e) { } }
+      try { await settleSession(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Browser storage refused a write (${rsErr(e.bk ? { message: e.bk.msg } : e)}). Your library was not changed.`); }
+      DB.lock = true; S.restoring = true; saveSession.cancel(); saveHist.cancel(); // no await between flush and lock
+      let before; try { before = await rsFingerprint(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Your current library couldn’t be read (${rsErr(e)}), so it can’t be protected. It was not changed.`); }
+      status('Replacing your library. Keep this tab open…');
+      try { await rsCommit(pkg); }
+      catch (e) {
+        let same = false; try { same = rsSame(before, await rsFingerprint()); } catch (_) { }
+        throw rsFail('The restore failed and was rolled back', `${rsErr(e)}. ` + (same ? 'Checked afterwards: every store holds exactly the songs, playlists, audio files and settings it held before. Your library is unchanged.' : 'Plainsong could not re-check your library afterwards. Reload the page and look at your library before doing anything else.'));
+      }
+      const themeNote = rsTheme(pkg);
+      status('Rebuilding the screen…');
+      try { await rsRebuild(); }
+      catch (e) { throw rsFail('Restored, but the screen needs a reload', `The backup was written to browser storage completely, but refreshing the screen failed (${rsErr(e)}). Reload the page to see it. ${themeNote}`); }
+      DB.lock = false; S.restoring = false;
+      return { themeNote };
+    }
+    async function runRestore(file) {
+      if (S.restoreBusy) return;
+      if (S.backupBusy) { toast('A backup is running. Try the restore when it finishes.', 3200); return; }
+      if (S.importBusy) { toast('Wait for the import to finish, then restore.', 3200); return; }
+      S.restoreBusy = true; RS = { cancel: false, running: false };
+      try {
+        if (!DB.ok) throw rsFail('Restore isn’t available in this browser mode', 'Your library is only held in memory right now (browser storage is unavailable or blocked, as in some private windows), so a restored library would disappear when you close the tab. Nothing was changed.');
+        const ui = bkProgress(RS, 'Checking backup file', 'Backup check progress');
+        const pkg = await readBackupZip(file, { ctl: RS, onProgress: ui });
+        let cur = await rsCurrent();
+        const go = await rsDialog(await rsPreviewHtml(pkg, file, cur), [{ id: 'no', label: 'Cancel', focus: true }, { id: 'go', label: 'Continue…', primary: true }]);
+        if (go !== 'go') throw new BackupCancel();
+        for (; ;) {
+          const p = rsDialog(rsConfirmHtml(pkg, cur), [{ id: 'no', label: 'Cancel', focus: true }, ...(cur.tracks || cur.playlists || cur.blobs ? [{ id: 'backup', label: 'Back up current library first' }] : []), { id: 'replace', label: 'Replace library', danger: true, disabled: !!(cur.tracks || cur.playlists || cur.blobs) }]);
+          const ack = $('#rsAck'), rb = $('#dlg [data-bk="replace"]');
+          if (ack) ack.onchange = () => { rb.disabled = !ack.checked; };
+          const ans = await p;
+          if (ans === 'backup') { await runBackup({ fromRestore: true }); cur = await rsCurrent(); continue; }
+          if (ans !== 'replace') throw new BackupCancel();
+          break;
+        }
+        const d = bkShow(`<h3>Restoring your library</h3><p class="note bk-note" id="rsMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar"><i style="width:100%"></i></div><p class="note bk-note">This can’t be cancelled once it starts, but it is all-or-nothing.</p>`);
+        d.onclose = null; d.oncancel = e => e.preventDefault();
+        const r = await applyRestore(pkg, t => { const m = $('#rsMsg'); if (m) m.textContent = t; });
+        const s = pkg.summary;
+        await bkInfo('Library restored', `${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)}) are now in this browser. Nothing is playing; press play when you are ready. ${r.themeNote}`);
+      } catch (e) {
+        DB.lock = false; S.restoring = false; // never leave writes paused while a message is on screen
+        if (e instanceof BackupCancel) { bkClose(); toast('Restore cancelled. Your library was not changed.', 3600); }
+        else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
+        else { console.error(e); await bkInfo('Restore failed', `Something unexpected went wrong (${rsErr(e)}). Reload the page and check your library before doing anything else.`); }
+      } finally { S.restoreBusy = false; S.restoring = false; DB.lock = false; RS = null; }
     }
 
     const tidOf = a => { const r = a.closest('[data-tid]'); return r && r.dataset.tid; };
@@ -1452,6 +1911,7 @@
         case 'import': $('#fileIn').click(); break;
         case 'importDir': $('#dirIn').click(); break;
         case 'backup': runBackup(); break;
+        case 'restore': if (!S.restoreBusy) $('#restoreIn').click(); break;
         case 'like': toggleLike(tidOf(a)); break;
         case 'more': { const r = a.getBoundingClientRect(); const c = a.closest('[data-ctx]'); openTrackMenu(tidOf(a), r.right, r.bottom, c ? c.dataset.ctx : ''); break; }
         case 'playList': { const ids = S.lists[+d.list]; if (ids && ids.length) playList(ids, 0, { shuffle: !!d.shuffle }); break; }
@@ -1552,6 +2012,7 @@
     seekEl.addEventListener('change', () => { const t = curT(); const d = isFinite(A.duration) && A.duration > 0 ? A.duration : (t && t.duration) || 0; if (d) A.currentTime = seekEl.value / 1000 * d; S.seeking = false; });
     $('#fileIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
     $('#dirIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
+    $('#restoreIn').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) runRestore(f); });
     document.addEventListener('input', e => {
       const t = e.target;
       if (t.id === 'libFilter') { S.view.filter = t.value; fillSongs(); }
@@ -1599,8 +2060,20 @@
       S.qi = S.queue.length ? Math.max(0, S.queue.indexOf(curId)) : -1;
       applyVol(); applyRate(); syncSpeed(); syncModes();
       $$('#npTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === S.npTab));
-      if (S.queue.length) { S.resume = ss.time || 0; loadCurrent(false); }
+      let loading;
+      if (S.queue.length) { S.resume = ss.time || 0; loading = loadCurrent(false); }
       if (ss.np && innerWidth > 1100) document.body.classList.add('np-open');
+      return loading;
+    }
+    // Load the library from IndexedDB into S. Used by boot (quiet on failure, as before) and by restore (strict + awaits the load).
+    async function hydrate(strict, reset) {
+      try {
+        const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
+        tracks.forEach(t => S.tracks.set(t.id, t));
+        S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
+        S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
+        if (ss || reset) { const loading = restore(ss || {}); if (reset) await loading; }
+      } catch (e) { if (strict) throw e; }
     }
     (async function boot() {
       $$('[data-ico]').forEach(el => { el.innerHTML = ico(el.dataset.ico, +el.dataset.s || 20); });
@@ -1609,15 +2082,7 @@
       const th = store.get('ps-theme'); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th;
       themeIcon(); applyVol(); syncModes(); syncLikeBtn();
       try { await DB.open(); } catch (e) { toast('This browser mode can’t save a library, so imports last only for this visit.', 7000); }
-      if (DB.ok) {
-        try {
-          const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
-          tracks.forEach(t => S.tracks.set(t.id, t));
-          S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
-          S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
-          if (ss) restore(ss);
-        } catch (e) { }
-      }
+      if (DB.ok) await hydrate();
       renderSide(); libStat(); render();
       if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
     })();

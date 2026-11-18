@@ -1,0 +1,8 @@
+19:28:14 start
+19:29:57 2B exit 0
+19:30:30 p0 ORIGINAL exit 0
+19:30:51 p1 ORIGINAL exit 0
+19:31:11 p1 ADAPTED exit 0
+19:31:25 p2a ORIGINAL exit 1
+19:31:39 p2a ADAPTED exit 0
+19:31:39 done

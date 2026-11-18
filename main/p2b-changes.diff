@@ -1,0 +1,423 @@
+--- p2a/index.html
++++ p2b/index.html
+@@ -40,6 +40,7 @@
+       <button class="btn primary" data-act="import"><span data-ico="upload" data-s="16"></span>Import music</button>
+       <button class="btn" data-act="importDir"><span data-ico="folder" data-s="16"></span>Import folder</button>
+       <button class="btn" data-act="backup"><span data-ico="download" data-s="16"></span>Back up library</button>
++      <button class="btn" data-act="restore"><span data-ico="restore" data-s="16"></span>Restore from backup…</button>
+       <div class="readout" id="libStat">0 songs</div>
+     </div>
+   </aside>
+@@ -57,6 +58,8 @@
+           data-ico="upload"></span></button>
+       <button class="icon-btn" data-act="backup" aria-label="Back up library" title="Back up library"><span
+           data-ico="download"></span></button>
++      <button class="icon-btn" data-act="restore" aria-label="Restore from backup" title="Restore from backup"><span
++          data-ico="restore"></span></button>
+       <button class="icon-btn" data-act="help" aria-label="Keyboard shortcuts" title="Keyboard shortcuts"><span
+           style="font:600 15px var(--f-mono)">?</span></button>
+       <button class="icon-btn" id="themeBtn" aria-label="Switch theme" title="Switch theme"></button>
+@@ -127,6 +130,7 @@
+ 
+   <input type="file" id="fileIn" accept="audio/*,.mp3,.m4a,.aac,.flac,.ogg,.opus,.wav" multiple hidden>
+   <input type="file" id="dirIn" webkitdirectory multiple hidden>
++  <input type="file" id="restoreIn" accept=".zip,application/zip,application/x-zip-compressed" hidden>
+   <div class="menu" id="menu" hidden></div>
+   <div class="pop" id="speedPop" hidden></div>
+   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+@@ -180,12 +184,13 @@
+       upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+       download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+       edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
++      restore: '<path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/>',
+       save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>'
+     };
+     const ico = (n, s = 20) => `<svg class="ico" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ''}</svg>`;
+ 
+     const DB = {
+-      ok: false, db: null,
++      ok: false, db: null, lock: false,
+       open() {
+         return new Promise((res, rej) => {
+           if (!window.indexedDB) return rej(new Error('IndexedDB unavailable'));
+@@ -202,6 +207,7 @@
+       req(store, mode, fn) {
+         return new Promise((res, rej) => {
+           if (!this.ok) return res(undefined);
++          if (this.lock && mode !== 'readonly') return rej(new Error('Writes are paused while a backup file is being restored'));
+           try {
+             const tx = this.db.transaction(store, mode); const rq = fn(tx.objectStore(store));
+             tx.oncomplete = () => res(rq && rq.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
+@@ -338,6 +344,7 @@
+ 
+     async function importFiles(files) {
+       if (S.backupBusy) { toast('A backup is running. Try the import again when it finishes.', 3200); return; }
++      if (S.restoreBusy) { toast('A restore is in progress. Try the import again when it finishes.', 3200); return; }
+       if (S.importBusy) { toast('An import is already running', 2200); return; }
+       S.importBusy = true;
+       try { await importRun(files); } finally { S.importBusy = false; }
+@@ -535,7 +542,7 @@
+       if (S.npTab === 'lyrics') renderNP();
+       saveSession();
+     }
+-    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) load(t, autoplay); }
++    function loadCurrent(autoplay) { const t = T(S.queue[S.qi]); if (t) return load(t, autoplay); }
+     function togglePlay() {
+       if (!S.queue.length) { const first = [...S.tracks.values()]; if (first.length) playList(first.map(t => t.id), 0); else toast('Import music or pick something from Explore'); return; }
+       if (!A.getAttribute('src')) { loadCurrent(true); return; }
+@@ -666,7 +673,8 @@
+       const left = S.sleep.at - Date.now();
+       const el = $('#sleepLeft'); if (el) el.textContent = left > 0 ? `Stops in ${fmt(left / 1000)}` : '';
+       if (left <= 0) {
+-        S.sleep = null; const el2 = A; for (let i = 10; i >= 0; i--) { el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
++        S.sleep = null; const el2 = A, ep = S.epoch; for (let i = 10; i >= 0; i--) { if (ep !== S.epoch) { applyVol(); return; } el2.volume = Math.max(0, (S.muted ? 0 : Math.pow(S.vol, 1.6)) * i / 10); if (G && el2 === aL) G.gain.gain.value = el2.volume; await wait(220); }
++        if (ep !== S.epoch) { applyVol(); return; }
+         el2.pause(); applyVol(); toast('Sleep timer: good night'); renderNPIf('sound');
+       }
+     }, 1000);
+@@ -1320,8 +1328,8 @@
+     function bkShow(html) { const d = $('#dlg'); if (d.open) d.innerHTML = html; else dialog(html); return d; }
+     function bkClose() { const d = $('#dlg'); d.onclose = null; d.oncancel = null; if (d.open) d.close(); }
+     const bkLines = l => l && l.length ? `<ul class="bk-list">${l.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+-    function bkProgress(ctl) {
+-      const d = bkShow(`<h3>Backing up your library</h3><p class="note bk-note" id="bkMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar" role="progressbar" aria-label="Backup progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bkFill"></i></div><div class="btn-row end"><button class="btn" id="bkCancel">Cancel</button></div>`);
++    function bkProgress(ctl, title = 'Backing up your library', label = 'Backup progress') {
++      const d = bkShow(`<h3>${esc(title)}</h3><p class="note bk-note" id="bkMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar" role="progressbar" aria-label="${esc(label)}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bkFill"></i></div><div class="btn-row end"><button class="btn" id="bkCancel">Cancel</button></div>`);
+       ctl.running = true;
+       const cancel = () => { ctl.cancel = true; const m = $('#bkMsg'); if (m) m.textContent = 'Cancelling…'; const b = $('#bkCancel'); if (b) b.disabled = true; };
+       $('#bkCancel').onclick = cancel; d.oncancel = e => { e.preventDefault(); cancel(); };
+@@ -1428,8 +1436,10 @@
+       a.href = url; a.download = name; a.hidden = true; document.body.appendChild(a); a.click(); a.remove();
+       setTimeout(() => URL.revokeObjectURL(url), 10 * 60 * 1000);
+     }
+-    async function runBackup() {
++    async function runBackup(opts) {
+       if (S.backupBusy) return;
++      if (S.restoring) { toast('A restore is writing to your library. Back up when it finishes.', 3200); return; }
++      if (S.restoreBusy && !(opts && opts.fromRestore)) { toast('A restore is in progress. Back up when it finishes.', 3200); return; } // only the restore dialog’s own “Back up current library first” may back up meanwhile
+       if (S.importBusy) { toast('Wait for the import to finish, then back up.', 3200); return; }
+       S.backupBusy = true; BK = { cancel: false, running: false };
+       try {
+@@ -1437,7 +1447,7 @@
+         bkDownload(r.blob, r.name);
+         const c = r.man.counts, inc = !r.man.complete;
+         await bkInfo(inc ? 'Incomplete backup downloaded' : 'Backup downloaded',
+-          `${c.tracks} song${c.tracks === 1 ? '' : 's'}, ${c.playlists} playlist${c.playlists === 1 ? '' : 's'}, ${bytes(r.blob.size)}. Your browser chooses where it goes, usually the Downloads folder. ${inc ? 'It is marked INCOMPLETE: ' + r.problems.length + ' song(s) had no audio to copy. ' : ''}Keep a copy somewhere outside this browser. Restoring from a backup file isn’t built yet, so don’t delete anything on the strength of it.`);
++          `${c.tracks} song${c.tracks === 1 ? '' : 's'}, ${c.playlists} playlist${c.playlists === 1 ? '' : 's'}, ${bytes(r.blob.size)}. Your browser chooses where it goes, usually the Downloads folder. ${inc ? 'It is marked INCOMPLETE: ' + r.problems.length + ' song(s) had no audio to copy. ' : ''}Keep a copy somewhere outside this browser. “Restore from backup…” can read this file back, but a restore replaces your library, so keep the file until you have checked the result.`);
+       } catch (e) {
+         if (e instanceof BackupCancel) { bkClose(); toast('Backup cancelled. Nothing was saved.', 3200); }
+         else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
+@@ -1714,6 +1724,186 @@
+       return pkg;
+     }
+ 
++    /* ---- safe restore (Phase 2B) ----
++       Replace-only. Order: validate the whole file (readBackupZip, read-only) -> escaped preview -> separate destructive
++       confirmation -> pause + flush + lock -> ONE read-write transaction over all four stores, verified inside the
++       transaction (abort = full rollback) -> rebuild app state without autoplay -> theme (localStorage, separate step). */
++    let RS = null;
++    const rsFail = (title, msg, lines) => bkFail(title, msg, lines);
++    const rsErr = e => (e && e.message) || String(e);
++    function rsDialog(html, buttons) {
++      return new Promise(res => {
++        if (RS) RS.running = false;
++        const d = bkShow(`${html}<div class="btn-row end">${buttons.map(b => `<button class="btn${b.primary ? ' primary' : ''}${b.danger ? ' danger' : ''}" data-bk="${b.id}"${b.focus ? ' data-focus' : ''}${b.disabled ? ' disabled' : ''}>${esc(b.label)}</button>`).join('')}</div>`);
++        d.oncancel = null; d.onclose = () => { if (!d.open) { d.onclose = null; res('no'); } };
++        d.querySelectorAll('[data-bk]').forEach(b => { b.onclick = () => { if (b.disabled) return; d.onclose = null; res(b.dataset.bk); }; });
++        const f = d.querySelector('[data-focus]') || d.querySelector('[data-bk]'); if (f) f.focus();
++      });
++    }
++    const fnv = str => { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return h >>> 0; };
++    // keys of every store + audio sizes/MIME + a digest of the records, from ONE read-only transaction
++    function rsFingerprint() {
++      return new Promise((resolve, reject) => {
++        let tx; try { tx = DB.db.transaction(BACKUP.stores, 'readonly'); } catch (e) { reject(e); return; }
++        const o = { keys: {}, digest: {}, blobs: [], audioBytes: 0 };
++        for (const n of ['tracks', 'playlists', 'kv']) {
++          const k = tx.objectStore(n).getAllKeys(); k.onsuccess = () => { o.keys[n] = k.result; };
++          const v = tx.objectStore(n).getAll(); v.onsuccess = () => { o.digest[n] = fnv(JSON.stringify(v.result)); };
++        }
++        const r = tx.objectStore('blobs').openCursor();
++        r.onsuccess = () => { const c = r.result; if (c) { const b = c.value; o.blobs.push([c.key, b && b.size, b && b.type]); o.audioBytes += (b && b.size) || 0; c.continue(); } };
++        tx.oncomplete = () => resolve(o); tx.onerror = tx.onabort = () => reject(tx.error || new Error('read failed'));
++      });
++    }
++    const rsSame = (a, b) => JSON.stringify(a) === JSON.stringify(b);
++
++    function rsHosts(pkg) {
++      const hs = new Set(), add = u => { if (typeof u === 'string' && isHttpUrl(u)) hs.add(new URL(u).host); };
++      const t = x => { add(x.url); add(x.cover); add(x.link); };
++      pkg.tracks.forEach(t); for (const x of pkg.kv) { if (x.key === 'session' && Array.isArray(x.value.webs)) x.value.webs.forEach(t); if (x.key === 'hist') x.value.forEach(h => h.snap && t(h.snap)); }
++      return [...hs].sort();
++    }
++    const rsRows = rows => `<dl class="bk-sum">${rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
++    async function rsQuota(need) {
++      try { if (navigator.storage && navigator.storage.estimate) { const e = await navigator.storage.estimate(); if (e && isFinite(e.quota) && isFinite(e.usage) && need > e.quota - e.usage) return `The browser reports about ${bytes(Math.max(0, e.quota - e.usage))} of free storage, less than the ${bytes(need)} this backup holds. The restore may fail; if it does your current library stays as it is.`; } } catch (e) { }
++      return '';
++    }
++    async function rsPreviewHtml(pkg, file, cur) {
++      const s = pkg.summary, when = new Date(s.createdAt), hosts = rsHosts(pkg), warn = pkg.warnings.slice(), q = await rsQuota(s.audioBytes);
++      if (q) warn.push(q);
++      if (hosts.length) warn.push(`This backup refers to web addresses on ${hosts.length} site${hosts.length === 1 ? '' : 's'}: ${hosts.slice(0, 6).join(', ')}${hosts.length > 6 ? ', …' : ''}. Plainsong contacts them only when you view or play those web songs.`);
++      return `<h3>Restore preview</h3><p class="note bk-note">Nothing has been changed yet. This is what the backup file contains.</p>` + rsRows([
++        ['File', file.name], ['File size', bytes(file.size)], ['Made', isFinite(when) ? when.toLocaleString() : s.createdAt], ['Made by', `${s.generator}, backup format ${s.formatVersion}`],
++        ['Songs', `${s.local + s.web} (${s.local} with audio, ${s.web} saved web)`], ['Playlists', String(s.playlists)], ['Audio files', `${s.audioFiles}, ${bytes(s.audioBytes)}${s.orphans ? `, ${s.orphans} with no song entry (kept)` : ''}`],
++        ['Queue and settings', s.hasSession ? `saved, queue of ${s.queue}` : 'none'], ['Play history', s.history ? `${s.history} plays` : 'none'], ['Theme', s.theme || 'not in this backup, yours stays as it is']
++      ]) + `<p class="note bk-note bk-h">Your library now</p>` + rsRows([['Songs', String(cur.tracks)], ['Playlists', String(cur.playlists)], ['Audio files', cur.blobs ? `${cur.blobs}, ${bytes(cur.audioBytes)}` : '0']]) + bkLines(warn);
++    }
++    function rsConfirmHtml(pkg, cur) {
++      const s = pkg.summary, empty = !cur.tracks && !cur.playlists && !cur.blobs;
++      const body = empty ? `<p class="note bk-note">Your library is empty, so nothing will be lost. The backup’s ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} will be added.</p>`
++        : `<p class="note bk-note">This <b>permanently deletes</b> everything in this browser’s Plainsong library and replaces it with the backup. There is no merge and no undo.</p>${bkLines([`Deleted: ${cur.tracks} song${cur.tracks === 1 ? '' : 's'}, ${cur.playlists} playlist${cur.playlists === 1 ? '' : 's'}, ${cur.blobs} audio file${cur.blobs === 1 ? '' : 's'} (${bytes(cur.audioBytes)}), your queue, play history and saved settings`, `Restored instead: ${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'}, ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)})`, 'Kept: logins or keys other services saved in this browser (a backup never contains them)', 'Playback stops; nothing starts playing afterwards'])}`;
++      return `<h3>Replace your library?</h3>${body}<p class="note bk-note">Close any other Plainsong tabs first. The restore is all-or-nothing: if anything fails, your current library stays exactly as it is.</p>${empty ? '' : '<label class="bk-check"><input type="checkbox" id="rsAck"><span>I understand my current library will be erased and replaced.</span></label>'}`;
++    }
++    async function rsCurrent() { const f = await rsFingerprint(); return { tracks: f.keys.tracks.length, playlists: f.keys.playlists.length, blobs: f.blobs.length, audioBytes: f.audioBytes }; }
++
++    // ONE read-write transaction over all four stores. Everything is queued up front (no awaits inside), verified inside
++    // the transaction, and any throw / request error / mismatch aborts = rollback of every store.
++    function rsCommit(pkg) {
++      return new Promise((resolve, reject) => {
++        let tx, why = null, verified = false;
++        try { tx = DB.db.transaction(BACKUP.stores, 'readwrite'); } catch (e) { reject(e); return; }
++        tx.oncomplete = () => { if (verified) resolve(); else reject(why || new Error('The database transaction ended before the restore was verified')); };
++        tx.onabort = () => reject(why || tx.error || new Error('The database transaction was aborted'));
++        tx.onerror = () => { };
++        const fail = e => { why = why || e; try { tx.abort(); } catch (_) { } };
++        try {
++          const st = n => tx.objectStore(n), keep = new Set(pkg.kv.map(x => x.key));
++          st('tracks').clear(); st('playlists').clear(); st('blobs').clear();
++          pkg.tracks.forEach(t => st('tracks').put(t)); pkg.playlists.forEach(p => st('playlists').put(p));
++          pkg.blobs.forEach(b => st('blobs').put(b.blob, b.key)); pkg.kv.forEach(x => st('kv').put(x.value, x.key));
++          const cur = st('kv').openCursor(); const got = {}; let waiting = 4;
++          const check = () => {
++            if (--waiting) return;
++            try {
++              const bad = m => { throw new Error('Verification failed: ' + m); };
++              if (JSON.stringify(got.tracks) !== JSON.stringify(pkg.tracks)) bad('songs differ from the backup');
++              if (JSON.stringify(got.playlists) !== JSON.stringify(pkg.playlists)) bad('playlists differ from the backup');
++              if (JSON.stringify(got.blobs) !== JSON.stringify(pkg.blobs.map(b => [b.key, b.size, b.type]))) bad('audio files differ from the backup (key, size or type)');
++              const mine = new Map(got.kv.map(x => [x.key, x.value]));
++              for (const x of pkg.kv) if (!mine.has(x.key) || JSON.stringify(mine.get(x.key)) !== JSON.stringify(x.value)) bad('saved settings differ from the backup');
++              for (const k of mine.keys()) if (!keep.has(k) && !isSecretKey(k)) bad('an unexpected saved setting remains');
++              verified = true;
++            } catch (e) { fail(e); }
++          };
++          cur.onsuccess = () => {
++            const c = cur.result;
++            if (c) { if (!keep.has(c.key) && !isSecretKey(c.key)) c.delete(); c.continue(); return; }
++            const a = st('tracks').getAll(); a.onsuccess = () => { got.tracks = a.result; check(); };
++            const b = st('playlists').getAll(); b.onsuccess = () => { got.playlists = b.result; check(); };
++            got.kv = []; const k = st('kv').openCursor(); k.onsuccess = () => { const c2 = k.result; if (c2) { got.kv.push({ key: c2.key, value: c2.value }); c2.continue(); } else check(); };
++            got.blobs = []; const l = st('blobs').openCursor(); l.onsuccess = () => { const c3 = l.result; if (c3) { got.blobs.push([c3.key, c3.value && c3.value.size, c3.value && c3.value.type]); c3.continue(); } else check(); };
++          };
++        } catch (e) {
++          // the transaction already ended (aborted from outside): its abort event reports the real reason
++          if (e && (e.name === 'InvalidStateError' || e.name === 'TransactionInactiveError')) { try { tx.abort(); } catch (_) { } } else fail(e);
++        }
++      });
++    }
++
++    function rsTheme(pkg) {
++      const v = pkg.ls['ps-theme'];
++      if (!v) return 'This backup has no saved theme, so your theme setting was left as it is.';
++      store.set('ps-theme', v);
++      const kept = store.get('ps-theme') === v;
++      document.documentElement.dataset.theme = v; themeIcon();
++      return kept ? `Theme set to ${v}. (Saved separately from the library: browsers can’t include it in the database commit.)` : `The browser wouldn’t save the theme setting, so ${v} applies for this visit only. Your library itself was restored.`;
++    }
++    async function rsRebuild() {
++      S.loadTok++; S.epoch = (S.epoch || 0) + 1; S.sleep = null; // a sleep timer set before the restore must not stop the restored session later
++      for (const a of [aL, aW]) { try { a.pause(); a.removeAttribute('src'); a.load(); } catch (e) { } }
++      A = aL; if (S.objUrl) { try { URL.revokeObjectURL(S.objUrl); } catch (e) { } S.objUrl = null; }
++      S.tracks.clear(); S.cache.clear(); S.mem.clear(); S.archTracks = []; S.playlists = []; S.hist = [];
++      S.queue = []; S.orig = []; S.qi = -1; S.cur = null; S.counted = false; S.resume = null; S.errCount = 0; S.seeking = false; S.lists = [];
++      S.lyr = { id: null, lines: [], idx: -1 }; S.stack = []; S.view = { name: 'home' };
++      abReset(); updateNowPlaying(null);
++      await hydrate(true, true);
++      applyEq(); saveSession.cancel(); saveHist.cancel(); S.lastSave = Date.now(); // nothing queued by the rebuild may overwrite the restored session
++      renderSide(); libStat(); render();
++      if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
++    }
++    async function applyRestore(pkg, status) {
++      status('Pausing playback and saving your latest changes…');
++      for (const a of [aL, aW]) { try { a.pause(); } catch (e) { } }
++      try { await settleSession(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Browser storage refused a write (${rsErr(e.bk ? { message: e.bk.msg } : e)}). Your library was not changed.`); }
++      DB.lock = true; S.restoring = true; saveSession.cancel(); saveHist.cancel(); // no await between flush and lock
++      let before; try { before = await rsFingerprint(); } catch (e) { throw rsFail('Restore stopped before changing anything', `Your current library couldn’t be read (${rsErr(e)}), so it can’t be protected. It was not changed.`); }
++      status('Replacing your library. Keep this tab open…');
++      try { await rsCommit(pkg); }
++      catch (e) {
++        let same = false; try { same = rsSame(before, await rsFingerprint()); } catch (_) { }
++        throw rsFail('The restore failed and was rolled back', `${rsErr(e)}. ` + (same ? 'Checked afterwards: every store holds exactly the songs, playlists, audio files and settings it held before. Your library is unchanged.' : 'Plainsong could not re-check your library afterwards. Reload the page and look at your library before doing anything else.'));
++      }
++      const themeNote = rsTheme(pkg);
++      status('Rebuilding the screen…');
++      try { await rsRebuild(); }
++      catch (e) { throw rsFail('Restored, but the screen needs a reload', `The backup was written to browser storage completely, but refreshing the screen failed (${rsErr(e)}). Reload the page to see it. ${themeNote}`); }
++      DB.lock = false; S.restoring = false;
++      return { themeNote };
++    }
++    async function runRestore(file) {
++      if (S.restoreBusy) return;
++      if (S.backupBusy) { toast('A backup is running. Try the restore when it finishes.', 3200); return; }
++      if (S.importBusy) { toast('Wait for the import to finish, then restore.', 3200); return; }
++      S.restoreBusy = true; RS = { cancel: false, running: false };
++      try {
++        if (!DB.ok) throw rsFail('Restore isn’t available in this browser mode', 'Your library is only held in memory right now (browser storage is unavailable or blocked, as in some private windows), so a restored library would disappear when you close the tab. Nothing was changed.');
++        const ui = bkProgress(RS, 'Checking backup file', 'Backup check progress');
++        const pkg = await readBackupZip(file, { ctl: RS, onProgress: ui });
++        let cur = await rsCurrent();
++        const go = await rsDialog(await rsPreviewHtml(pkg, file, cur), [{ id: 'no', label: 'Cancel', focus: true }, { id: 'go', label: 'Continue…', primary: true }]);
++        if (go !== 'go') throw new BackupCancel();
++        for (; ;) {
++          const p = rsDialog(rsConfirmHtml(pkg, cur), [{ id: 'no', label: 'Cancel', focus: true }, ...(cur.tracks || cur.playlists || cur.blobs ? [{ id: 'backup', label: 'Back up current library first' }] : []), { id: 'replace', label: 'Replace library', danger: true, disabled: !!(cur.tracks || cur.playlists || cur.blobs) }]);
++          const ack = $('#rsAck'), rb = $('#dlg [data-bk="replace"]');
++          if (ack) ack.onchange = () => { rb.disabled = !ack.checked; };
++          const ans = await p;
++          if (ans === 'backup') { await runBackup({ fromRestore: true }); cur = await rsCurrent(); continue; }
++          if (ans !== 'replace') throw new BackupCancel();
++          break;
++        }
++        const d = bkShow(`<h3>Restoring your library</h3><p class="note bk-note" id="rsMsg" role="status" aria-live="polite">Starting…</p><div class="bk-bar"><i style="width:100%"></i></div><p class="note bk-note">This can’t be cancelled once it starts, but it is all-or-nothing.</p>`);
++        d.onclose = null; d.oncancel = e => e.preventDefault();
++        const r = await applyRestore(pkg, t => { const m = $('#rsMsg'); if (m) m.textContent = t; });
++        const s = pkg.summary;
++        await bkInfo('Library restored', `${s.local + s.web} song${s.local + s.web === 1 ? '' : 's'}, ${s.playlists} playlist${s.playlists === 1 ? '' : 's'} and ${s.audioFiles} audio file${s.audioFiles === 1 ? '' : 's'} (${bytes(s.audioBytes)}) are now in this browser. Nothing is playing; press play when you are ready. ${r.themeNote}`);
++      } catch (e) {
++        DB.lock = false; S.restoring = false; // never leave writes paused while a message is on screen
++        if (e instanceof BackupCancel) { bkClose(); toast('Restore cancelled. Your library was not changed.', 3600); }
++        else if (e && e.bk) await bkInfo(e.bk.title, e.bk.msg, e.bk.lines);
++        else { console.error(e); await bkInfo('Restore failed', `Something unexpected went wrong (${rsErr(e)}). Reload the page and check your library before doing anything else.`); }
++      } finally { S.restoreBusy = false; S.restoring = false; DB.lock = false; RS = null; }
++    }
++
+     const tidOf = a => { const r = a.closest('[data-tid]'); return r && r.dataset.tid; };
+     async function handleAct(a, e) {
+       const d = a.dataset;
+@@ -1721,6 +1911,7 @@
+         case 'import': $('#fileIn').click(); break;
+         case 'importDir': $('#dirIn').click(); break;
+         case 'backup': runBackup(); break;
++        case 'restore': if (!S.restoreBusy) $('#restoreIn').click(); break;
+         case 'like': toggleLike(tidOf(a)); break;
+         case 'more': { const r = a.getBoundingClientRect(); const c = a.closest('[data-ctx]'); openTrackMenu(tidOf(a), r.right, r.bottom, c ? c.dataset.ctx : ''); break; }
+         case 'playList': { const ids = S.lists[+d.list]; if (ids && ids.length) playList(ids, 0, { shuffle: !!d.shuffle }); break; }
+@@ -1821,6 +2012,7 @@
+     seekEl.addEventListener('change', () => { const t = curT(); const d = isFinite(A.duration) && A.duration > 0 ? A.duration : (t && t.duration) || 0; if (d) A.currentTime = seekEl.value / 1000 * d; S.seeking = false; });
+     $('#fileIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
+     $('#dirIn').addEventListener('change', e => { importFiles(e.target.files); e.target.value = ''; });
++    $('#restoreIn').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) runRestore(f); });
+     document.addEventListener('input', e => {
+       const t = e.target;
+       if (t.id === 'libFilter') { S.view.filter = t.value; fillSongs(); }
+@@ -1868,8 +2060,20 @@
+       S.qi = S.queue.length ? Math.max(0, S.queue.indexOf(curId)) : -1;
+       applyVol(); applyRate(); syncSpeed(); syncModes();
+       $$('#npTabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === S.npTab));
+-      if (S.queue.length) { S.resume = ss.time || 0; loadCurrent(false); }
++      let loading;
++      if (S.queue.length) { S.resume = ss.time || 0; loading = loadCurrent(false); }
+       if (ss.np && innerWidth > 1100) document.body.classList.add('np-open');
++      return loading;
++    }
++    // Load the library from IndexedDB into S. Used by boot (quiet on failure, as before) and by restore (strict + awaits the load).
++    async function hydrate(strict, reset) {
++      try {
++        const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
++        tracks.forEach(t => S.tracks.set(t.id, t));
++        S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
++        S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
++        if (ss || reset) { const loading = restore(ss || {}); if (reset) await loading; }
++      } catch (e) { if (strict) throw e; }
+     }
+     (async function boot() {
+       $$('[data-ico]').forEach(el => { el.innerHTML = ico(el.dataset.ico, +el.dataset.s || 20); });
+@@ -1878,15 +2082,7 @@
+       const th = store.get('ps-theme'); if (th === 'dark' || th === 'light') document.documentElement.dataset.theme = th;
+       themeIcon(); applyVol(); syncModes(); syncLikeBtn();
+       try { await DB.open(); } catch (e) { toast('This browser mode can’t save a library, so imports last only for this visit.', 7000); }
+-      if (DB.ok) {
+-        try {
+-          const [tracks, pls, hist, ss] = await Promise.all([DB.all('tracks'), DB.all('playlists'), DB.get('kv', 'hist'), DB.get('kv', 'session')]);
+-          tracks.forEach(t => S.tracks.set(t.id, t));
+-          S.playlists = pls.sort((a, b) => (a.created || 0) - (b.created || 0)); S.hist = hist || [];
+-          S.hist.forEach(h => { if (h.snap && !T(h.id)) S.cache.set(h.id, h.snap); });
+-          if (ss) restore(ss);
+-        } catch (e) { }
+-      }
++      if (DB.ok) await hydrate();
+       renderSide(); libStat(); render();
+       if (document.body.classList.contains('np-open')) { renderNP(); setTimeout(() => { sizeMeter(); startMeter(); }, 260); }
+     })();
+--- p2a/style.css
++++ p2b/style.css
+@@ -1696,3 +1696,69 @@
+   font: 400 12px/1.5 var(--f-mono);
+   overflow-wrap: anywhere
+ }
++
++/* ---------- backup restore ---------- */
++.btn.danger {
++  background: var(--led-r);
++  border-color: transparent;
++  color: #fff
++}
++
++.btn.danger:hover {
++  filter: brightness(1.08)
++}
++
++.btn[disabled] {
++  opacity: .45;
++  cursor: not-allowed;
++  filter: none
++}
++
++.bk-sum {
++  display: grid;
++  grid-template-columns: auto 1fr;
++  gap: 4px 14px;
++  margin: 10px 0 0;
++  font-size: 13px
++}
++
++.bk-sum dt {
++  color: var(--dim)
++}
++
++.bk-sum dd {
++  margin: 0;
++  overflow-wrap: anywhere
++}
++
++.bk-h {
++  margin: 14px 0 0;
++  font-weight: 600
++}
++
++.bk-check {
++  display: flex;
++  align-items: flex-start;
++  gap: 10px;
++  margin-top: 12px;
++  font-size: 14px;
++  cursor: pointer
++}
++
++.bk-check input {
++  width: auto;
++  margin-top: 3px;
++  flex: none
++}
++
++@media (max-width: 560px) {
++  .bk-sum {
++    grid-template-columns: 1fr;
++    gap: 0
++  }
++
++  .bk-sum dd {
++    margin-bottom: 6px
++  }
++
++}

@@ -1,0 +1,1086 @@
+{
+ "total": 216,
+ "failed": 1,
+ "results": [
+  {
+   "name": "app boots without restore UI wired (no restore button/input exists yet)",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: parsed OK",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: manifest identical to independent extraction",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: tracks identical (every field, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "main-fixture: playlists identical (incl. ids order)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: kv identical (session, hist, custom keys, floats)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: localStorage block identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: 6 audio blobs: key, MIME, size, SHA-256 identical and in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: returned Blobs report the exact MIME and size",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main-fixture: summary matches manifest counts",
+   "ok": true,
+   "detail": "{\"createdAt\":\"2026-11-04T08:10:31.057Z\",\"generator\":\"Plainsong\",\"complete\":true,\"formatVersion\":1,\"local\":5,\"web\":1,\"playlists\":2,\"kv\":3,\"audioFiles\":6,\"audioBytes\":5782040,\"orphans\":1,\"queue\":4,\"hasSession\":true,\"history\":2,\"theme\":\"dark\",\"fileBytes\":5789745,\"problems\":0}"
+  },
+  {
+   "name": "main fixture: orphan blob with unicode key \"orphan/ü key 🎧\" is reported as an orphan and kept",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main fixture: secret key stayed out (kv holds only custom:pref, hist, session)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "main fixture: 1 MiB all-bytes blob (custom MIME) and 3 MiB blob (empty MIME) keep their exact MIME",
+   "ok": true,
+   "detail": "[[\"bin-1\",\"application/x-test\"],[\"bin-2\",\"\"]]"
+  },
+  {
+   "name": "main-fixture: parsing took 69 ms",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: parsed OK",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: manifest identical to independent extraction",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: tracks identical (every field, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "minimal-fixture: playlists identical (incl. ids order)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: kv identical (session, hist, custom keys, floats)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: localStorage block identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: 1 audio blobs: key, MIME, size, SHA-256 identical and in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: returned Blobs report the exact MIME and size",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "minimal-fixture: summary matches manifest counts",
+   "ok": true,
+   "detail": "{\"createdAt\":\"2026-11-04T08:10:40.421Z\",\"generator\":\"Plainsong\",\"complete\":true,\"formatVersion\":1,\"local\":1,\"web\":0,\"playlists\":0,\"kv\":0,\"audioFiles\":1,\"audioBytes\":529244,\"orphans\":0,\"queue\":0,\"hasSession\":false,\"history\":0,\"theme\":null,\"fileBytes\":531666,\"problems\":0}"
+  },
+  {
+   "name": "minimal-fixture: parsing took 13 ms",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "fixtures parse: zero IndexedDB write transactions, zero put/add/delete/clear, zero localStorage writes, no database open/delete",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0,\"open\":0}"
+  },
+  {
+   "name": "fixtures parse: database and localStorage byte-identical afterwards",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "fixtures parse: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "spy control: a real kv write is counted (spies are not vacuous)",
+   "ok": true,
+   "detail": "{\"tx\":[\"kv:readwrite\"],\"idbWrite\":1,\"ls\":0,\"open\":0}"
+  },
+  {
+   "name": "spy control: a real localStorage write is counted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "baseline library for the no-write proof has 3 songs, 3 audio blobs and a saved theme",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ACCEPT ok-original: the untouched p1 archive",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ACCEPT ok-rebuilt: same content rebuilt by the raw builder (proves the builder is not the cause of rejections)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ACCEPT ok-extra-manifest-field: unknown extra manifest field is tolerated (forward compatible)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ACCEPT ok-unknown-kv-key: an unknown, non-secret kv key is carried through as data",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ACCEPT ok-empty-ls: localstorage.json with no keys",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "REJECT c-empty [not-zip]: empty file",
+   "ok": true,
+   "detail": "got code=not-zip msg=This file is too small to be a Plainsong backup. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-tiny [not-zip]: 10 bytes",
+   "ok": true,
+   "detail": "got code=not-zip msg=This file is too small to be a Plainsong backup. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-text [eocd]: a text file",
+   "ok": true,
+   "detail": "got code=eocd msg=This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP com "
+  },
+  {
+   "name": "REJECT c-truncated-tail [eocd]: last 40 bytes cut off",
+   "ok": true,
+   "detail": "got code=eocd msg=This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP com "
+  },
+  {
+   "name": "REJECT c-truncated-half [eocd]: cut in the middle of the audio",
+   "ok": true,
+   "detail": "got code=eocd msg=This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP com "
+  },
+  {
+   "name": "REJECT c-trailing-junk [eocd]: extra bytes after the end record",
+   "ok": true,
+   "detail": "got code=eocd msg=This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP com "
+  },
+  {
+   "name": "REJECT c-comment [eocd]: archive comment present (end record no longer at the tail)",
+   "ok": true,
+   "detail": "got code=eocd msg=This isn’t a Plainsong backup: the ZIP end record is missing, damaged, or followed by extra bytes (the file may be cut short). Plainsong backups have no ZIP com "
+  },
+  {
+   "name": "REJECT c-comment-len [comment]: end record at the tail but its comment length is non-zero",
+   "ok": true,
+   "detail": "got code=comment msg=This archive has a ZIP comment; Plainsong backups have none. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-zip64-count [zip64]: ZIP64 marker in the entry count",
+   "ok": true,
+   "detail": "got code=zip64 msg=This archive uses ZIP64, which Plainsong backups never do. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-zip64-offset [zip64]: ZIP64 marker in the directory offset",
+   "ok": true,
+   "detail": "got code=zip64 msg=This archive uses ZIP64, which Plainsong backups never do. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-multidisk [multidisk]: disk number set",
+   "ok": true,
+   "detail": "got code=multidisk msg=This archive is split over several disks, which Plainsong backups never are. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-count-mismatch [cd-entry|directory|count]: end record claims one more entry",
+   "ok": true,
+   "detail": "got code=cd-entry msg=ZIP directory entry 12 is damaged. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-count-too-few [count]: end record claims only 3 entries",
+   "ok": true,
+   "detail": "got code=count msg=This archive has only 3 entries; a Plainsong backup has at least 5. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-cdoff-wrong [directory]: directory offset wrong",
+   "ok": true,
+   "detail": "got code=directory msg=The ZIP directory doesn’t line up with the file size, so the file is damaged or has extra data attached. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-cdsize-wrong [directory]: directory size wrong",
+   "ok": true,
+   "detail": "got code=directory msg=The ZIP directory doesn’t line up with the file size, so the file is damaged or has extra data attached. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-cd-signature [cd-entry]: central directory signature corrupted",
+   "ok": true,
+   "detail": "got code=cd-entry msg=ZIP directory entry 11 is damaged. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-deflate [method]: entries compressed (method 8)",
+   "ok": true,
+   "detail": "got code=method msg=An entry is compressed. Plainsong backups store every entry uncompressed, so this file wasn’t written by Plainsong (or was re-zipped). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-encrypted [flags]: encryption flag set",
+   "ok": true,
+   "detail": "got code=flags msg=An entry is encrypted or uses data descriptors, which Plainsong backups never do. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-data-descriptor [flags]: data-descriptor flag set",
+   "ok": true,
+   "detail": "got code=flags msg=An entry is encrypted or uses data descriptors, which Plainsong backups never do. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-ver-high [flags]: version needed 63",
+   "ok": true,
+   "detail": "got code=flags msg=An entry needs a newer ZIP feature level than Plainsong backups use. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-cd-extra [extra]: extra field in a directory entry",
+   "ok": true,
+   "detail": "got code=extra msg=An entry has extra fields, comments or a disk number; Plainsong backups have none. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-entry-comment [extra]: entry comment",
+   "ok": true,
+   "detail": "got code=extra msg=An entry has extra fields, comments or a disk number; Plainsong backups have none. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-lh-extra [layout]: extra field in a local header (shifts the tiling, so the layout check fires first)",
+   "ok": true,
+   "detail": "got code=layout msg=Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-duplicate-name [duplicate]: the same entry name twice",
+   "ok": true,
+   "detail": "got code=duplicate msg=The archive contains the same entry name twice. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-traversal [unexpected-entry]: extra entry named '../evil.json'",
+   "ok": true,
+   "detail": "got code=unexpected-entry msg=The archive contains an entry Plainsong backups never contain, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-absolute [unexpected-entry]: extra entry named '/etc/passwd'",
+   "ok": true,
+   "detail": "got code=unexpected-entry msg=The archive contains an entry Plainsong backups never contain, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-backslash [unexpected-entry]: extra entry named 'blobs\\\\000099.bin'",
+   "ok": true,
+   "detail": "got code=unexpected-entry msg=The archive contains an entry Plainsong backups never contain, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-extra [unexpected-entry]: extra entry named 'data/extra.json'",
+   "ok": true,
+   "detail": "got code=unexpected-entry msg=The archive contains an entry Plainsong backups never contain, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-dotdot-blob [unexpected-entry]: extra entry named 'blobs/../manifest.json'",
+   "ok": true,
+   "detail": "got code=unexpected-entry msg=The archive contains an entry Plainsong backups never contain, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-space [name]: extra entry named 'data/tracks .json'",
+   "ok": true,
+   "detail": "got code=name msg=An entry name contains characters a Plainsong backup never uses (spaces, control or non-ASCII characters). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-nonascii [name]: extra entry named 'data/tracksé.json'",
+   "ok": true,
+   "detail": "got code=name msg=An entry name contains characters a Plainsong backup never uses (spaces, control or non-ASCII characters). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-name-long [name]: a 200-byte entry name",
+   "ok": true,
+   "detail": "got code=name msg=An entry name has an invalid length. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-lh-name [local-header]: local header name differs from directory",
+   "ok": true,
+   "detail": "got code=local-header msg=The header of data/tracks.json disagrees with the ZIP directory (name). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-lh-crc [local-header]: local header CRC differs from directory",
+   "ok": true,
+   "detail": "got code=local-header msg=The header of data/tracks.json disagrees with the ZIP directory (CRC or size). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-lh-size [local-header]: local header size differs from directory",
+   "ok": true,
+   "detail": "got code=local-header msg=The header of data/tracks.json disagrees with the ZIP directory (CRC or size). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-lh-flags [local-header]: local header flags differ from directory",
+   "ok": true,
+   "detail": "got code=local-header msg=The header of data/playlists.json disagrees with the ZIP directory (flags/method). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-gap [layout]: 16 junk bytes hidden between entries (offsets stay consistent)",
+   "ok": true,
+   "detail": "got code=layout msg=Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-overlap [layout]: two entries claim the same offset",
+   "ok": true,
+   "detail": "got code=layout msg=Entries overlap, leave gaps, or hide extra data between them. Plainsong backups store entries back to back. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-manifest-not-first [order]: manifest.json is not the first entry",
+   "ok": true,
+   "detail": "got code=order msg=Entry 1 should be manifest.json. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-order-swapped-data [order]: data/playlists.json and data/kv.json swapped",
+   "ok": true,
+   "detail": "got code=order msg=Entry 3 should be data/playlists.json. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-blob-gap [order]: audio entries numbered 1,2,3,4,5,7",
+   "ok": true,
+   "detail": "got code=order msg=Audio entries must be numbered consecutively from blobs/000001.bin. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-missing-data [order]: data/kv.json missing",
+   "ok": true,
+   "detail": "got code=order msg=Entry 4 should be data/kv.json. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-missing-blob-entry [manifest-shape]: last audio entry missing (manifest still lists it)",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: the audio list doesn’t match the archive entries. Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-flip-audio [crc]: one audio byte flipped (ZIP + manifest CRC no longer match)",
+   "ok": true,
+   "detail": "got code=crc msg=An audio file in the backup is damaged (checksum mismatch). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-flip-json [crc]: one byte flipped inside tracks.json",
+   "ok": true,
+   "detail": "got code=crc msg=data/tracks.json is damaged (checksum mismatch). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-flip-manifest [crc]: one byte flipped inside manifest.json",
+   "ok": true,
+   "detail": "got code=crc msg=manifest.json is damaged (checksum mismatch). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-flip-audio-last [crc]: one byte flipped in the last (4-byte orphan) audio entry",
+   "ok": true,
+   "detail": "got code=crc msg=An audio file in the backup is damaged (checksum mismatch). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-audio-changed-consistent-zip [manifest-shape]: audio changed and ZIP CRC repaired, but the manifest CRC still describes the original",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audio item 2 doesn’t match its archive entry (path, size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT c-stale-manifest-payload [manifest-shape]: manifest sizes do not add up",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audioBytes/payloadBytes don’t add up to the archive contents. Nothing was changed. "
+  },
+  {
+   "name": "REJECT l-payload [limits]: payload over the (lowered) byte limit",
+   "ok": true,
+   "detail": "got code=limits msg=The backup holds 5.8 MB; this version restores up to 2.0 MB. Nothing was changed. "
+  },
+  {
+   "name": "REJECT l-entries [limits]: more entries than the (lowered) limit",
+   "ok": true,
+   "detail": "got code=limits msg=This archive has 11 entries; this version restores at most 8. Nothing was changed. "
+  },
+  {
+   "name": "REJECT l-json [limits]: a data file over the (lowered) JSON limit",
+   "ok": true,
+   "detail": "got code=limits msg=data/tracks.json is 3 KB, over the 1 KB this version reads per data file. Nothing was changed. "
+  },
+  {
+   "name": "REJECT l-manifest [limits]: manifest over the (lowered) limit",
+   "ok": true,
+   "detail": "got code=limits msg=The manifest is unreasonably large. Nothing was changed. "
+  },
+  {
+   "name": "REJECT l-file [limits]: file bigger than limit + overhead",
+   "ok": true,
+   "detail": "got code=limits msg=This file is 5.8 MB; this version restores backups up to 1 KB of data. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-not-json [manifest-json]: manifest is not JSON",
+   "ok": true,
+   "detail": "got code=manifest-json msg=manifest.json isn’t valid JSON. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-not-object [manifest-shape]: manifest is a list",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: it isn’t an object. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-bad-utf8 [utf8]: manifest contains invalid UTF-8",
+   "ok": true,
+   "detail": "got code=utf8 msg=manifest.json isn’t valid UTF-8 text. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-bom [manifest-json]: manifest starts with a UTF-8 BOM",
+   "ok": true,
+   "detail": "got code=manifest-json msg=manifest.json isn’t valid JSON. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-wrong-format [format]: format marker wrong",
+   "ok": true,
+   "detail": "got code=format msg=This isn’t a Plainsong backup (wrong format marker). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-2 [version]: formatVersion = 2",
+   "ok": true,
+   "detail": "got code=version msg=This backup uses format 2, made by a newer Plainsong. This version reads format 1 only. Update Plainsong, then try again. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-99 [version]: formatVersion = 99",
+   "ok": true,
+   "detail": "got code=version msg=This backup uses format 99, made by a newer Plainsong. This version reads format 1 only. Update Plainsong, then try again. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-0 [version]: formatVersion = 0",
+   "ok": true,
+   "detail": "got code=version msg=This backup uses format 0, which this version doesn’t read (it reads format 1 only). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-str [version]: formatVersion = '1'",
+   "ok": true,
+   "detail": "got code=version msg=The backup has no usable format version. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-float [version]: formatVersion = 1.5",
+   "ok": true,
+   "detail": "got code=version msg=The backup has no usable format version. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-null [version]: formatVersion = None",
+   "ok": true,
+   "detail": "got code=version msg=The backup has no usable format version. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-version-missing [version]: formatVersion absent",
+   "ok": true,
+   "detail": "got code=version msg=The backup has no usable format version. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-dbversion-2 [db-version]: source.databaseVersion = 2",
+   "ok": true,
+   "detail": "got code=db-version msg=This backup comes from a database layout this version doesn’t know (expected plainsong v1). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-dbname [db-version]: source.database = other",
+   "ok": true,
+   "detail": "got code=db-version msg=This backup comes from a database layout this version doesn’t know (expected plainsong v1). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-complete-str [manifest-shape]: complete is a string",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: complete must be true or false. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-created-bad [manifest-shape]: createdAt not a date",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: createdAt isn’t a valid date. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-counts-wrong [counts]: counts.tracks off by one",
+   "ok": true,
+   "detail": "got code=counts msg=The record counts in the manifest don’t match the data files. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-counts-neg [manifest-shape]: counts.kv negative",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: counts are missing or invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-files-short [manifest-shape]: files[] lists only 3 data files",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: files must list the four data files. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-files-crc [manifest-shape]: files[] CRC forged for kv.json",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: the entry for data/kv.json doesn’t match the archive (size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-files-path [manifest-shape]: files[] path renamed",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: the entry for data/playlists.json doesn’t match the archive (size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-crc [manifest-shape]: blobs[0].crc32 forged",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audio item 1 doesn’t match its archive entry (path, size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-bytes [manifest-shape]: blobs[1].bytes forged",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audio item 2 doesn’t match its archive entry (path, size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-path [manifest-shape]: blobs[2].path points at another entry",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audio item 3 doesn’t match its archive entry (path, size or checksum). Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-dupkey [duplicate-key]: two audio items with the same key",
+   "ok": true,
+   "detail": "got code=duplicate-key msg=Two audio items share the same key. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-order [order]: audio keys not in ascending order (paths/CRCs consistent)",
+   "ok": true,
+   "detail": "got code=order msg=Audio keys must be in ascending store order. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-key-int [manifest-shape]: audio key is a number",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audio item 1 has no valid key. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-type-upper [blob-type]: MIME type with upper case (would be altered by Blob)",
+   "ok": true,
+   "detail": "got code=blob-type msg=Audio item 1 has a MIME type that can’t be stored exactly. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-type-nonascii [blob-type]: MIME type with non-ASCII",
+   "ok": true,
+   "detail": "got code=blob-type msg=Audio item 1 has a MIME type that can’t be stored exactly. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-blob-type-int [blob-type]: MIME type not text",
+   "ok": true,
+   "detail": "got code=blob-type msg=Audio item 1 has a MIME type that can’t be stored exactly. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-payload [manifest-shape]: audioBytes wrong",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: audioBytes/payloadBytes don’t add up to the archive contents. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-problems-shape [manifest-shape]: problems entry malformed",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: problems must be a list of {id, title, reason}. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-complete-with-problems [manifest-shape]: complete:true but problems listed",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: it says the backup is complete but lists problems. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-warnings-shape [manifest-shape]: warnings not text",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: warnings must be a list of text. Nothing was changed. "
+  },
+  {
+   "name": "REJECT m-excluded-shape [manifest-shape]: excluded.kv not a list of text",
+   "ok": true,
+   "detail": "got code=manifest-shape msg=manifest.json is inconsistent: excluded is malformed. Nothing was changed. "
+  },
+  {
+   "name": "REJECT i-incomplete [incomplete]: valid archive marked complete:false (an INCOMPLETE export)",
+   "ok": true,
+   "detail": "got code=incomplete msg=This backup is marked INCOMPLETE: 1 song has no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file itself "
+  },
+  {
+   "name": "REJECT i-incomplete-unaccounted [reference]: incomplete, but a missing song is not listed in problems",
+   "ok": true,
+   "detail": "got code=reference msg=The backup is marked incomplete but doesn’t account for every song without audio. Nothing was changed. "
+  },
+  {
+   "name": "REJECT i-complete-but-empty-audio [reference]: complete:true but a local song has an empty audio entry",
+   "ok": true,
+   "detail": "got code=reference msg=The backup says it is complete, but some songs have no audio in it. Nothing was changed. "
+  },
+  {
+   "name": "REJECT i-complete-missing-audio [reference]: complete:true but a local song has no audio entry at all",
+   "ok": true,
+   "detail": "got code=reference msg=The backup says it is complete, but some songs have no audio in it. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-tracks-not-list [shape]: tracks.json is an object",
+   "ok": true,
+   "detail": "got code=shape msg=tracks.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-not-object [shape]: a track is a string",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-no-id [shape]: a track without id",
+   "ok": true,
+   "detail": "got code=shape msg=tracks.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-id-int [shape]: a track with numeric id",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-id-empty [shape]: a track with empty id",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-dup-id [duplicate-id]: two tracks share an id",
+   "ok": true,
+   "detail": "got code=duplicate-id msg=Two songs share the same key. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-order [order]: tracks not in key order",
+   "ok": true,
+   "detail": "got code=order msg=songs must be in ascending store key order (the order Plainsong writes them). Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-kind [shape]: kind = \"remote\"",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-title-int [shape]: title is a number",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-title-missing [shape]: title missing",
+   "ok": true,
+   "detail": "got code=shape msg=tracks.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-duration-str [shape]: duration is text",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-plays-neg [shape]: plays negative",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-liked-int [shape]: liked = 1",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-cover-js [shape]: cover = javascript: URL",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-cover-svg [shape]: cover = data:image/svg+xml",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-cover-file [shape]: cover = file: URL",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-web-url-js [shape]: web song url = javascript:",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-web-url-data [shape]: web song url = data: audio",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-web-url-missing [shape]: web song without url",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-web-link-js [shape]: web song link = javascript:",
+   "ok": true,
+   "detail": "got code=shape msg=Some songs have invalid fields. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-track-proto [shape]: a track carries a __proto__ key",
+   "ok": true,
+   "detail": "got code=shape msg=The data contains content Plainsong never writes. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-deep-nesting [shape]: a field nested 60 levels deep",
+   "ok": true,
+   "detail": "got code=shape msg=The data contains content Plainsong never writes. Nothing was changed. "
+  },
+  {
+   "name": "ACCEPT d-track-ok-unknown-field: a track with an unknown extra field is accepted and kept",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "REJECT d-badutf8-tracks [utf8]: tracks.json contains invalid UTF-8 (ZIP CRC repaired)",
+   "ok": true,
+   "detail": "got code=utf8 msg=data/tracks.json isn’t valid UTF-8 text. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-json-trailing [json]: tracks.json has trailing garbage",
+   "ok": true,
+   "detail": "got code=json msg=data/tracks.json isn’t valid JSON. Nothing was changed. "
+  },
+  {
+   "name": "REJECT d-tracks-empty-count [counts]: tracks.json emptied but manifest counts say otherwise",
+   "ok": true,
+   "detail": "got code=counts msg=The record counts in the manifest don’t match the data files. Nothing was changed. "
+  },
+  {
+   "name": "REJECT p-dup-id [duplicate-id]: two playlists share an id",
+   "ok": true,
+   "detail": "got code=duplicate-id msg=Two playlists share the same key. Nothing was changed. "
+  },
+  {
+   "name": "REJECT p-ids-not-list [shape]: playlist ids is a string",
+   "ok": true,
+   "detail": "got code=shape msg=Some playlists are invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT p-ids-nonstring [shape]: playlist ids contains a number",
+   "ok": true,
+   "detail": "got code=shape msg=Some playlists are invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT p-name-int [shape]: playlist name is a number",
+   "ok": true,
+   "detail": "got code=shape msg=Some playlists are invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT p-order [order]: playlists out of key order",
+   "ok": true,
+   "detail": "got code=order msg=playlists must be in ascending store key order (the order Plainsong writes them). Nothing was changed. "
+  },
+  {
+   "name": "ACCEPT p-dangling-ok: playlist referencing an unknown song id is accepted (kept as-is, warned)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "REJECT k-not-list [shape]: kv.json is an object",
+   "ok": true,
+   "detail": "got code=shape msg=kv.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-no-value [shape]: kv entry without value",
+   "ok": true,
+   "detail": "got code=shape msg=kv.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-extra-prop [shape]: kv entry with a third property",
+   "ok": true,
+   "detail": "got code=shape msg=Some saved settings entries are invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-key-int [shape]: kv key is a number",
+   "ok": true,
+   "detail": "got code=shape msg=Some saved settings entries are invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-dup [duplicate-key]: duplicate kv keys",
+   "ok": true,
+   "detail": "got code=duplicate-key msg=Two saved settings share the same key. Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-order [order]: kv keys not ascending",
+   "ok": true,
+   "detail": "got code=order msg=saved settings must be in ascending store key order (the order Plainsong writes them). Nothing was changed. "
+  },
+  {
+   "name": "REJECT k-secret [secret]: kv contains secret:listenbrainz-token",
+   "ok": true,
+   "detail": "got code=secret msg=This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainso "
+  },
+  {
+   "name": "REJECT k-secret-xss [secret]: credential key whose name is an HTML payload (must be shown escaped)",
+   "ok": true,
+   "detail": "got code=secret msg=This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainso "
+  },
+  {
+   "name": "REJECT k-secret-case [secret]: kv contains Secret:lastfm-session (case variant)",
+   "ok": true,
+   "detail": "got code=secret msg=This file contains saved credentials (secret: keys). Plainsong backups never include them and a restore never imports them, so this file isn’t a genuine Plainso "
+  },
+  {
+   "name": "REJECT s-queue-not-list [shape]: session.queue is a string",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-queue-nonstring [shape]: session.queue holds numbers",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-qi-float [shape]: session.qi = 1.5",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-vol-range [shape]: session.vol = 7",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-rate-range [shape]: session.rate = 100",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-eq-length [shape]: session.eq has 9 bands",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-eq-str [shape]: session.eq has text",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-repeat [shape]: session.repeat = 5",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-tab [shape]: session.npTab = \"<script>\"",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-web-url [shape]: session.webs[0].url = javascript:",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT s-not-object [shape]: session is a list",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT h-not-list [shape]: hist is an object",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT h-entry [shape]: hist entry without time",
+   "ok": true,
+   "detail": "got code=shape msg=kv.json must be a list. Nothing was changed. "
+  },
+  {
+   "name": "REJECT h-snap-url [shape]: hist snapshot url = javascript:",
+   "ok": true,
+   "detail": "got code=shape msg=The saved session or history is invalid. Nothing was changed. "
+  },
+  {
+   "name": "REJECT ls-unknown-key [localstorage]: localstorage.json carries a key outside the allow-list",
+   "ok": true,
+   "detail": "got code=localstorage msg=The file carries a browser-storage key Plainsong doesn’t restore, so it won’t be read. Nothing was changed. "
+  },
+  {
+   "name": "REJECT ls-bad-theme [localstorage]: ps-theme = \"purple\"",
+   "ok": true,
+   "detail": "got code=localstorage msg=ps-theme must be \"light\" or \"dark\". Nothing was changed. "
+  },
+  {
+   "name": "REJECT ls-not-object [shape]: localstorage.json is a list",
+   "ok": true,
+   "detail": "got code=shape msg=localstorage.json must be an object. Nothing was changed. "
+  },
+  {
+   "name": "ACCEPT ok-big: a 64 MiB random audio entry (363 ms)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "all 149 rejection cases and 8 acceptance controls ran",
+   "ok": true,
+   "detail": "149 / 8"
+  },
+  {
+   "name": "incomplete: refused by default (code incomplete) and the error carries the validated package + problem list",
+   "ok": true,
+   "detail": "{\"ok\":false,\"code\":\"incomplete\",\"cancel\":false,\"title\":\"This backup can’t be restored\",\"msg\":\"This backup is marked INCOMPLETE: 1 song has no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file itself is intact.) Nothing was changed.\",\"lines\":[\"A"
+  },
+  {
+   "name": "incomplete: with allowIncomplete the same file is returned with complete:false and the missing song listed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "no-write proof over 157 archives: zero write transactions, zero put/add/delete/clear/update, zero localStorage writes, no open/delete of any database",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0,\"open\":0}"
+  },
+  {
+   "name": "no-write proof: all four IndexedDB stores (records, keys, order, blob bytes+MIME) and localStorage are byte-identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "existing library still works: 3 songs still listed in the app state",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cancel during validation: reader stops with BackupCancel (nothing returned)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cancel during validation: still zero writes and storage unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "reader is reusable after a cancel",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "hostile archives: no page errors, no unhandled rejections",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: parsed OK",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: manifest identical to independent extraction",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: tracks identical (every field, order)",
+   "ok": true,
+   "detail": "3 vs 3"
+  },
+  {
+   "name": "live-export: playlists identical (incl. ids order)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: kv identical (session, hist, custom keys, floats)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: localStorage block identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: 3 audio blobs: key, MIME, size, SHA-256 identical and in order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: returned Blobs report the exact MIME and size",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live-export: summary matches manifest counts",
+   "ok": true,
+   "detail": "{\"createdAt\":\"2026-11-05T19:31:23.713Z\",\"generator\":\"Plainsong\",\"complete\":true,\"formatVersion\":1,\"local\":3,\"web\":0,\"playlists\":1,\"kv\":0,\"audioFiles\":3,\"audioBytes\":1587732,\"orphans\":0,\"queue\":0,\"hasSession\":false,\"history\":0,\"theme\":null,\"fileBytes\":1591409,\"problems\":0}"
+  },
+  {
+   "name": "live INCOMPLETE export (written by this build) is refused as incomplete, file intact",
+   "ok": true,
+   "detail": "{\"ok\":false,\"code\":\"incomplete\",\"cancel\":false,\"title\":\"This backup can’t be restored\",\"msg\":\"This backup is marked INCOMPLETE: 1 song has no audio in it. Restoring would replace your library with a partial copy, so this version refuses. (The file it"
+  },
+  {
+   "name": "live INCOMPLETE export with allowIncomplete: accepted, complete:false, missing song accounted for",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live INCOMPLETE export: parsed records and audio identical to independent extraction",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "live exports: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "IndexedDB unavailable: reader still validates the archive and performs no storage writes",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0,\"open\":0}"
+  },
+  {
+   "name": "IndexedDB unavailable: corrupt archive still rejected with a code",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "credential key named like an HTML payload: refused, and the offending name renders escaped (no live <img>)",
+   "ok": true,
+   "detail": "<ul class=\"bk-list\"><li>secret:&lt;img src=x onerror=alert(1)&gt;</li></ul>"
+  },
+  {
+   "name": "rendered refusal text creates no element from archive text",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "limits in force are the documented ones",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "page errors",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

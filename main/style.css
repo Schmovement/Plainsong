@@ -1696,3 +1696,69 @@ dialog input {
   font: 400 12px/1.5 var(--f-mono);
   overflow-wrap: anywhere
 }
+
+/* ---------- backup restore ---------- */
+.btn.danger {
+  background: var(--led-r);
+  border-color: transparent;
+  color: #fff
+}
+
+.btn.danger:hover {
+  filter: brightness(1.08)
+}
+
+.btn[disabled] {
+  opacity: .45;
+  cursor: not-allowed;
+  filter: none
+}
+
+.bk-sum {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 10px 0 0;
+  font-size: 13px
+}
+
+.bk-sum dt {
+  color: var(--dim)
+}
+
+.bk-sum dd {
+  margin: 0;
+  overflow-wrap: anywhere
+}
+
+.bk-h {
+  margin: 14px 0 0;
+  font-weight: 600
+}
+
+.bk-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 14px;
+  cursor: pointer
+}
+
+.bk-check input {
+  width: auto;
+  margin-top: 3px;
+  flex: none
+}
+
+@media (max-width: 560px) {
+  .bk-sum {
+    grid-template-columns: 1fr;
+    gap: 0
+  }
+
+  .bk-sum dd {
+    margin-bottom: 6px
+  }
+
+}

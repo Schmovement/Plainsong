@@ -1,0 +1,22 @@
+RUN RECORD (fresh extract of candidate zip, app served from that extract)
+date: 2026-11-05T19:34:20Z
+node: v22.23.4  python: Python 3.13.18
+chromium (playwright): 153.0.8010.12
+served index.html sha256 (curl http://localhost:8765/index.html): 97dd4a8ba822879ed2ea7ddc03c6bb0762278dd83b4cae26a9220b6545b2b011
+extract index.html sha256: 97dd4a8ba822879ed2ea7ddc03c6bb0762278dd83b4cae26a9220b6545b2b011
+extract style.css sha256: c072bea448208a254a2509e5d9de13e2fdf0563072d089fc3d3b8da632f3bccb
+--- fixtures after all runs
+Artist A - Song One.wav: OK
+Artist B - Song Two.wav: OK
+Artist C - Song Three.wav: OK
+p1-main-backup.expected.json: OK
+p1-main-backup.zip: OK
+p1-minimal-backup.zip: OK
+p1-main-backup.expected.json: OK
+p1-main-backup.zip: OK
+p1-minimal-backup.zip: OK
+--- checkpoints (unchanged, mtime Nov 4/5)
+30cc98eb4a899f4467c7f3e1bd8098a003dc977adf492456c76a023ba5a3bb9b  checkpoints/plainsong-checkpoint-p0-baseline.zip
+b5c1bef8c84369820236f9a3b3a07cde22cebefaa0fcbd512e364348967c4be9  checkpoints/plainsong-checkpoint-p1.zip
+6d7bc653768461d016cc923c0c15b6541a0e5149580772e0faaec49617bb0673  checkpoints/plainsong-checkpoint-p2a.zip
+--- generated WORK dirs removed after each run; disk: /dev/vda        252G   15G   28G  34% /

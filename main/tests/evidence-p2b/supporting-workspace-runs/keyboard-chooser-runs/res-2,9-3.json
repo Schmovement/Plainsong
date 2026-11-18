@@ -1,0 +1,131 @@
+{
+ "total": 25,
+ "failed": 0,
+ "results": [
+  {
+   "name": "validation stage shows a progress dialog with a Cancel button, focused",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cancel during validation: toast says nothing changed",
+   "ok": true,
+   "detail": "Restore cancelled. Your library was not changed."
+  },
+  {
+   "name": "cancel during validation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "cancel during validation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "after cancelled validation the next restore starts normally (no stuck busy flag)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "cancel on preview (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "dismiss preview (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "cancel on confirmation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "dismiss confirmation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "confirmation with the box unticked cannot be confirmed (still open, still Replace disabled)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "unticked confirmation then Escape: nothing written (no write tx/put/delete/localStorage) and all stores byte-identical",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "after all cancellations: busy flags clear, lock off, app state untouched",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "\"Back up current library first\" downloads a backup and returns to the confirmation",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "after backup-first then cancel: songs, playlists, audio, secret/custom settings and localStorage unchanged (the backup itself re-saves the session)",
+   "ok": true,
+   "detail": "{\"tx\":[\"kv:readwrite\"],\"idbWrite\":1,\"ls\":0}"
+  },
+  {
+   "name": "writing stage: dialog says it cannot be cancelled and Escape does not close it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "...and the restore then completes normally",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "cancellation scenarios: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: ONE Enter on the focused \"Restore from backup…\" button opens exactly one file chooser",
+   "ok": true,
+   "detail": "{\"inputClicks\":1,\"choosers\":1}"
+  },
+  {
+   "name": "keyboard: preview opens with focus on Cancel; Tab reaches Continue; Escape cancels",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: Tab moves to Continue…",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: Enter on Continue… reaches the confirmation, focus on Cancel (safe default)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: confirmation focus order reaches the checkbox, Cancel and Back-up-first, and skips the disabled Replace button",
+   "ok": true,
+   "detail": "[\"BODY\",\"rsAck\",\"no\",\"backup\",\"BODY\",\"rsAck\"]"
+  },
+  {
+   "name": "keyboard: Replace is skipped by Tab order while disabled, and Space on the checkbox enables it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard-only restore completes",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: bro"
+  },
+  {
+   "name": "keyboard scenarios: no page errors",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

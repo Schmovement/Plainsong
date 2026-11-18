@@ -1,0 +1,27 @@
+PASS validation stage shows a progress dialog with a Cancel button, focused
+PASS cancel during validation: toast says nothing changed
+PASS cancel during validation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS cancel during validation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS after cancelled validation the next restore starts normally (no stuck busy flag)
+PASS cancel on preview (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS dismiss preview (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS cancel on confirmation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS dismiss confirmation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS confirmation with the box unticked cannot be confirmed (still open, still Replace disabled)
+PASS unticked confirmation then Escape: nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS after all cancellations: busy flags clear, lock off, app state untouched
+PASS "Back up current library first" downloads a backup and returns to the confirmation
+PASS after backup-first then cancel: songs, playlists, audio, secret/custom settings and localStorage unchanged (the backup itself re-saves the session)
+PASS writing stage: dialog says it cannot be cancelled and Escape does not close it
+PASS ...and the restore then completes normally
+PASS cancellation scenarios: no page errors
+PASS keyboard: ONE Enter on the focused "Restore from backup…" button opens exactly one file chooser
+PASS keyboard: preview opens with focus on Cancel; Tab reaches Continue; Escape cancels
+PASS keyboard: Tab moves to Continue…
+PASS keyboard: Enter on Continue… reaches the confirmation, focus on Cancel (safe default)
+PASS keyboard: confirmation focus order reaches the checkbox, Cancel and Back-up-first, and skips the disabled Replace button
+PASS keyboard: Replace is skipped by Tab order while disabled, and Space on the checkbox enables it
+PASS keyboard-only restore completes
+PASS keyboard scenarios: no page errors
+
+PHASE 2B: 25 / 25 pass

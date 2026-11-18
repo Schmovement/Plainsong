@@ -1,0 +1,196 @@
+{
+ "total": 38,
+ "failed": 0,
+ "results": [
+  {
+   "name": "test library is quiescent (two snapshots 1.8 s apart identical)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "library has 3 songs, 3 audio blobs, secret key, custom key, theme light",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "restore buttons exist: sidebar and top bar, with accessible names",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "sidebar \"Restore from backup…\" opens exactly one file chooser (zip only)",
+   "ok": true,
+   "detail": "{\"inputClicks\":1,\"choosers\":1}"
+  },
+  {
+   "name": "preview says nothing has changed and lists file, songs (5 with audio + 1 web), 2 playlists, 6 audio files, orphan, queue, history, theme",
+   "ok": true,
+   "detail": "Restore preview\n\nNothing has been changed yet. This is what the backup file contains.\n\nFile\np1-main-backup.zip\nFile size\n5.8 MB\nMade\n11/4/2026, 3:10:31 PM\nMade by\nPlainsong, backup format 1\nSongs\n6 (5 with audio, 1 saved web)\nPlaylists\n2\nAudio files\n6, 5.8 MB, 1 with no song entry (kept)\nQueue and settings\nsaved, queue of 4\nPlay history\n2 plays\nTheme\ndark\n\nYour library now\n\nSongs\n3\nPlaylists\n1\nAudio files\n3, 1.6 MB\nBackup note: 1 stored audio file has no library entry; included as-is\nThis backup refers to web addresses on 2 sites: audius.co, example.invalid. Plainsong contacts them only when you view or play those web songs.\nCancel\nContinue…"
+  },
+  {
+   "name": "preview shows the current library (3 songs, 1 playlist) and the web hosts the backup refers to",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "preview: Cancel is focused first; there is no destructive button yet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "preview stage: zero writes so far",
+   "ok": true,
+   "detail": "{\"tx\":[],\"idbWrite\":0,\"ls\":0}"
+  },
+  {
+   "name": "preview stage: database and localStorage byte-identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "confirmation is a separate step naming what is deleted (3 songs, 1 playlist, 3 audio files, queue/history/settings), what replaces it, what is kept, and warns about other tabs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "confirmation: Cancel focused; \"Replace library\" disabled until the checkbox is ticked",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "clicking the disabled Replace button does nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ticking the checkbox enables Replace",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "result dialog: restored counts, \"Nothing is playing\", theme set to dark and described as a separate step",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "restore into populated library: songs identical to the backup (every field, key order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "restore into populated library: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "restore into populated library: saved settings identical (session, history, custom keys)",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "restore into populated library: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "restore into populated library: this browser's secret: key survived untouched (value kept, never in a backup)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"SEKRET-VALUE-DO-NOT-LOSE\"}}]"
+  },
+  {
+   "name": "old songs, old playlist, old custom setting and old audio are gone",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "ps-theme: backup value dark applied to localStorage AFTER the database commit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "rebuilt app state: 6 songs, playlists [pl-1,pl-2], queue and index from the session, volume from the session, home view",
+   "ok": true,
+   "detail": "{\"tr\":6,\"pl\":[\"pl-1\",\"pl-2\"],\"q\":4,\"cur\":\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"qi\":0,\"vol\":0.8,\"view\":\"home\",\"stack\":0,\"paused\":true,\"plays\":0,\"lock\":false,\"busy\":[false,false,false,false],\"lib\":\"6 songs · 4 min\\n5.8 MB on this device\",\"bar\":\"Song One\",\"src\":\"set\",\"tracksInView\":0}"
+  },
+  {
+   "name": "NO AUTOPLAY: both audio elements paused and zero media play events since the restore started (autoplay was allowed in this browser)",
+   "ok": true,
+   "detail": "{\"tr\":6,\"pl\":[\"pl-1\",\"pl-2\"],\"q\":4,\"cur\":\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"qi\":0,\"vol\":0.8,\"view\":\"home\",\"stack\":0,\"paused\":true,\"plays\":0,\"lock\":false,\"busy\":[false,false,false,false],\"lib\":\"6 songs · 4 min\\n5.8 MB on this device\",\"bar\":\"Song One\",\"src\":\"set\",\"tracksInView\":0}"
+  },
+  {
+   "name": "restored current track is loaded (not playing) and shown in the bar",
+   "ok": true,
+   "detail": "Song One"
+  },
+  {
+   "name": "locks released: DB.lock false, no busy flags, library counter shows 6 songs",
+   "ok": true,
+   "detail": "{\"tr\":6,\"pl\":[\"pl-1\",\"pl-2\"],\"q\":4,\"cur\":\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"qi\":0,\"vol\":0.8,\"view\":\"home\",\"stack\":0,\"paused\":true,\"plays\":0,\"lock\":false,\"busy\":[false,false,false,false],\"lib\":\"6 songs · 4 min\\n5.8 MB on this device\",\"bar\":\"Song One\",\"src\":\"set\",\"tracksInView\":0}"
+  },
+  {
+   "name": "exactly one read-write transaction touched the database during the restore besides the pre-commit session flush",
+   "ok": true,
+   "detail": "[\"kv:readwrite\",\"tracks,playlists,blobs,kv:readwrite\"]"
+  },
+  {
+   "name": "nothing wrote over the restored data afterwards (snapshot 1.5 s later identical)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "restored local song plays from the restored audio bytes (currentTime advances)",
+   "ok": true,
+   "detail": "{\"t\":3.012608,\"paused\":false,\"err\":null,\"dur\":12}"
+  },
+  {
+   "name": "normal writes work again after the restore (lock lifted)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "page errors during the whole happy path",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: ONE Enter on the focused \"Restore from backup…\" button opens exactly one file chooser",
+   "ok": true,
+   "detail": "{\"inputClicks\":1,\"choosers\":1}"
+  },
+  {
+   "name": "keyboard: preview opens with focus on Cancel; Tab reaches Continue; Escape cancels",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: Tab moves to Continue…",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: Enter on Continue… reaches the confirmation, focus on Cancel (safe default)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard: confirmation focus order reaches the checkbox, Cancel and Back-up-first, and skips the disabled Replace button",
+   "ok": true,
+   "detail": "[\"BODY\",\"rsAck\",\"no\",\"backup\",\"BODY\",\"rsAck\"]"
+  },
+  {
+   "name": "keyboard: Replace is skipped by Tab order while disabled, and Space on the checkbox enables it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "keyboard-only restore completes",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: bro"
+  },
+  {
+   "name": "keyboard scenarios: no page errors",
+   "ok": true,
+   "detail": ""
+  }
+ ]
+}

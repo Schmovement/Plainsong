@@ -1,0 +1,5 @@
+page.evaluate: Target page, context or browser has been closed
+    at tryBackup (/home/claude/plainsong/tests/phase2b.test.js:486:130)
+    at async /home/claude/plainsong/tests/phase2b.test.js:490:13 {
+  log: []
+}

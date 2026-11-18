@@ -1,0 +1,11 @@
+--- a/index.html
++++ b/index.html
+@@ -1844,7 +1844,7 @@
+       A = aL; if (S.objUrl) { try { URL.revokeObjectURL(S.objUrl); } catch (e) { } S.objUrl = null; }
+       S.tracks.clear(); S.cache.clear(); S.mem.clear(); S.archTracks = []; S.playlists = []; S.hist = [];
+       S.queue = []; S.orig = []; S.qi = -1; S.cur = null; S.counted = false; S.resume = null; S.errCount = 0; S.seeking = false; S.lists = [];
+-      S.lyr = { id: null, lines: [], idx: -1 }; S.stack = []; S.view = { name: 'home' };
++      S.lyr = { id: null, lines: [], idx: -1 }; S.stack = []; S.view = { name: 'library' };   // Phase 2C: land on the Library (shows the restored songs, makes NO network request); the Home screen fetches public discover lists whenever it renders
+       abReset(); updateNowPlaying(null);
+       await hydrate(true, true);
+       applyEq(); saveSession.cancel(); saveHist.cancel(); S.lastSave = Date.now(); // nothing queued by the rebuild may overwrite the restored session

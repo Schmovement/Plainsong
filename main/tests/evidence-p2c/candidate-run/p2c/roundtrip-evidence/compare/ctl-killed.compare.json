@@ -1,0 +1,1 @@
+{"schema":"oracle_2c.compare.v1","A":"x","B":"y","results":[{"check":"c","status":"exact"}],"fail":0,"allowed":0,"exact":1}

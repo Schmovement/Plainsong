@@ -1,0 +1,8 @@
+Mutation checks for the Phase 2A reader tests (each mutant = current index.html with ONE safeguard removed; the suite must FAIL on it)
+m1-no-audio-crc: PHASE 2A: 213 / 216 pass  -> DETECTED (3 failing checks)
+m2-allow-secret: PHASE 2A: 211 / 215 pass  -> DETECTED (4 failing checks)
+m3-allow-proto: PHASE 2A: 214 / 215 pass  -> DETECTED (1 failing checks)
+m4-allow-compressed: PHASE 2A: 214 / 215 pass  -> DETECTED (1 failing checks)
+m5-reader-writes: PHASE 2A: 210 / 215 pass  -> DETECTED (5 failing checks)
+m6-no-url-check: PHASE 2A: 213 / 215 pass  -> DETECTED (2 failing checks)
+(m1 re-run after the flip-byte generator fix: 216 checks; m2-m6 were run against the 215-check generator before that fix, which does not affect the cases they target)

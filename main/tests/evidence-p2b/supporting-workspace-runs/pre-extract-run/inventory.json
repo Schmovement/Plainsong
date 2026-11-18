@@ -1,0 +1,42 @@
+{
+  "kvKeys": [
+    "hist",
+    "session"
+  ],
+  "trackFields": [
+    "id",
+    "kind",
+    "key",
+    "title",
+    "artist",
+    "album",
+    "track",
+    "duration",
+    "cover",
+    "lyrics",
+    "size",
+    "added",
+    "plays",
+    "liked"
+  ],
+  "blobType": "audio/wav",
+  "blobSize": 529244,
+  "sessionKeys": [
+    "queue",
+    "orig",
+    "qi",
+    "time",
+    "shuffle",
+    "repeat",
+    "vol",
+    "muted",
+    "rate",
+    "pitch",
+    "eq",
+    "eqPreset",
+    "np",
+    "npTab",
+    "webs"
+  ],
+  "ls": []
+}

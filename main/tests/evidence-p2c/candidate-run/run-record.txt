@@ -1,0 +1,5 @@
+project: /home/claude/p2c
+served: http://localhost:8765/index.html
+start: 2026-11-06T05:39:50Z
+node: v22.23.4 python: Python 3.13.18
+end: 2026-11-06T05:47:16Z

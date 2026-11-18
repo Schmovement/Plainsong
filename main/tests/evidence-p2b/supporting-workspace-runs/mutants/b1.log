@@ -1,0 +1,16 @@
+PASS (a) backup requested during VALIDATION: refused with "A restore is in progress", no download, no backup state left set
+PASS (a) backup requested during the PREVIEW: refused, no download, no backup state left set
+PASS (a) backup requested during the CONFIRMATION: refused, no download, no backup state left set
+PASS (a) the dialog's own "Back up current library first" is the one intended exception: it downloads and returns to the confirmation
+PASS (a) after cancelling: restoreBusy is cleared and the library is byte-identical
+PASS (a) after cancelling, a normal backup works again (one download) and clears its busy flag
+PASS (a) backup requested inside the locked write window: refused with "A restore is writing", no download
+FAIL (b) restore clears the old timed sleep timer (S.sleep null) and starts no playback
+FAIL (b) restored playback started after the restore is still playing, at its normal volume, long after the old deadline (not stopped, not faded)  :: {"paused":true,"vol":0.38422030210494995,"want":0.38422029683805425,"toast":"Sleep timer: good night"}
+FAIL (b) restore clears an "after this song" sleep timer
+FAIL (b) the restored session, when a song ends, advances normally instead of "Sleep timer: playback stopped"  :: {"qi0":1,"qi":1,"n":3,"toast":"Sleep timer: playback stopped"}
+PASS (b) in-flight fade-out was running (volume below normal) when the rebuild happened
+PASS (b) after the rebuild the abandoned fade does not pause the player or leave the volume lowered, and says no "good night"
+PASS (a)(b) scenarios: no page errors
+
+PHASE 2B: 10 / 14 pass
