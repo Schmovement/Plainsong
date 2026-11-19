@@ -1,0 +1,51 @@
+PASS S11 setup (test data): legacy originals: a GIF, a WebP and a PNG whose data URL is 1082734 characters (> the 700,000-character limit for NEW covers)
+PASS S11 L1: the legacy original (image/gif, 1474 chars) is previewed as the current cover
+PASS S11 L1: after replacing it, origCover is EXACTLY the legacy string (any MIME, any size) and the cover is a new small picture (<= 700,000 chars)
+PASS S11 L1: the editor shows the legacy original as a picture and Revert is available
+PASS S11 L1: Revert gives back the legacy original EXACTLY (cover === origCover === the legacy string; the 700,000 limit applies only to NEW covers)
+PASS S11 L2: the legacy original (image/webp, 1167 chars) is previewed as the current cover
+PASS S11 L2: after replacing it, origCover is EXACTLY the legacy string (any MIME, any size) and the cover is a new small picture (<= 700,000 chars)
+PASS S11 L2: the editor shows the legacy original as a picture and Revert is available
+PASS S11 L2: Revert gives back the legacy original EXACTLY (cover === origCover === the legacy string; the 700,000 limit applies only to NEW covers)
+PASS S11 L3: the legacy original (image/png, 1082734 chars) is previewed as the current cover
+PASS S11 L3: after replacing it, origCover is EXACTLY the legacy string (any MIME, any size) and the cover is a new small picture (<= 700,000 chars)
+PASS S11 L3: the editor shows the legacy original as a picture and Revert is available
+FAIL S11 L3: Revert gives back the legacy original EXACTLY (cover === origCover === the legacy string; the 700,000 limit applies only to NEW covers)  :: {"sv2":{"open":true,"err":"That cover can’t be saved. Nothing was saved."}}
+PASS S11: only the three edited records changed in the database, audio identical
+PASS S11-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S11-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S11-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S11 E file vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S11 E file vs live DB: playlists identical (ids order kept)
+PASS S11 E file vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S11 E file vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S11 E file vs live DB: this browser's own secret: keys are untouched (1)
+PASS S11 E file vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S11 E: the independent Python reader finds in the backup file, for every song, the same cover and origCover as the live database: kind, declared MIME = magic-byte MIME, byte size, SHA-256 of the decoded bytes, width x height
+PASS S11 E: every embedded image in the backup passes the Python reader's CONTAINER-FRAMING checks (PNG chunk CRCs and IEND last / JPEG SOF found and EOI trailer / GIF trailer / WebP RIFF size; this is NOT a pixel decode), has canonical base64, and its declared MIME equals its magic bytes (7 images)
+PASS S11: the Python reader sees the legacy MIMEs exactly: L1 origCover image/gif (16x16), L2 cover image/webp, L3 origCover image/png > 700,000 chars
+PASS S11 E -> clean (the strict reader accepts the legacy originals): real UI restore finished with "Library restored"
+PASS S11 E -> clean (the strict reader accepts the legacy originals): tracks identical to the backup (every field, key order, order)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): playlists identical (ids order kept)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): kv (everything but secret: keys) identical, including session and history
+PASS S11 E -> clean (the strict reader accepts the legacy originals): 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): this browser's own secret: keys are untouched (0)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S11 E -> clean (the strict reader accepts the legacy originals): UI shows the restored library (5 songs) and the policy theme
+PASS S11-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S11-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S11-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S11: E vs the re-export from the clean browser (legacy GIF/WebP/oversize originals carried exactly): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS S11: E vs the re-export from the clean browser (legacy GIF/WebP/oversize originals carried exactly): tracks records identical (order and key order), playlists identical
+PASS S11: E vs the re-export from the clean browser (legacy GIF/WebP/oversize originals carried exactly): every audio entry identical in order: key, MIME, size, SHA-256
+PASS S11: E vs the re-export from the clean browser (legacy GIF/WebP/oversize originals carried exactly): kv keys identical
+PASS S11: E vs the re-export from the clean browser (legacy GIF/WebP/oversize originals carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS S11: no page errors
+PASS S11 clean: no page errors
+PASS network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries
+PASS network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3B: 48 / 49 pass

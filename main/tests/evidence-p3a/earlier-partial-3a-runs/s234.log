@@ -1,0 +1,78 @@
+PASS S2: the clicked song really plays (not paused, time advancing, it is the current song)
+PASS S2: opening the editor does not pause the music
+PASS S2: after editing the CURRENT song it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue
+PASS S2: the playback position CONTINUED (did not restart or jump back)
+PASS S2: now-playing bar, panel and tab title show the new title/artist
+PASS S2: the media session (lock-screen/keyboard metadata) shows the new title, artist, album
+PASS S2: the queue panel shows the new title on the playing row
+PASS S2: after editing a NON-current song the music is still playing, same source, no new play()/loadstart, same current song and queue
+PASS S2: the bar still shows the current (edited) song, not the other one
+PASS S2 current song record: title/artist/album are exactly ["Now Playing Edited","Live Artist","Live Album"]
+PASS S2 current song record: genre is "Live"
+PASS S2 current song record: origMeta is the pre-edit snapshot {"title":"Song One","artist":"Artist A","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2 other song record: title/artist/album are exactly ["Queued Edited","Artist C","Unknown album"]
+PASS S2 other song record: genre is "Q"
+PASS S2 other song record: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S2: raw DB: same song ids in the same order (5)
+PASS S2: raw DB: playlists identical (ids, order, references)
+PASS S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S2: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S2: localStorage identical
+PASS S2: likes, plays, added time, duration, size, key of both edited songs unchanged
+PASS S2: no page errors
+PASS S3: Cancel closes the editor, writes nothing and changes nothing
+FAIL S3: after Cancel the focus is back on this song's ⋯ button
+FAIL S3: Escape cancels: zero writes, nothing changed, focus back on the ⋯ button
+PASS S3: Save with no change closes with no write and changes nothing
+PASS S3: typing a change and typing it back is a no-change Save: zero writes, no origMeta created
+PASS S3: Tab order is Title, Artist, Album, Genre, Cancel, Save (disabled Revert is skipped), then wraps
+PASS S3: at 390 px the dialog and its three buttons are inside the screen and the page has no horizontal scroll
+PASS S3: nothing played, nothing changed in playback state throughout
+PASS S3: no page errors
+PASS S4: Enter in a field saves
+PASS S4 edit 1: title/artist/album are exactly ["T1","Artist B","Unknown album"]
+PASS S4 edit 1: genre is "G1"
+PASS S4 edit 1: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4 edit 1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 edit 1: raw DB: same song ids in the same order (5)
+PASS S4 edit 1: raw DB: playlists identical (ids, order, references)
+PASS S4 edit 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 edit 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 edit 1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 edit 1: raw DB: history identical
+PASS S4 edit 1: localStorage identical
+PASS S4: reopening an edited song shows the original values and enables Revert
+PASS S4 edit 2 (genre cleared): title/artist/album are exactly ["T2","A2","B2"]
+PASS S4 edit 2 (genre cleared): genre is "" and the genre key is absent
+PASS S4 edit 2 (genre cleared): origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: the snapshot is stable: byte-identical after the second edit
+PASS S4: "Revert to originals" fills the form with the originals, disables itself, and moves focus to Save
+PASS S4: until Save, the stored song is still the edited one (Revert only fills the form)
+PASS S4: Revert then Cancel changes nothing
+PASS S4 reverted: title/artist/album are exactly ["Song Two","Artist B","Unknown album"]
+PASS S4 reverted: genre is "" and the genre key is absent
+PASS S4 reverted: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: after revert the record equals the never-edited record plus origMeta (no other difference at all)
+PASS S4 revert: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 revert: raw DB: same song ids in the same order (5)
+PASS S4 revert: raw DB: playlists identical (ids, order, references)
+PASS S4 revert: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 revert: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 revert: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 revert: raw DB: history identical
+PASS S4 revert: localStorage identical
+PASS S4: right after a revert the form equals the originals, so Revert is disabled
+PASS S4 edit after revert: title/artist/album are exactly ["T3","Artist B","Unknown album"]
+PASS S4 edit after revert: genre is "" and the genre key is absent
+PASS S4 edit after revert: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: origMeta still the very first snapshot (byte-identical) after revert and another edit
+PASS S4: a different, never-edited song has Revert disabled
+PASS S4: after RELOAD the final state and snapshot persist exactly
+PASS S4: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 21 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 74 / 76 pass

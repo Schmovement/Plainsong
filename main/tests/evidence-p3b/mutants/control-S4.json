@@ -1,0 +1,198 @@
+{
+ "complete": true,
+ "only": "4",
+ "total": 38,
+ "failed": 0,
+ "results": [
+  {
+   "name": "S4: setup (test data): L2 carries an embedded original cover, W2 an http cover address, no song has origCover yet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: a never-edited song shows \"Current cover\" and no original block",
+   "ok": true,
+   "detail": "{\"open\":true,\"h\":\"Edit cover\",\"state\":\"Current cover\",\"err\":\"\",\"save\":true,\"revert\":true,\"prev\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQ"
+  },
+  {
+   "name": "S4: first replacement: ONE write; origCover is EXACTLY the original embedded picture (same string); cover is the new picture",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"7905717e-9d4a-4e76-b4c3-66be0c1ac6d7\"}]"
+  },
+  {
+   "name": "S4 first replacement: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],0] vs [[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S4 first replacement: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 first replacement: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: reopening shows the kept ORIGINAL as a picture, \"Current cover\", Revert enabled",
+   "ok": true,
+   "detail": "{\"orig\":\"Original cover (kept from before your first change)\",\"img\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJ\",\"rv\":false}"
+  },
+  {
+   "name": "S4: second replacement (a JPEG 800x600): origCover is STILL exactly the first original (never overwritten by the earlier custom cover), cover replaced, scaled to fit 512 px keeping the shape",
+   "ok": true,
+   "detail": "{\"c2\":{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":6551,\"sha256\":\"cd145d18797e016eda3418b57ccb4a03e6e5ef077be94cbdffb282834aa21c3e\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":512,\"h\":384},\"same\":true}"
+  },
+  {
+   "name": "S4: Revert fills the preview with the original (\"Original cover (not saved yet)\"), Revert disables itself, Save is enabled; nothing is written yet",
+   "ok": true,
+   "detail": "{\"s\":\"Original cover (not saved yet)\",\"rv\":true,\"sv\":false}"
+  },
+  {
+   "name": "S4: saving the revert restores the original EXACTLY (cover === origCover === the original string); origCover stays; one write",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"7905717e-9d4a-4e76-b4c3-66be0c1ac6d7\"}]"
+  },
+  {
+   "name": "S4: after the revert the record equals the very first record plus origCover (cover bytes, MIME and hash identical to before any edit)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: reopening after the revert: Revert is disabled (already the original) and Save is disabled",
+   "ok": true,
+   "detail": "{\"open\":true,\"h\":\"Edit cover\",\"state\":\"Current cover\",\"err\":\"\",\"save\":true,\"revert\":true,\"prev\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQ"
+  },
+  {
+   "name": "S4: editing again after a revert works and still keeps the first original in origCover",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],0] vs [[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],[\"de948b6f-f5d8-489a-8e4a-ae1835bd4729\",\"audius:W1\",\"d2ada6a8-427c-41da-a92c-5122a46f8dd2\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S4 edit after revert: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: after RELOAD the records are byte-for-byte what was stored",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: a saved WEB song can get a custom cover; origCover is its exact original data URL",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: a web song with an http cover: origCover is the exact address string; the new cover is an embedded picture",
+   "ok": true,
+   "detail": "\"https://example.invalid/cover-w2.jpg\""
+  },
+  {
+   "name": "S4: the editor shows the http original as text (\"a web picture … not loaded here\") and does NOT request it (no network request for that address while the editor is open)",
+   "ok": true,
+   "detail": "{\"orig\":\"Original cover (kept from before your first change)\\nA web picture (its address is kept; it is not loaded here)\",\"hits\":0}"
+  },
+  {
+   "name": "S4: Revert on a web song restores the exact original address string (cover === origCover === the http address)",
+   "ok": true,
+   "detail": "\"https://example.invalid/cover-w2.jpg\""
+  },
+  {
+   "name": "S4: web song fields (url, link, title, plays, likes) never changed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: audio entries identical throughout all replacements and reverts",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: exactly the three edited songs have origCover",
+   "ok": true,
+   "detail": "[\"7905717e-9d4a-4e76-b4c3-66be0c1ac6d7\",\"archive:W2\",\"audius:W1\"]"
+  },
+  {
+   "name": "S4: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 18 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

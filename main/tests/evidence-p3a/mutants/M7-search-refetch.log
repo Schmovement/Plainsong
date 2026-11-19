@@ -1,0 +1,36 @@
+PASS S1: the editor opens on the song with its current values, title focused, bounds 200/200/200/80
+PASS S1: a never-edited song: "Revert to originals" is disabled and no original-values block is shown
+PASS S1: Save closes the editor without an error
+PASS S1: exactly ONE write to the tracks store, a put of this song
+PASS S1 saved record: title/artist/album are exactly ["Renamed Three","New Artist","New Album"]
+PASS S1 saved record: genre is "Test Genre"
+PASS S1 saved record: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S1: raw DB: same song ids in the same order (5)
+PASS S1: raw DB: playlists identical (ids, order, references)
+PASS S1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S1: raw DB: history identical
+PASS S1: localStorage identical
+PASS S1: in-memory record equals the stored record
+PASS S1: playback state untouched: still paused, same audio source, same time, no play()/loadstart, same current song, queue, playlists and library ids
+PASS S1: the visible list row shows the new title, artist and album
+PASS S1: keyboard focus returned to this song's ⋯ button after Save
+PASS S1: library filter finds the song by its new title, by its new album, and by its GENRE
+PASS S1: library filter no longer finds the song by its old title
+PASS S1: the queue panel shows the new title and not the old one
+PASS S1: global search finds the song under its new title
+FAIL S1: saving from the search view makes NO network request (the Audius/Archive lists are not refetched)  :: ["https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20","https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&rows=12&page=1&output=json&sort"]
+PASS S1: the search block shows the new title
+PASS S1: after an edit that no longer matches the query, the song leaves the search results
+PASS S1: snapshot kept the FIRST originals through repeated edits
+PASS S1: after RELOAD every record is byte-for-byte what was stored before (edited fields, origMeta, everything)
+PASS S1: after RELOAD the list shows the edited values
+PASS S1: no autoplay after reload, play() never called
+PASS S1: no page errors
+FAIL network: NO request was attempted during any song-info save  :: [{"scn":"S1","urls":["https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20","https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&rows=12&page=1&output=json&sort"]},{"scn":"S1","urls":["https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20","https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creato
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 15 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 32 / 34 pass

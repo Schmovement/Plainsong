@@ -1,0 +1,45 @@
+PASS S4: Enter in a field saves
+PASS S4 edit 1: title/artist/album are exactly ["T1","Artist B","Unknown album"]
+PASS S4 edit 1: genre is "G1"
+PASS S4 edit 1: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4 edit 1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 edit 1: raw DB: same song ids in the same order (5)
+PASS S4 edit 1: raw DB: playlists identical (ids, order, references)
+PASS S4 edit 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 edit 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 edit 1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 edit 1: raw DB: history identical
+PASS S4 edit 1: localStorage identical
+PASS S4: reopening an edited song shows the original values and enables Revert
+PASS S4 edit 2 (genre cleared): title/artist/album are exactly ["T2","A2","B2"]
+PASS S4 edit 2 (genre cleared): genre is "" and the genre key is absent
+FAIL S4 edit 2 (genre cleared): origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)  :: {"title":"T1","artist":"Artist B","album":"Unknown album","genre":"G1"}
+FAIL S4: the snapshot is stable: byte-identical after the second edit  :: {"title":"T1","artist":"Artist B","album":"Unknown album","genre":"G1"}
+FAIL S4: "Revert to originals" fills the form with the originals, disables itself, and moves focus to Save  :: {"v":["T1","Artist B","Unknown album","G1"],"rv":true,"foc":"metaSave"}
+PASS S4: until Save, the stored song is still the edited one (Revert only fills the form)
+PASS S4: Revert then Cancel changes nothing
+FAIL S4 reverted: title/artist/album are exactly ["Song Two","Artist B","Unknown album"]  :: {"title":"T1","artist":"Artist B","album":"Unknown album","genre":"G1"}
+FAIL S4 reverted: genre is "" and the genre key is absent  :: "G1"
+FAIL S4 reverted: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)  :: {"title":"T2","artist":"A2","album":"B2","genre":""}
+FAIL S4: after revert the record equals the never-edited record plus origMeta (no other difference at all)  :: {"id":"f490f23d-d60d-4e26-a0f8-108e4f3ed1a8","kind":"local","key":"Artist B - Song Two.wav|529244|1793908062000","title":"T1","artist":"Artist B","album":"Unknown album","track":0,"duration":12,"cover":"","lyrics":"","size":529244,"added":1793961508439,"plays":0,"liked":false,"origMeta":{"title":"T2","artist":"A2","album":"B2","genre":""},"genre":"G1"} vs {"id":"f490f23d-d60d-4e26-a0f8-108e4f3ed1a8","kind":"local","key":"Artist B - Song Two.wav|529244|1793908062000","title":"Song Two","artist":"Artist B","album":"Unknown album","track":0,"duration":12,"cover":"","lyrics":"","size":529244,"added":1793961508439,"plays":0,"liked":false}
+PASS S4 revert: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 revert: raw DB: same song ids in the same order (5)
+PASS S4 revert: raw DB: playlists identical (ids, order, references)
+PASS S4 revert: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 revert: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 revert: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 revert: raw DB: history identical
+PASS S4 revert: localStorage identical
+FAIL S4: right after a revert the form equals the originals, so Revert is disabled
+PASS S4 edit after revert: title/artist/album are exactly ["T3","Artist B","Unknown album"]
+FAIL S4 edit after revert: genre is "" and the genre key is absent  :: "G1"
+FAIL S4 edit after revert: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)  :: {"title":"T1","artist":"Artist B","album":"Unknown album","genre":"G1"}
+FAIL S4: origMeta still the very first snapshot (byte-identical) after revert and another edit
+PASS S4: a different, never-edited song has Revert disabled
+PASS S4: after RELOAD the final state and snapshot persist exactly
+PASS S4: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 9 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 32 / 43 pass

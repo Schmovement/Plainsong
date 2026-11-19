@@ -1,0 +1,123 @@
+{
+ "complete": true,
+ "only": "2",
+ "total": 23,
+ "failed": 0,
+ "results": [
+  {
+   "name": "S2: the clicked song really plays (not paused, time advancing, it is the current song)",
+   "ok": true,
+   "detail": "{\"p\":false,\"ct\":2.17483,\"cur\":\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\"}"
+  },
+  {
+   "name": "S2: opening the cover editor does not pause the music",
+   "ok": true,
+   "detail": "{\"paused\":false}"
+  },
+  {
+   "name": "S2: after changing the CURRENT song's cover it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8792/ce8b9c5c-c751-42b6-87fd-db2f5fae3dca\",\"ct\":2.17483,\"plays\":1,\"ls\":1,\"cur\":\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"qi\":0,\"queue\":[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"9f1b5a13-2c72-4c05-9a7f-7e8549a87718\",\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"ghost-id\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\"]],\"lib\":[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"9f1b5a13-2c72-4c05-9a7f-7e8549a87718\",\"archive:W2\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\"]} | {\"paused\":false,\"src\":\"blob:http://localhost:8792/ce8b9c5c-c751-42b6-87fd-db2f5fae3dca\",\"ct\":3.37105,\"plays\":1,\"ls\":1,\"cur\":\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"qi\":0,\"queue\":[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"9f"
+  },
+  {
+   "name": "S2: the playback position CONTINUED (did not restart or jump back)",
+   "ok": true,
+   "detail": "2.17483 -> 3.37105"
+  },
+  {
+   "name": "S2: the now-playing bar and the full panel show the new cover",
+   "ok": true,
+   "detail": "{\"bar\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJ\",\"np\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJ\"}"
+  },
+  {
+   "name": "S2: the media session artwork (lock-screen/keyboard metadata) is the new cover",
+   "ok": true,
+   "detail": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX"
+  },
+  {
+   "name": "S2: the queue panel shows the new cover on the playing row",
+   "ok": true,
+   "detail": "[[\"Song One\",true,\"url(\\\"data:image/jpeg;base64,/9\"],[\"Web ✓ <b>bold</b> & \\\"q\\\"\",false,\"url(\\\"data:image/png;base64,iVB\"],[\"Song Three\",false,\"\"],[\"Queued only ✓\",false,\"\"]]"
+  },
+  {
+   "name": "S2: after changing a NON-current song's cover the music is still playing, same source, no new play()/loadstart, same current song and queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8792/ce8b9c5c-c751-42b6-87fd-db2f5fae3dca\",\"ct\":4.492336,\"plays\":1,\"ls\":1,\"cur\":\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"qi\":0,\"queue\":[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"9f1b5a13-2c72-4c05-9a7f-7e8549a87718\",\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"ghost-id\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\"]],\"lib\":[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"9f1b5a13-2c72-4c05-9a7f-7e8549a87718\",\"archive:W2\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\"]}"
+  },
+  {
+   "name": "S2: the bar still shows the current song's cover, not the other one",
+   "ok": true,
+   "detail": "url(\"data:image/jpeg;base64,/9j/4AAQSkZJ"
+  },
+  {
+   "name": "S2: the queue panel row of the other edited song shows its new cover",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],0] vs [[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],[\"6eb48f76-b4a9-40f3-a98d-ea6808bfbef0\",\"audius:W1\",\"be973dfc-08e7-49ed-8837-8162535f5cc6\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S2: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: likes, plays, added time, duration, size, key and title/artist/album of both edited songs unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: the two edited songs have different covers (no shared data)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

@@ -1,0 +1,176 @@
+{
+ "total": 34,
+ "failed": 2,
+ "results": [
+  {
+   "name": "S1: the editor opens on the song with its current values, title focused, bounds 200/200/200/80",
+   "ok": true,
+   "detail": "{\"h\":\"Edit song info\",\"v\":[\"Song Three\",\"Artist C\",\"Unknown album\",\"\"],\"mx\":[200,200,200,80],\"rv\":true,\"orig\":\"\",\"active\":\"meta_title\"}"
+  },
+  {
+   "name": "S1: a never-edited song: \"Revert to originals\" is disabled and no original-values block is shown",
+   "ok": true,
+   "detail": "{\"h\":\"Edit song info\",\"v\":[\"Song Three\",\"Artist C\",\"Unknown album\",\"\"],\"mx\":[200,200,200,80],\"rv\":true,\"orig\":\"\",\"active\":\"meta_title\"}"
+  },
+  {
+   "name": "S1: Save closes the editor without an error",
+   "ok": true,
+   "detail": "{\"open\":false,\"err\":\"\"}"
+  },
+  {
+   "name": "S1: exactly ONE write to the tracks store, a put of this song",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\"}]"
+  },
+  {
+   "name": "S1 saved record: title/artist/album are exactly [\"Renamed Three\",\"New Artist\",\"New Album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Renamed Three\",\"artist\":\"New Artist\",\"album\":\"New Album\",\"genre\":\"Test Genre\"}"
+  },
+  {
+   "name": "S1 saved record: genre is \"Test Genre\"",
+   "ok": true,
+   "detail": "\"Test Genre\""
+  },
+  {
+   "name": "S1 saved record: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],0] vs [[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S1: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: in-memory record equals the stored record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: playback state untouched: still paused, same audio source, same time, no play()/loadstart, same current song, queue, playlists and library ids",
+   "ok": true,
+   "detail": "{\"paused\":true,\"src\":\"blob:http://localhost:8791/650e556e-011f-4053-922b-b969b4fa0f07\",\"ct\":1.5,\"plays\":0,\"ls\":1,\"cur\":\"207073f8-cf76-4994-afae-4092e1878ece\",\"qi\":0,\"queue\":[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"f8f2cb98-3324-4d29-ae76-7db7f2f23722\",\"207073f8-cf76-4994-afae-4092e1878ece\",\"ghost-id\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\"]],\"lib\":[\"207073f8-cf76-4994-afae-4092e1878ece\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"archive:W2\",\"audius:W1\",\"f8f2cb98-3324-4d29-ae76-7db7f2f23722\"]} vs {\"paused\":true,\"src\":\"blob:http://localhost:8791/650e556e-011f-4053-922b-b969b4fa0f07\",\"ct\":1.5,\"plays\":0,\"ls\":1,\"cur\":\"207073f8-cf76-4994-afae-4092e1878ece\",\"qi\":0,\"queue\":[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"f8f2cb98-33"
+  },
+  {
+   "name": "S1: the visible list row shows the new title, artist and album",
+   "ok": true,
+   "detail": "{\"t\":\"Renamed Three\",\"a\":\"New Artist\",\"al\":\"New Album\",\"html\":\"\\n    <div class=\\\"r-cov\\\"><div class=\\\"cover sm\\\" style=\\\"--h:87\\\">R</div><span class=\\\"r-btn\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" aria-hidden=\\\"true\\\"><polygon points=\\\"7 4 20 12 7 20 7 4\\\" fill=\\\"currentColor\\\" stroke=\\\"none\\\"></polygon></svg></span><span class=\\\"bars\\\"><i></i><i></i><i></i></span></div>\\n    <div class=\\\"r-main\\\"><div class=\\\"r-t\\\">Renamed Three</div><div class=\\\"r-a\\\">New Artist</div></div>\\n    <div class=\\\"r-alb\\\">New Album</div>\\n    <div class=\\\"r-dur\\\">0:12</div>\\n    <div class=\\\"r-act\\\"><button class=\\\"icon-btn like\\\" data-act=\\\"like\\\" aria-label=\\\"Like\\\" aria-pressed=\\\"false\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" "
+  },
+  {
+   "name": "S1: keyboard focus returned to this song's ⋯ button after Save",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: library filter finds the song by its new title, by its new album, and by its GENRE",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: library filter no longer finds the song by its old title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: the queue panel shows the new title and not the old one",
+   "ok": true,
+   "detail": "[\"Song One\",\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"Renamed Three\",\"Queued only ✓\"]"
+  },
+  {
+   "name": "S1: global search finds the song under its new title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: saving from the search view makes NO network request (the Audius/Archive lists are not refetched)",
+   "ok": false,
+   "detail": "[\"https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20\",\"https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&rows=12&page=1&output=json&sort\"]"
+  },
+  {
+   "name": "S1: the search block shows the new title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: after an edit that no longer matches the query, the song leaves the search results",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: snapshot kept the FIRST originals through repeated edits",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S1: after RELOAD every record is byte-for-byte what was stored before (edited fields, origMeta, everything)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: after RELOAD the list shows the edited values",
+   "ok": true,
+   "detail": "{\"t\":\"Zzz\",\"a\":\"Qq\",\"al\":\"Qq\",\"html\":\"\\n    <div class=\\\"r-cov\\\"><div class=\\\"cover sm\\\" style=\\\"--h:104\\\">Z</div><span class=\\\"r-btn\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" aria-hidden=\\\"true\\\"><polygon points=\\\"7 4 20 12 7 20 7 4\\\" fill=\\\"currentColor\\\" stroke=\\\"none\\\"></polygon></svg></span><span class=\\\"bars\\\"><i></i><i></i><i></i></span></div>\\n    <div class=\\\"r-main\\\"><div class=\\\"r-t\\\">Zzz</div><div class=\\\"r-a\\\">Qq</div></div>\\n    <div class=\\\"r-alb\\\">Qq</div>\\n    <div class=\\\"r-dur\\\">0:12</div>\\n    <div class=\\\"r-act\\\"><button class=\\\"icon-btn like\\\" data-act=\\\"like\\\" aria-label=\\\"Like\\\" aria-pressed=\\\"false\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke"
+  },
+  {
+   "name": "S1: no autoplay after reload, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"207073f8-cf76-4994-afae-4092e1878ece\",\"audius:W1\",\"7b42aaf8-f168-4c36-9c3f-d9980f931cd5\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any song-info save",
+   "ok": false,
+   "detail": "[{\"scn\":\"S1\",\"urls\":[\"https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20\",\"https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creator&rows=12&page=1&output=json&sort\"]},{\"scn\":\"S1\",\"urls\":[\"https://api.audius.co/v1/tracks/search?query=Renamed&app_name=Plainsong&limit=20\",\"https://archive.org/advancedsearch.php?q=%28Renamed%29+AND+mediatype%3Aaudio&fl%5B%5D=identifier&fl%5B%5D=title&fl%5B%5D=creato"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 15 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

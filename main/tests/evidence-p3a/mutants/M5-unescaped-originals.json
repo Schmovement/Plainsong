@@ -1,0 +1,211 @@
+{
+ "total": 41,
+ "failed": 1,
+ "results": [
+  {
+   "name": "S5 accepted: HTML image tag with an event handler: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"<img src=x onerror=\\\"window.__pwned=1\\\">\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: HTML image tag with an event handler: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"A B C Z q\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: lone surrogates: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"�x�\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: lone surrogates: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: emoji, CJK, accents kept exactly: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"歌曲 🎵 ü ß\",\"artist\":\"Ünï 日本\",\"album\":\"🎧\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: emoji, CJK, accents kept exactly: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: leading/trailing/inner spaces: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"spaced out\",\"artist\":\"a b\",\"album\":\"🎧\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: leading/trailing/inner spaces: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: __proto__ and constructor as text: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"__proto__\",\"artist\":\"constructor\",\"album\":\"toString\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: __proto__ and constructor as text: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: empty artist and album get the app's default names: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"__proto__\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: empty artist and album get the app's default names: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: exactly 200 characters in title (the maximum): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: exactly 200 characters in title (the maximum): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: exactly 80 characters in genre (the maximum): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg\"} | "
+  },
+  {
+   "name": "S5 accepted: exactly 80 characters in genre (the maximum): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5: the hostile title/artist/album/genre never become markup anywhere (library list, queue panel): no injected img, script or svg, and no script ran",
+   "ok": true,
+   "detail": "{\"pwned\":0,\"imgs\":0,\"scripts\":0,\"svg\":0}"
+  },
+  {
+   "name": "S5: the album page header shows the hostile album as text",
+   "ok": true,
+   "detail": "{\"h1\":\"</dialog><script>window.__pwned=2</script>\",\"inj\":0,\"pwned\":0}"
+  },
+  {
+   "name": "S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run",
+   "ok": false,
+   "detail": "{\"txt\":\"Original values (kept from before your first edit)\\nTitle\\nArtist\\nAlbum\\nGenre\\n\\\">\",\"inj\":3,\"pwned\":4}"
+  },
+  {
+   "name": "S5 refused: title of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title is too long (at most 200 characters). Nothing was saved. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: title of 5000 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title is too long (at most 200 characters). Nothing was saved. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: whitespace-only title: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title can’t be empty. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: genre of 81 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Genre is too long (at most 80 characters). Nothing was saved. | focus meta_genre"
+  },
+  {
+   "name": "S5 refused: artist of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Artist is too long (at most 200 characters). Nothing was saved. | focus meta_artist"
+  },
+  {
+   "name": "S5: typing or pasting more than 200 characters is stopped by the field (maxlength)",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "S5-hostile: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261106-173847.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S5-hostile: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5-hostile: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 export vs live DB: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S5 export vs live DB: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 export vs live DB: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S5 export vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S5 export vs live DB: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lastfm\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}}]"
+  },
+  {
+   "name": "S5 export vs live DB: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5: the hostile record in the backup file holds the exact stored strings",
+   "ok": true,
+   "detail": "{\"title\":\"<img src=x onerror=\\\"window.__pwned=1\\\">\",\"artist\":\"<b>bold</b>\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"}"
+  },
+  {
+   "name": "S5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any song-info save",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

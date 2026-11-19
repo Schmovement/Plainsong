@@ -1,0 +1,187 @@
+PASS oracle control: a backup compared with itself is all-exact (22 checks, 0 allowed, 0 failed)
+PASS oracle control audio-byte-flip: one bit of one audio entry flipped (file stays internally consistent) -> the intended check(s) FAIL: audio list identical + blobs/000003.bin byte-identical
+PASS oracle control session-vol: session.vol 0.8 -> 0.7 -> the intended check(s) FAIL: kv[session] differs in fields
+PASS oracle control tracks-key-order: two keys of one track record swapped (same values) -> the intended check(s) FAIL: tracks records identical + data/tracks.json byte-identical
+PASS oracle control playlist-order: playlist song order reversed -> the intended check(s) FAIL: playlists records identical + data/playlists.json byte-identical
+PASS oracle control blob-mime-manifest: one audio MIME type changed in the manifest -> the intended check(s) FAIL: audio list identical + manifest.blobs[blobs/000001.bin].type
+PASS oracle control kv-extra-key: an extra kv entry -> the intended check(s) FAIL: kv key set and order identical
+PASS oracle control localstorage-extra-key: an extra localStorage key -> the intended check(s) FAIL: localstorage.json differs
+PASS oracle control extra-zip-entry: an extra ZIP entry not in the manifest -> the intended check(s) FAIL: entry names and order identical + B self-check
+PASS oracle control secret-in-B: B carries a secret: key in kv.json -> the intended check(s) FAIL: B has no secret: key in kv.json + kv key set and order identical
+PASS oracle control secret-upper-in-B: B carries SECRET:Token (case-insensitive prefix) -> the intended check(s) FAIL: B has no secret: key in kv.json
+PASS oracle control secret-in-A: A carries a secret: key (compared with a clean B) -> the intended check(s) FAIL: A has no secret: key in kv.json
+PASS oracle control time-drift-bounded: session.time 3 -> 3.2 (drift 0.2 s, inside the 0.25 s bound) -> ONLY these non-exact results, all allowed: kv[session] identical except time + manifest.files[data/kv.json].crc32 + manifest.files[data/kv.json].bytes + manifest.payloadBytes
+PASS oracle control time-jump-forward: session.time 3 -> 8 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control time-rewind-to-zero: session.time 3 -> 0 WITHOUT the explicit unavailable-position evidence flag -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control time-rewind-to-zero-with-evidence: session.time 3 -> 0 WITH --time-unavailable (harness proved the current song cannot report a position) -> ONLY these non-exact results, all allowed: kv[session] identical except time + manifest.files[data/kv.json].crc32
+PASS oracle control time-flag-but-not-zero: --time-unavailable given but B.time is 1, not 0 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control time-negative: session.time -1 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control time-string: session.time "3" (a string) -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control time-large-backward-jump: session.time 120 -> 60 (a large backward jump that is not zero), with the evidence flag given -> the intended check(s) FAIL: kv[session].time changed beyond the allowance
+PASS oracle control createdAt-later: manifest.createdAt later than A -> ONLY these non-exact results, all allowed: manifest.createdAt
+PASS oracle control createdAt-earlier: manifest.createdAt EARLIER than A -> the intended check(s) FAIL: manifest.createdAt
+PASS oracle control theme-added-allowed: A has no theme; B carries the target browser's dark theme (--b-theme dark) -> ONLY these non-exact results, all allowed: localstorage.json: A had no ps-theme + manifest.counts.localStorage + manifest.files[data/localstorage.json].crc32 + manifest.files[data/localstorage.json].bytes + manifest.payloadBytes
+PASS oracle control theme-added-wrong-b-theme: A has no theme; B has dark but the target's theme was light -> the intended check(s) FAIL: localstorage.json differs
+PASS oracle control theme-added-no-evidence: A has no theme; B has dark and no --b-theme was given -> the intended check(s) FAIL: localstorage.json differs
+PASS oracle control theme-changed: A has dark; B has light (a theme in the backup must be kept exactly) -> the intended check(s) FAIL: localstorage.json differs
+PASS oracle control manifest-duplicate-file-entry: manifest.files lists data/tracks.json twice -> the intended check(s) FAIL: B self-check
+PASS oracle control manifest-duplicate-blob-entry: manifest.blobs lists blobs/000001.bin twice -> the intended check(s) FAIL: B self-check
+PASS oracle control manifest-extra-top-key: an extra top-level manifest key -> the intended check(s) FAIL: B self-check + manifest.x differs
+PASS oracle control manifest-missing-nested-key: manifest.counts lost a key -> the intended check(s) FAIL: B self-check + manifest.counts.localStorage differs
+PASS oracle control manifest-extra-nested-key: manifest.excluded gained a key -> the intended check(s) FAIL: B self-check + manifest.excluded.extra differs
+PASS oracle control manifest-counts-wrong: manifest.counts.tracks says 99 -> the intended check(s) FAIL: B self-check + manifest.counts.tracks differs
+PASS oracle control manifest-blobs-reordered: two manifest.blobs entries swapped -> the intended check(s) FAIL: B self-check
+PASS oracle control manifest-excluded-not-a-secret: manifest.excluded.kv lists a non-secret name -> the intended check(s) FAIL: B self-check
+PASS oracle control manifest-complete-flipped: manifest.complete true -> false -> the intended check(s) FAIL: manifest.complete differs
+PASS oracle control manifest-audioBytes-lie: manifest.audioBytes off by one -> the intended check(s) FAIL: B self-check + manifest.audioBytes differs
+PASS oracle control excluded-names-match-browser: excluded.kv names changed to the secret key this (harness-read) browser holds -> ONLY these non-exact results, all allowed: manifest.excluded.kv
+PASS oracle control excluded-names-not-the-browsers: excluded.kv lists secret:zzz but the browser holds secret:yyy -> the intended check(s) FAIL: manifest.excluded.kv
+PASS oracle control excluded-names-missing: excluded.kv is empty although the browser holds secret:lastfm -> the intended check(s) FAIL: manifest.excluded.kv
+PASS oracle control warning-theme-dropped: A has [orphan warning, theme warning]; B (a restored browser) has only the orphan warning -> ONLY these non-exact results, all allowed: manifest.warnings
+PASS oracle control warning-orphan-dropped: the orphan-audio warning disappeared (data-derived: must be a FAIL) -> the intended check(s) FAIL: manifest.warnings differs
+PASS oracle control warning-both-dropped: A has [orphan, theme]; B has none (the orphan warning may not vanish with it) -> the intended check(s) FAIL: manifest.warnings differs
+PASS oracle control warning-theme-added: B gained the theme warning that A did not have -> the intended check(s) FAIL: manifest.warnings differs
+PASS harness control: a stale report left at the output path is NOT used when the oracle fails (exit 2, no new report -> error)
+PASS harness control: exit 0 is rejected where a failing comparison (exit 1) was required
+PASS harness control: an oracle KILLED BY A SIGNAL (SIGKILL, after writing an all-pass-looking report, with a stale all-pass report already at the path) is rejected, not accepted
+PASS harness control: an oracle that exceeds the timeout is stopped and rejected (a stale all-pass report at the path is not used, and the stale file is gone)
+PASS safe-delete control: refused = filesystem root, home directory, /home, a shallow dir, the project root, tests dir, fixtures, the WAV fixtures dir, a non-empty directory without the ownership marker, a symlink to the fixtures, a dangling symlink
+PASS safe-delete control: an owned, generated directory (with the marker) and a new path under an unrelated parent are accepted
+PASS safe-delete control: the immutable fixtures and tests are still present after the refusals
+PASS source library: 3 imported WAVs + 2 web songs, 2 playlists, session, history, 2 orphans, custom/unicode/unknown kv, 2 secret: keys, dark theme
+PASS E1-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS E1-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS E1-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS E1 equals the source database: tracks, playlists, every kv key except secret:, every audio entry (key/MIME/size/SHA-256) and the theme
+PASS E1 contains the unicode/unknown data: x_future field on a song, x_note on a playlist, custom unicode key, x-future kv key, orphan unicode key, unicode titles
+PASS E1 orphan audio is exported (2 entries with no song) and the manifest warns about it
+PASS E1 playlist order and dangling ids are kept exactly
+PASS E1 session equals the saved session (the export re-writes it from the live player): differing fields = []
+PASS E1 -> own browser: real UI restore finished with "Library restored"
+PASS E1 -> own browser: tracks identical to the backup (every field, key order, order)
+PASS E1 -> own browser: playlists identical (ids order kept)
+PASS E1 -> own browser: kv (everything but secret: keys) identical, including session and history
+PASS E1 -> own browser: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E1 -> own browser: this browser's own secret: keys are untouched (2)
+PASS E1 -> own browser: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E1 -> own browser: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS E1 -> own browser: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS E1 -> own browser: UI shows the restored library (5 songs) and the policy theme
+PASS E1 -> own browser after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS E1 -> own browser after RELOAD: playlists identical (ids order kept)
+PASS E1 -> own browser after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS E1 -> own browser after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E1 -> own browser after RELOAD: this browser's own secret: keys are untouched (2)
+PASS E1 -> own browser after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E1 -> own browser after RELOAD: still 5 songs, theme dark, paused, no play() call
+PASS E1b-own-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS E1b-own-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS E1b-own-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS E1 vs re-export from the same browser: oracle comparison has ZERO failures (25 exact, 1 allowed, 0 failed)
+PASS E1 vs re-export from the same browser: tracks records identical (order and key order), playlists identical
+PASS E1 vs re-export from the same browser: every audio entry identical in order: key, MIME, size, SHA-256
+PASS E1 vs re-export from the same browser: kv keys identical
+PASS E1 vs re-export from the same browser: narrowly allowed differences, each with its stated reason (not ignored fields): 1
+PASS scenario 1 source browser: no page errors
+PASS target library before: 2 imported WAVs + 1 web song, own playlist, orphan, colliding kv key, light theme, 2 secret: keys (different values from the source)
+PASS E1 -> populated target: real UI restore finished with "Library restored"
+PASS E1 -> populated target: tracks identical to the backup (every field, key order, order)
+PASS E1 -> populated target: playlists identical (ids order kept)
+PASS E1 -> populated target: kv (everything but secret: keys) identical, including session and history
+PASS E1 -> populated target: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E1 -> populated target: this browser's own secret: keys are untouched (2)
+PASS E1 -> populated target: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E1 -> populated target: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)
+PASS E1 -> populated target: in-memory library has none of the target's old songs
+PASS E1 -> populated target: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS E1 -> populated target: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS E1 -> populated target: UI shows the restored library (5 songs) and the policy theme
+PASS E1 -> populated target after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS E1 -> populated target after RELOAD: playlists identical (ids order kept)
+PASS E1 -> populated target after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS E1 -> populated target after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E1 -> populated target after RELOAD: this browser's own secret: keys are untouched (2)
+PASS E1 -> populated target after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E1 -> populated target after RELOAD: still 5 songs, theme dark, paused, no play() call
+PASS E2-from-populated-target: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS E2-from-populated-target: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS E2-from-populated-target: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS E1 vs E2 (export, restore over a different populated library, export): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS E1 vs E2 (export, restore over a different populated library, export): tracks records identical (order and key order), playlists identical
+PASS E1 vs E2 (export, restore over a different populated library, export): every audio entry identical in order: key, MIME, size, SHA-256
+PASS E1 vs E2 (export, restore over a different populated library, export): kv keys identical
+PASS E1 vs E2 (export, restore over a different populated library, export): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS E2 manifest lists the TARGET's credential key names only (never values)
+PASS scenario 1 populated target: no page errors
+PASS E2 -> clean browser: real UI restore finished with "Library restored"
+PASS E2 -> clean browser: tracks identical to the backup (every field, key order, order)
+PASS E2 -> clean browser: playlists identical (ids order kept)
+PASS E2 -> clean browser: kv (everything but secret: keys) identical, including session and history
+PASS E2 -> clean browser: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E2 -> clean browser: this browser's own secret: keys are untouched (0)
+PASS E2 -> clean browser: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E2 -> clean browser: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS E2 -> clean browser: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS E2 -> clean browser: UI shows the restored library (5 songs) and the policy theme
+PASS E2 -> clean browser after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS E2 -> clean browser after RELOAD: playlists identical (ids order kept)
+PASS E2 -> clean browser after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS E2 -> clean browser after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E2 -> clean browser after RELOAD: this browser's own secret: keys are untouched (0)
+PASS E2 -> clean browser after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E2 -> clean browser after RELOAD: still 5 songs, theme dark, paused, no play() call
+PASS E3-from-clean-target: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS E3-from-clean-target: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS E3-from-clean-target: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS E2 vs E3 (second hop, via a clean browser): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS E2 vs E3 (second hop, via a clean browser): tracks records identical (order and key order), playlists identical
+PASS E2 vs E3 (second hop, via a clean browser): every audio entry identical in order: key, MIME, size, SHA-256
+PASS E2 vs E3 (second hop, via a clean browser): kv keys identical
+PASS E2 vs E3 (second hop, via a clean browser): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS scenario 1 clean browser: no page errors
+PASS E3 -> same populated target again (it already holds E1's data): real UI restore finished with "Library restored"
+PASS E3 -> same populated target again (it already holds E1's data): tracks identical to the backup (every field, key order, order)
+PASS E3 -> same populated target again (it already holds E1's data): playlists identical (ids order kept)
+PASS E3 -> same populated target again (it already holds E1's data): kv (everything but secret: keys) identical, including session and history
+PASS E3 -> same populated target again (it already holds E1's data): 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS E3 -> same populated target again (it already holds E1's data): this browser's own secret: keys are untouched (2)
+PASS E3 -> same populated target again (it already holds E1's data): localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS E3 -> same populated target again (it already holds E1's data): no autoplay (nothing playing, play() never called, no audio element playing)
+PASS E3 -> same populated target again (it already holds E1's data): the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS E3 -> same populated target again (it already holds E1's data): UI shows the restored library (5 songs) and the policy theme
+PASS E4-repeat: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS E4-repeat: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS E4-repeat: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS E3 vs E4 (third hop): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS E3 vs E4 (third hop): tracks records identical (order and key order), playlists identical
+PASS E3 vs E4 (third hop): every audio entry identical in order: key, MIME, size, SHA-256
+PASS E3 vs E4 (third hop): kv keys identical
+PASS E3 vs E4 (third hop): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS E1 vs E4 (whole chain: source -> populated -> clean -> populated): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS E1 vs E4 (whole chain: source -> populated -> clean -> populated): tracks records identical (order and key order), playlists identical
+PASS E1 vs E4 (whole chain: source -> populated -> clean -> populated): every audio entry identical in order: key, MIME, size, SHA-256
+PASS E1 vs E4 (whole chain: source -> populated -> clean -> populated): kv keys identical
+PASS E1 vs E4 (whole chain: source -> populated -> clean -> populated): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS across the chain the three hops reach a fixed point: E2, E3 and E4 have identical audio/tracks/playlists bytes
+PASS scenario 1 populated target (second restore): no page errors
+PASS S2 full -> clean-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S2 full -> clean-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S2 full -> clean-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S2 full -> clean source: no page errors
+PASS S2 full -> clean: real UI restore finished with "Library restored"
+PASS S2 full -> clean: tracks identical to the backup (every field, key order, order)
+PASS S2 full -> clean: playlists identical (ids order kept)
+PASS S2 full -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S2 full -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S2 full -> clean: this browser's own secret: keys are untouched (0)
+PASS S2 full -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S2 full -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S2 full -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S2 full -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S2 full -> clean after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS S2 full -> clean after RELOAD: playlists identical (ids order kept)
+PASS S2 full -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS S2 full -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S2 full -> clean after RELOAD: this browser's own secret: keys are untouched (0)
+PASS S2 full -> clean after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S2 full -> clean after RELOAD: still 5 songs, theme dark, paused, no play() call

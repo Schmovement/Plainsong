@@ -1,0 +1,318 @@
+{
+ "complete": true,
+ "only": "9",
+ "total": 62,
+ "failed": 1,
+ "results": [
+  {
+   "name": "S9 reject: setup: the song is playing, never edited (cover '' and no origCover/origMeta/genre), a picture is chosen",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 reject: the cover write is now HELD (pending): the editor is still open",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 reject: the real writers all took effect in memory (liked toggled from the seeded value, +1 play, last-played time) while the cover write was pending",
+   "ok": true,
+   "detail": "{\"liked\":false,\"plays\":5,\"last\":1794069862955}"
+  },
+  {
+   "name": "S9 reject: the 3A save that ran meanwhile reported success",
+   "ok": true,
+   "detail": "{\"ok\":true,\"changed\":[\"title\",\"genre\"],\"before\":{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"},\"memoryOnly\":false}"
+  },
+  {
+   "name": "S9 reject: RAW DATABASE equals the in-memory record exactly (every field and key order): no divergence between what is stored and what the app holds",
+   "ok": true,
+   "detail": "raw {\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"Zeile eins\\nLínea dos ✓ 日本語\",\"size\":529244,\"added\":1794069856441,\"plays\":5,\"liked\":false,\"lrc\":\"[00:01.00]Zeile eins\\n[00:03.50]Línea dos\",\"x_future\":{\"n\":[1,{\"a\":null}], | mem {\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"Zeile eins\\nLínea dos ✓ 日本語\",\"size\":529244,\"added\":1794069856441,\"plays\":5,\"liked\":false,\"lrc\":\"[00:01.00]Zeile eins\\n[00:03.50]Línea dos\",\"x_future\":{\"n\":[1,{\"a\":null}],"
+  },
+  {
+   "name": "S9 reject: the newer writers' data is preserved in the raw database: liked = the toggled value (!seeded), plays +1, last-played time, new title/genre, origMeta = the pre-edit values",
+   "ok": true,
+   "detail": "{\"liked\":false,\"want\":false,\"plays\":5,\"last\":1794069862955,\"title\":\"Meta During Cover\",\"genre\":\"mg\"}"
+  },
+  {
+   "name": "S9 reject: the failed cover save left NO trace anywhere: raw cover is the original '' and the origCover key is ABSENT (exact presence) in the database AND in memory",
+   "ok": true,
+   "detail": "{\"rawCover\":\"\",\"rawHas\":false,\"memHas\":false}"
+  },
+  {
+   "name": "S9 reject: the editor stays open and shows the truthful error that nothing was changed",
+   "ok": true,
+   "detail": "{\"open\":true,\"err\":\"Couldn’t save the cover (injected storage failure). Nothing was changed.\"}"
+  },
+  {
+   "name": "S9 reject: every other record, the playlists and all 5 audio entries (SHA-256) are identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 reject: write order recorded by the model (held cover write first, then the other writers' snapshots): HELD stat+cover, stat, meta, meta",
+   "ok": true,
+   "detail": "[{\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"held\":true,\"liked\":true,\"plays\":4,\"title\":\"Song One\",\"cover\":\"data:image/jpeg;base64…1543\",\"hasOrigCover\":true,\"hasOrigMeta\":false},{\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Song One\",\"cover\":\"\",\"hasOrigCover\":false,\"hasOrigMeta\":false},{\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Meta During Cover\",\"cover\":\"\",\"hasOrigCover\":false,\"hasOrigMeta\":true},{\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Meta During Cover\",\"cover\":\"\",\"hasOrigCover\":false,\"hasOrigMeta\":true}]"
+  },
+  {
+   "name": "S9 reject: after RELOAD the stored record is exactly what was stored before the reload (raw-before == raw-after; the reload itself wrote nothing to this record)",
+   "ok": true,
+   "detail": "differing keys: [] | before {\"plays\":5,\"last\":1794069862955,\"sess\":{\"queue\":[\"64aadb11-438e-4993-9503-b30662cc252b\",\"audius:W1\",\"ba9a0b4a-b1e5-40f8-9f74-6ce9be2e0d52\",\"audius:QW\"],\"orig\":[\"64aadb11-438e-4993-9503-b30662cc252b\",\"audius:W1\",\"ba9a0b4a-b1e5-40f8-9f74-6ce9be2e0d52\",\"audius:QW\"],\"qi\":0,\"time\":1,\"shuffle\":false,\"repeat\":0,\"vol\":0.55,\"muted\":false,\"rate\":1.25,\"pitch\":true,\"eq\":[3,2,1,0,0,0,-1,-2,-3,0],\"eqPreset\":\"Cu | after {\"plays\":5,\"last\":1794069862955,\"sess\":{\"queue\":[\"64aadb11-438e-4993-9503-b30662cc252b\",\"audius:W1\",\"ba9a0b4a-b1e5-40f8-9f74-6ce9be2e0d52\",\"audius:QW\"],\"orig\":[\"64aadb11-438e-4993-9503-b30662cc252b\",\"audius:W1\",\"ba9a0b4a-b1e5-40f8-9f74-6ce9be2e0d52\",\"audius:QW\"],\"qi\":0,\"time\":1,\"shuffle\":false,\"repeat\":0,\"vol\":0.55,\"muted\":false,\"rate\":1.25,\"pitch\":true,\"eq\":[3,2,1,0,0,0,-1,-2,-3,0],\"eqPreset\":\"Cu"
+  },
+  {
+   "name": "S9 reject: after RELOAD the app's in-memory record equals the stored record (memory == raw after reload)",
+   "ok": true,
+   "detail": "differing keys: [] | mem {\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"Zeile eins\\nLínea dos ✓ 日本語\",\" | raw {\"id\":\"64aadb11-438e-4993-9503-b30662cc252b\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"Zeile eins\\nLínea dos ✓ 日本語\",\""
+  },
+  {
+   "name": "S9 reject: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 release: setup: the song is playing, never edited (cover '' and no origCover/origMeta/genre), a picture is chosen",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 release: the cover write is now HELD (pending): the editor is still open",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 release: the real writers all took effect in memory (liked toggled from the seeded value, +1 play, last-played time) while the cover write was pending",
+   "ok": true,
+   "detail": "{\"liked\":false,\"plays\":5,\"last\":1794069876689}"
+  },
+  {
+   "name": "S9 release: the 3A save that ran meanwhile reported success",
+   "ok": true,
+   "detail": "{\"ok\":true,\"changed\":[\"title\",\"genre\"],\"before\":{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"},\"memoryOnly\":false}"
+  },
+  {
+   "name": "S9 release: RAW DATABASE equals the in-memory record exactly (every field and key order): no divergence between what is stored and what the app holds",
+   "ok": true,
+   "detail": "raw {\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQA | mem {\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQA"
+  },
+  {
+   "name": "S9 release: the newer writers' data is preserved in the raw database: liked = the toggled value (!seeded), plays +1, last-played time, new title/genre, origMeta = the pre-edit values",
+   "ok": true,
+   "detail": "{\"liked\":false,\"want\":false,\"plays\":5,\"last\":1794069876689,\"title\":\"Meta During Cover\",\"genre\":\"mg\"}"
+  },
+  {
+   "name": "S9 release: the cover committed: raw and memory hold the new JPEG cover and origCover is the original ''; the editor closed",
+   "ok": true,
+   "detail": "{\"ci\":\"data\",\"orig\":\"\",\"open\":false}"
+  },
+  {
+   "name": "S9 release: every other record, the playlists and all 5 audio entries (SHA-256) are identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 release: write order recorded by the model (held cover write first, then the other writers' snapshots): HELD stat+cover, stat+cover, meta+cover, meta+cover",
+   "ok": true,
+   "detail": "[{\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"held\":true,\"liked\":true,\"plays\":4,\"title\":\"Song One\",\"cover\":\"data:image/jpeg;base64…1543\",\"hasOrigCover\":true,\"hasOrigMeta\":false},{\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Song One\",\"cover\":\"data:image/jpeg;base64…1543\",\"hasOrigCover\":true,\"hasOrigMeta\":false},{\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Meta During Cover\",\"cover\":\"data:image/jpeg;base64…1543\",\"hasOrigCover\":true,\"hasOrigMeta\":true},{\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"held\":false,\"liked\":false,\"plays\":5,\"title\":\"Meta During Cover\",\"cover\":\"data:image/jpeg;base64…1543\",\"hasOrigCover\":true,\"hasOrigMeta\":true}]"
+  },
+  {
+   "name": "S9 release: after RELOAD the stored record is exactly what was stored before the reload (raw-before == raw-after; the reload itself wrote nothing to this record)",
+   "ok": true,
+   "detail": "differing keys: [] | before {\"plays\":5,\"last\":1794069876689,\"sess\":{\"queue\":[\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"audius:W1\",\"f51bad3c-88fc-49d8-9a62-ed034a849b6f\",\"audius:QW\"],\"orig\":[\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"audius:W1\",\"f51bad3c-88fc-49d8-9a62-ed034a849b6f\",\"audius:QW\"],\"qi\":0,\"time\":1,\"shuffle\":false,\"repeat\":0,\"vol\":0.55,\"muted\":false,\"rate\":1.25,\"pitch\":true,\"eq\":[3,2,1,0,0,0,-1,-2,-3,0],\"eqPreset\":\"Cu | after {\"plays\":5,\"last\":1794069876689,\"sess\":{\"queue\":[\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"audius:W1\",\"f51bad3c-88fc-49d8-9a62-ed034a849b6f\",\"audius:QW\"],\"orig\":[\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"audius:W1\",\"f51bad3c-88fc-49d8-9a62-ed034a849b6f\",\"audius:QW\"],\"qi\":0,\"time\":1,\"shuffle\":false,\"repeat\":0,\"vol\":0.55,\"muted\":false,\"rate\":1.25,\"pitch\":true,\"eq\":[3,2,1,0,0,0,-1,-2,-3,0],\"eqPreset\":\"Cu"
+  },
+  {
+   "name": "S9 release: after RELOAD the app's in-memory record equals the stored record (memory == raw after reload)",
+   "ok": true,
+   "detail": "differing keys: [] | mem {\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQA | raw {\"id\":\"a9b86451-9118-4a21-a84b-3e5853b9a6e5\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Meta During Cover\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQA"
+  },
+  {
+   "name": "S9 release: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9 meta: the cover save and the like that ran while the 3A save was pending succeeded",
+   "ok": true,
+   "detail": "{\"ok\":true,\"memoryOnly\":false}"
+  },
+  {
+   "name": "S9 meta: RAW DATABASE equals the in-memory record exactly",
+   "ok": true,
+   "detail": "raw {\"id\":\"95fcc31e-4ff8-4e98-bab4-eb78267be089\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEh | mem {\"id\":\"95fcc31e-4ff8-4e98-bab4-eb78267be089\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEh"
+  },
+  {
+   "name": "S9 meta: the failed 3A save left NO trace: title/artist/album are the originals, genre and origMeta are ABSENT (exact presence) in the database and in memory",
+   "ok": true,
+   "detail": "{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S9 meta: the newer writers' data is preserved: the new cover (+ origCover ''), liked toggled (!seeded), plays +1 and last-played time",
+   "ok": true,
+   "detail": "{\"cover\":\"data:image/png;base6\",\"orig\":\"\",\"liked\":false,\"want\":false,\"plays\":5}"
+  },
+  {
+   "name": "S9 meta: the 3A editor stays open with its truthful error",
+   "ok": true,
+   "detail": "Couldn’t save the changes (injected storage failure). Nothing was changed."
+  },
+  {
+   "name": "S9 meta: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9d: the song is gone from the app immediately (memory), while its cover write is still held",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9d: RAW DB: the removed song and its audio are gone and stay gone (neither the held cover write nor the queued like resurrected it)",
+   "ok": true,
+   "detail": "[\"10a507d4-de73-45d7-84bd-87a695459137\",\"archive:W2\",\"audius:W1\",\"e0f09dc5-38d8-402e-87a4-2acb49819d67\"]"
+  },
+  {
+   "name": "S9d: every other record and audio entry is identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9d: the cover save reports that the song is no longer in the library (it did not pretend to apply)",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}"
+  },
+  {
+   "name": "S9d: memory does not hold the song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9d: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: RAW DB equals memory exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: the first save committed (PNG, origCover ''); the second, queued with the same old base, was REFUSED as stale and wrote nothing",
+   "ok": false,
+   "detail": "[{\"ok\":true,\"memoryOnly\":false},{\"ok\":true,\"memoryOnly\":false},\"data:image/jpeg;base64,/\"]"
+  },
+  {
+   "name": "S9e release: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"830c5fdc-4843-4568-9f38-c25190d205a0\",\"audius:W1\",\"021ccc1c-f871-4947-bbb5-951f5deec1cb\",\"audius:QW\"],[\"830c5fdc-4843-4568-9f38-c25190d205a0\",\"audius:W1\",\"021ccc1c-f871-4947-bbb5-951f5deec1cb\",\"audius:QW\"],0] vs [[\"830c5fdc-4843-4568-9f38-c25190d205a0\",\"audius:W1\",\"021ccc1c-f871-4947-bbb5-951f5deec1cb\",\"audius:QW\"],[\"830c5fdc-4843-4568-9f38-c25190d205a0\",\"audius:W1\",\"021ccc1c-f871-4947-bbb5-951f5deec1cb\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S9e release: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e release: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: RAW DB equals memory exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: the first save failed cleanly (error, no trace) and the queued second save then committed on the intact original (cover is the second picture, origCover '')",
+   "ok": true,
+   "detail": "[{\"ok\":false,\"msg\":\"Couldn’t save the cover (injected storage failure). Nothing was changed.\"},{\"ok\":true,\"memoryOnly\":false},\"data:image/jpeg;base64,/\"]"
+  },
+  {
+   "name": "S9e reject: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"746c7a43-97e7-4ec5-8357-869e4182c8ab\",\"audius:W1\",\"771b34f9-f196-4c5b-8878-ae1f9e55c119\",\"audius:QW\"],[\"746c7a43-97e7-4ec5-8357-869e4182c8ab\",\"audius:W1\",\"771b34f9-f196-4c5b-8878-ae1f9e55c119\",\"audius:QW\"],0] vs [[\"746c7a43-97e7-4ec5-8357-869e4182c8ab\",\"audius:W1\",\"771b34f9-f196-4c5b-8878-ae1f9e55c119\",\"audius:QW\"],[\"746c7a43-97e7-4ec5-8357-869e4182c8ab\",\"audius:W1\",\"771b34f9-f196-4c5b-8878-ae1f9e55c119\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S9e reject: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S9e reject: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 42 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

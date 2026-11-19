@@ -1,0 +1,141 @@
+{
+ "total": 27,
+ "failed": 1,
+ "results": [
+  {
+   "name": "S2: the clicked song really plays (not paused, time advancing, it is the current song)",
+   "ok": true,
+   "detail": "{\"p\":false,\"ct\":2.170737,\"cur\":\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\"}"
+  },
+  {
+   "name": "S2: opening the editor does not pause the music",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ct\":2.276825}"
+  },
+  {
+   "name": "S2: after editing the CURRENT song it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8791/4a9d2aae-5e85-4002-b482-455b492edc89\",\"ct\":2.170737,\"plays\":1,\"ls\":1,\"cur\":\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"qi\":0,\"queue\":[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"d707b11b-9833-424d-a20b-594ceb385e31\",\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"ghost-id\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\"]],\"lib\":[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"archive:W2\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"d707b11b-9833-424d-a20b-594ceb385e31\"]} | {\"paused\":false,\"src\":\"blob:http://localhost:8791/4a9d2aae-5e85-4002-b482-455b492edc89\",\"ct\":0.812336,\"plays\":1,\"ls\":1,\"cur\":\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"qi\":0,\"queue\":[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\""
+  },
+  {
+   "name": "S2: the playback position CONTINUED (did not restart or jump back)",
+   "ok": false,
+   "detail": "2.170737 -> 0.812336"
+  },
+  {
+   "name": "S2: now-playing bar, panel and tab title show the new title/artist",
+   "ok": true,
+   "detail": "{\"bar\":\"Now Playing Edited\",\"barA\":\"Live Artist\",\"np\":\"Now Playing Edited\",\"npA\":\"Live Artist\",\"doc\":\"Now Playing Edited · Plainsong\",\"ms\":[\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]}"
+  },
+  {
+   "name": "S2: the media session (lock-screen/keyboard metadata) shows the new title, artist, album",
+   "ok": true,
+   "detail": "[\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]"
+  },
+  {
+   "name": "S2: the queue panel shows the new title on the playing row",
+   "ok": true,
+   "detail": "[[\"Now Playing Edited\",true],[\"Web ✓ <b>bold</b> & \\\"q\\\"\",false],[\"Song Three\",false],[\"Queued only ✓\",false]]"
+  },
+  {
+   "name": "S2: after editing a NON-current song the music is still playing, same source, no new play()/loadstart, same current song and queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8791/4a9d2aae-5e85-4002-b482-455b492edc89\",\"ct\":1.741116,\"plays\":1,\"ls\":1,\"cur\":\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"qi\":0,\"queue\":[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"d707b11b-9833-424d-a20b-594ceb385e31\",\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"ghost-id\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\"]],\"lib\":[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"archive:W2\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"d707b11b-9833-424d-a20b-594ceb385e31\"]}"
+  },
+  {
+   "name": "S2: the bar still shows the current (edited) song, not the other one",
+   "ok": true,
+   "detail": "Now Playing Edited"
+  },
+  {
+   "name": "S2 current song record: title/artist/album are exactly [\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Now Playing Edited\",\"artist\":\"Live Artist\",\"album\":\"Live Album\",\"genre\":\"Live\"}"
+  },
+  {
+   "name": "S2 current song record: genre is \"Live\"",
+   "ok": true,
+   "detail": "\"Live\""
+  },
+  {
+   "name": "S2 current song record: origMeta is the pre-edit snapshot {\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S2 other song record: title/artist/album are exactly [\"Queued Edited\",\"Artist C\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Queued Edited\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"Q\"}"
+  },
+  {
+   "name": "S2 other song record: genre is \"Q\"",
+   "ok": true,
+   "detail": "\"Q\""
+  },
+  {
+   "name": "S2 other song record: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S2: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],0] vs [[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],[\"11a97f48-2620-4cbe-a2c7-7fa62319cdb9\",\"audius:W1\",\"b88434bb-f70f-495d-b10a-5e24f0d2c03c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S2: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: likes, plays, added time, duration, size, key of both edited songs unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any song-info save",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

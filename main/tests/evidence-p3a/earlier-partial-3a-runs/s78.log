@@ -1,0 +1,186 @@
+PASS S7: setup: four songs carry origMeta (one of them reverted to its originals), one web song carries genre, the untouched web song has neither
+PASS S7-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7 E1 file vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 file vs live DB: playlists identical (ids order kept)
+PASS S7 E1 file vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 file vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 file vs live DB: this browser's own secret: keys are untouched (1)
+PASS S7 E1 file vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7: the independent oracle reads genre and origMeta from the backup file exactly as stored (records, key order)
+PASS S7 E1 -> clean: real UI restore finished with "Library restored"
+PASS S7 E1 -> clean: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 -> clean: playlists identical (ids order kept)
+PASS S7 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 -> clean: this browser's own secret: keys are untouched (0)
+PASS S7 E1 -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E1 -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S7 E1 -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S7 E1 -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S7 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 -> clean after RELOAD: playlists identical (ids order kept)
+PASS S7 E1 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 -> clean after RELOAD: this browser's own secret: keys are untouched (0)
+PASS S7 E1 -> clean after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E1 -> clean after RELOAD: still 5 songs, theme dark, paused, no play() call
+PASS S7: after the restore the Library list shows the edited titles
+PASS S7-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): tracks records identical (order and key order), playlists identical
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): every audio entry identical in order: key, MIME, size, SHA-256
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): kv keys identical
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS S7 E2 -> populated: real UI restore finished with "Library restored"
+PASS S7 E2 -> populated: tracks identical to the backup (every field, key order, order)
+PASS S7 E2 -> populated: playlists identical (ids order kept)
+PASS S7 E2 -> populated: kv (everything but secret: keys) identical, including session and history
+PASS S7 E2 -> populated: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E2 -> populated: this browser's own secret: keys are untouched (1)
+PASS S7 E2 -> populated: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E2 -> populated: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)
+PASS S7 E2 -> populated: in-memory library has none of the target's old songs
+PASS S7 E2 -> populated: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S7 E2 -> populated: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S7 E2 -> populated: UI shows the restored library (5 songs) and the policy theme
+PASS S7: the populated browser now has exactly the edited songs, genre and snapshots of the backup (none of its old songs)
+PASS S7-E3: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E3: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E3: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: E2 vs the re-export from the populated browser: oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS S7: E2 vs the re-export from the populated browser: tracks records identical (order and key order), playlists identical
+PASS S7: E2 vs the re-export from the populated browser: every audio entry identical in order: key, MIME, size, SHA-256
+PASS S7: E2 vs the re-export from the populated browser: kv keys identical
+PASS S7: E2 vs the re-export from the populated browser: narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS S7: after the restore the editor still knows the originals of an edited song and Revert is available
+PASS S7 revert after restore: title/artist/album are exactly ["Song Three","Artist C","Unknown album"]
+PASS S7 revert after restore: genre is "" and the genre key is absent
+PASS S7 revert after restore: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S7 revert after restore: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S7 revert after restore: raw DB: same song ids in the same order (5)
+PASS S7 revert after restore: raw DB: playlists identical (ids, order, references)
+PASS S7 revert after restore: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S7 revert after restore: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S7 revert after restore: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S7 revert after restore: raw DB: history identical
+PASS S7 revert after restore: localStorage identical
+PASS S7-E4: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E4: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E4: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: re-export after the revert: every OTHER song record identical to E2 and audio identical
+PASS S7: in that re-export the reverted song has its original title/artist/album, no genre, and the same origMeta
+PASS S7 source: no page errors
+PASS S7 clean: no page errors
+PASS S7 populated: no page errors
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (6 songs) and the policy theme
+PASS S8 p1 full: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 full: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 full edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 full edit: raw DB: same song ids in the same order (6)
+PASS S8 p1 full edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 full edit: raw DB: 6 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 full edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 full edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 full edit: raw DB: history identical
+PASS S8 p1 full edit: localStorage identical
+PASS S8 p1 full: no page errors
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {} (theme policy)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (1 songs) and the policy theme
+PASS S8 p1 minimal: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 minimal: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 minimal edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 minimal edit: raw DB: same song ids in the same order (1)
+PASS S8 p1 minimal edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 minimal edit: raw DB: 1 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 minimal edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 minimal edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 minimal edit: raw DB: history identical
+PASS S8 p1 minimal edit: localStorage identical
+PASS S8 p1 minimal: no page errors
+PASS S8-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S8-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S8-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S8: 10 new-field archives were generated by an independent Python helper (stdlib only)
+PASS S8 refused: bad-origmeta-number (origMeta is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.side-foot [data-act="restore"]')[22m
+[2m    - locator resolved to <button class="btn" data-act="restore">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at /home/claude/p3a/tests/phase3a.test.js:181:48
+    at chooserVia (/home/claude/p3a/tests/phase3a.test.js:161:34)
+    at restoreVia0 (/home/claude/p3a/tests/phase3a.test.js:181:20)
+    at restoreVia (/home/claude/p3a/tests/phase3a.test.js:178:54)
+    at /home/claude/p3a/tests/phase3a.test.js:674:23 {
+  log: [
+    `  - waiting for locator('.side-foot [data-act="restore"]')`,
+    '    - locator resolved to <button class="btn" data-act="restore">…</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    58 × waiting for element to be visible, enabled and stable',
+    '       - element is visible, enabled and stable',
+    '       - scrolling into view if needed',
+    '       - done scrolling',
+    '       - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

@@ -1,0 +1,25 @@
+== p3b  02:24:54
+p3b | exit=0 | PHASE 3B: 600 / 600 pass
+== p3a  02:28:19
+p3a | exit=0 | PHASE 3A: 354 / 354 pass
+== p2c  02:29:58
+p2c | exit=0 | PHASE 2C: 510 / 510 pass
+== p2b-adapted  02:32:14
+p2b-adapted | exit=0 | PHASE 2B: 189 / 189 pass
+== p2b-original  02:33:56
+p2b-original | exit=1 | PHASE 2B: 188 / 189 pass
+    FAIL rebuilt app state: 6 songs, playlists [pl-1,pl-2], queue and index from the session, volume from the session, home view  :: {"tr":6,"pl":["pl-1","pl-2"],"q":4,"cur":"fb922971-a227-4d99-a9b1-11d2a0760f21","qi":0,"vol":0.8,"view":"library","stack":0,"paused
+== p0-original  02:35:39
+p0-original | exit=0 | TOTAL 38  PASS 38  FAIL 0
+== p1-original  02:36:11
+p1-original | exit=0 | TOTAL 225  PASS 224  FAIL 1
+    FAIL S1 success dialog states restore is not built yet and shows counts  :: Backup downloaded  6 songs, 2 playlists, 5.8 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…
+== p1-adapted  02:36:32
+p1-adapted | exit=0 | TOTAL 225  PASS 225  FAIL 0
+== p2a-original  02:36:53
+p2a-original | exit=1 | PHASE 2A: 215 / 216 pass
+    FAIL app boots without restore UI wired (no restore button/input exists yet)
+== p2a-adapted  02:37:08
+p2a-adapted | exit=0 | PHASE 2A: 217 / 217 pass
+project tree: UNCHANGED by the run
+matrix exit=0

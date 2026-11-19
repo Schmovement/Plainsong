@@ -1,0 +1,10 @@
+# Generated export ZIPs omitted from the p3a ZIP to stay under 30 MiB. Format: sha256  path-in-tree  bytes. They exist only in the build session scratchpad; every oracle truth/compare JSON that was computed from them IS included.
+3e54b74569c1aa323f831fba4071cdd6df3d21de87295338236ad5760599272f  tests/evidence-p3a/candidate-3a-full-run/roundtrip-evidence/exports/01-S5-hostile.zip  1598622
+0b37cf3e450bb06f647efe691a165d12d74b4f4923c94f8c18fc11688036b084  tests/evidence-p3a/candidate-3a-full-run/roundtrip-evidence/exports/03-S7-E2.zip  1598748
+b006ff6489087c7688d10c422496d03abd4f1549ea82bfd54fcca6d56f96d10e  tests/evidence-p3a/candidate-3a-full-run/roundtrip-evidence/exports/04-S7-E3.zip  1598772
+f63a2f8984b94c91fed0e78acad3471757f4f3e8208b41181bb887d7f1bf2947  tests/evidence-p3a/candidate-3a-full-run/roundtrip-evidence/exports/06-S8-source.zip  1598453
+7d5561400b9038ed5367a45e1baec0714183ae3dcf4a3381b208ade0876348cc  tests/evidence-p3a/candidate-regressions/p2c/roundtrip-evidence/01-E1-source.zip  1598374
+99f84690e6a3c1a4f367729a00141e35a158a5e5a050d11555d5cfdcf89bf827  tests/evidence-p3a/candidate-regressions/p2c/roundtrip-evidence/03-E2-from-populated-target.zip  1598381
+921944b6bddc82118e6f5518804958aca560e14361ec4cf10f42c5ce1c9021d5  tests/evidence-p3a/candidate-regressions/p2c/roundtrip-evidence/04-E3-from-clean-target.zip  1598323
+cd0252637ea5625f59143f23470a6188fb43a1671d23011293034a665255fbd5  tests/evidence-p3a/candidate-regressions/p2c/roundtrip-evidence/05-E4-repeat.zip  1598381
+# KEPT: tests/evidence-p3a/candidate-3a-full-run/roundtrip-evidence/exports/02-S7-E1.zip (edited source library backup) and 05-S7-E4.zip (final re-export)

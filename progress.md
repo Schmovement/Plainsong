@@ -1,20 +1,19 @@
 # Plainsong — Patch Notes
 
-## Phase 2 — Library backup restore
-- Restore a version 1 library backup from a local ZIP, with a preview and clear replace confirmation.
-- Validate backup contents before changing the library; restore supported tracks, audio, playlists, listening session and theme settings.
-- Keep the restore local and safe: reject incomplete or invalid backups, protect saved credentials, and land in the Library after restoring.
+## Phase 3 — Make the library yours
+- Edit a saved song’s title, artist, album, and genre, then find it using the updated details.
+- Give saved songs custom cover art, or switch back to their original artwork.
 
-## Phase 1 — Full library backup export
-- Added “Back up library” actions in the sidebar and mobile top bar, with progress feedback and cancellation.
-- Exports a versioned ZIP containing library records, playlists, saved session/history, allow-listed theme preference, and original binary audio data; credentials are excluded.
-- Adds archive integrity checks and clear handling for missing audio, size/entry limits, and explicitly marked incomplete exports.
-- Export only: restoring a backup is not included in this phase.
+## Phase 2 — Restore your library
+- Preview a version 1 ZIP backup and confirm before replacing your library.
+- Bring back songs and audio, playlists, your listening session, and theme settings.
 
-## Phase 0 — Baseline
-- Local music library and playback
-- Playback queue
-- Web sources
-- Equalizer
-- Playback-speed controls
-- A–B loop
+## Phase 1 — Back up your library
+- Export a versioned library backup from desktop or mobile, with progress feedback and an option to cancel.
+- Carry songs, playlists, listening session and history, theme choice, and original audio in one ZIP.
+- See clear notices if an export cannot be completed in full.
+
+## Phase 0 — The original set
+- Import and play local music, with a playback queue.
+- Browse and play music from web sources.
+- Shape playback with an equalizer, speed controls, and A–B looping.

@@ -184,6 +184,7 @@
       upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
       download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
       edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+      image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
       restore: '<path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/>',
       save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>'
     };
@@ -221,6 +222,23 @@
     };
     const dbPut = (...a) => DB.put(...a).catch(() => { });
     const dbDel = (...a) => DB.del(...a).catch(() => { });
+    /* ---- per-track write coordination (Phase 3B review fix) ----
+       IndexedDB takes its snapshot of a record when put() is CALLED, and every writer of a song (likes, play counter, duration, lyrics, the info editor, the cover editor,
+       removal) shares the one in-memory record. So all writes of ONE track id run strictly one after another, and a queued writer takes its snapshot when it RUNS (not when it was
+       queued): it then sees every earlier change that actually committed and nothing that failed. The info/cover editors do not touch the shared record before their write is durable:
+       they put a CLONE carrying only their own fields, then apply just those fields to the shared record. A failed write therefore leaves nothing to undo, and no other writer's
+       snapshot can carry an uncommitted field. Different tracks never wait for each other. */
+    const trackQ = new Map();
+    function trackWrite(id, task) {
+      const prev = trackQ.get(id);
+      const p = prev ? prev.then(task) : task();   // idle queue: runs immediately (same timing as before); busy: strictly after the earlier writes settled
+      const tail = Promise.resolve(p).then(() => { }, () => { });
+      trackQ.set(id, tail); tail.then(() => { if (trackQ.get(id) === tail) trackQ.delete(id); });
+      return p;
+    }
+    // a plain whole-record write (like, play counter, duration, lyrics, a new web song): snapshot at execution; skipped if the song was removed or the library replaced meanwhile
+    const dbPutTrack = t => trackWrite(t.id, async () => { if (S.tracks.get(t.id) !== t) return; await DB.put('tracks', t); }).catch(() => { });
+    const dbDelTrack = id => trackWrite(id, () => DB.del('tracks', id)).catch(() => { });
 
     const ascii = (b, o, n) => { let s = ''; for (let i = 0; i < n && o + i < b.length; i++) s += String.fromCharCode(b[o + i]); return s; };
     const syncsafe = (b, o) => (b[o] << 21) | (b[o + 1] << 14) | (b[o + 2] << 7) | b[o + 3];
@@ -328,7 +346,7 @@
     const curT = () => S.cur ? T(S.cur) : null;
     function reg(t) { const ex = S.tracks.get(t.id) || S.cache.get(t.id); if (ex) return ex; S.cache.set(t.id, t); return t; }
     const strip = t => ({ id: t.id, kind: t.kind, src: t.src, srcId: t.srcId, title: t.title, artist: t.artist, album: t.album, duration: t.duration, cover: t.cover, url: t.url, link: t.link, added: 0, plays: 0, liked: false });
-    function saveWeb(t) { if (t.kind !== 'web' || S.tracks.has(t.id)) return; S.tracks.set(t.id, t); S.cache.delete(t.id); t.added = Date.now(); dbPut('tracks', t); libStat(); }
+    function saveWeb(t) { if (t.kind !== 'web' || S.tracks.has(t.id)) return; S.tracks.set(t.id, t); S.cache.delete(t.id); t.added = Date.now(); dbPutTrack(t); libStat(); }
     async function getBlob(id) { if (S.mem.has(id)) return S.mem.get(id); return DB.get('blobs', id); }
     const albumKey = t => (t.album || 'Unknown album').toLowerCase();
     const artistKey = t => (t.artist || 'Unknown artist').toLowerCase();
@@ -619,7 +637,7 @@
         S.counted = true; t.plays = (t.plays || 0) + 1; t.last = Date.now();
         S.hist.unshift({ id: t.id, t: Date.now(), snap: (t.kind === 'web' && !S.tracks.has(t.id)) ? strip(t) : undefined });
         if (S.hist.length > 300) S.hist.length = 300;
-        if (S.tracks.has(t.id)) dbPut('tracks', t);
+        if (S.tracks.has(t.id)) dbPutTrack(t);
         saveHist();
       }
       syncLyrics();
@@ -647,7 +665,7 @@
       el.addEventListener('timeupdate', () => onTime(el));
       el.addEventListener('loadedmetadata', () => {
         if (el !== A) return; const t = curT();
-        if (t && isFinite(el.duration) && el.duration > 0 && Math.abs((t.duration || 0) - el.duration) > 1) { t.duration = el.duration; if (S.tracks.has(t.id)) dbPut('tracks', t); }
+        if (t && isFinite(el.duration) && el.duration > 0 && Math.abs((t.duration || 0) - el.duration) > 1) { t.duration = el.duration; if (S.tracks.has(t.id)) dbPutTrack(t); }
         if (S.resume != null) { try { el.currentTime = S.resume; } catch (e) { } S.resume = null; }
         drawAB(); onTime(el);
       });
@@ -760,7 +778,7 @@
       }
       if (r && (r.syncedLyrics || r.plainLyrics)) { t.lrc = r.syncedLyrics || ''; t.lyrics = r.plainLyrics || ''; t.lyricsFrom = 'lrclib'; delete t.noLyrics; }
       else t.noLyrics = Date.now();
-      if (S.tracks.has(t.id)) dbPut('tracks', t);
+      if (S.tracks.has(t.id)) dbPutTrack(t);
     }
 
     function setCover(el, t) {
@@ -971,7 +989,7 @@
     const emptyLib = msg => `<div class="empty">${esc(msg || 'Your library is empty.')}<div class="btn-row"><button class="btn primary" data-act="import">Import music</button><button class="btn" data-act="importDir">Import folder</button></div></div>`;
     const fmtLong = s => { if (s < 60) return `${Math.round(s)} sec`; const h = Math.floor(s / 3600), m = Math.round(s % 3600 / 60); return h ? `${h} h ${m} min` : `${m} min`; };
     const tokens = q => q.toLowerCase().split(/\s+/).filter(Boolean);
-    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album}`.toLowerCase(); return tk.every(x => s.includes(x)); };
+    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album} ${t.genre || ''}`.toLowerCase(); return tk.every(x => s.includes(x)); };
     const uniq = a => [...new Set(a)];
     const byNo = (a, b) => (a.track || 999) - (b.track || 999) || a.title.localeCompare(b.title);
     const SORTS = { added: (a, b) => b.added - a.added, title: (a, b) => a.title.localeCompare(b.title), artist: (a, b) => a.artist.localeCompare(b.artist) || a.album.localeCompare(b.album) || byNo(a, b), album: (a, b) => a.album.localeCompare(b.album) || byNo(a, b), duration: (a, b) => b.duration - a.duration, plays: (a, b) => (b.plays || 0) - (a.plays || 0) };
@@ -1038,15 +1056,15 @@
       archSearch(ARCH_PICKS[pick][1], 24).then(r => { if (tok !== S.vtok) return; const n = $('#exArc'); if (n) n.innerHTML = r ? (r.length ? archCards(r, true) : '<div class="empty">No results.</div>') : offlineMsg('the Internet Archive'); });
     };
 
+    const searchLocal = (q, all) => { const local = [...S.tracks.values()].filter(t => matches(t, tokens(q))); return local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'; };
     VIEWS.search = (el, v) => {
       const q = v.q || '', src = v.src || 'all', tok = S.vtok, tk = tokens(q);
       $('#q').value = q;
-      const local = [...S.tracks.values()].filter(t => matches(t, tk));
       const chips = [['all', 'All'], ['library', 'Library'], ['audius', 'Audius'], ['archive', 'Internet Archive']];
       const all = src === 'all';
       el.innerHTML = `<div class="page-h"><h1>Results for “${esc(q)}”</h1></div>
   <div class="chips">${chips.map(([k, l]) => `<button class="chip${k === src ? ' on' : ''}" data-act="searchSrc" data-v="${k}">${l}</button>`).join('')}</div>
-  ${(all || src === 'library') ? `<section class="blk"><div class="shelf-h"><h2>Your library</h2></div>${local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'}</section>` : ''}
+  ${(all || src === 'library') ? `<section class="blk" id="sLib"><div class="shelf-h"><h2>Your library</h2></div><div id="sLibBody">${searchLocal(q, all)}</div></section>` : ''}
   ${(all || src === 'audius') ? `<section class="blk"><div class="shelf-h"><h2>Audius</h2><span class="mono dim">full-length streams</span></div><div id="sAud">${skelRows(5)}</div></section>` : ''}
   ${(all || src === 'archive') ? `<section class="blk"><div class="shelf-h"><h2>Internet Archive</h2><span class="mono dim">free albums and recordings</span></div><div id="sArc">${skelCards()}</div></section>` : ''}`;
       const clean = q.replace(/[^\p{L}\p{N}\s'-]/gu, ' ').trim() || q;
@@ -1148,6 +1166,7 @@
       if (t.kind === 'local') { items.push({ label: 'Go to album', fn: () => go('album', { key: albumKey(t) }) }, { label: 'Go to artist', fn: () => go('artist', { key: artistKey(t) }) }); }
       if (t.link) items.push({ label: 'Open source page', fn: () => window.open(t.link, '_blank', 'noopener') });
       if (ctx.startsWith('pl:')) items.push({ label: 'Remove from this playlist', icon: 'x', fn: () => plRemove(ctx.slice(3), tid) });
+      if (S.tracks.has(tid)) items.push({ label: 'Edit info…', icon: 'edit', fn: () => openMetaEditor(tid) }, { label: 'Edit cover…', icon: 'image', fn: () => openCoverEditor(tid) });
       if (S.tracks.has(tid)) items.push({ label: 'Remove from library', icon: 'trash', danger: true, fn: () => removeTrack(tid) });
       openMenu(items, x, y);
     }
@@ -1182,7 +1201,7 @@
     function toggleLike(id) {
       const t = T(id); if (!t) return;
       t.liked = !t.liked;
-      if (t.kind === 'web' && !S.tracks.has(id) && t.liked) saveWeb(t); else if (S.tracks.has(id)) dbPut('tracks', t);
+      if (t.kind === 'web' && !S.tracks.has(id) && t.liked) saveWeb(t); else if (S.tracks.has(id)) dbPutTrack(t);
       refreshLikeUI(id);
       if (!t.liked && S.view.name === 'library' && S.view.tab === 'liked') refresh();
     }
@@ -1204,11 +1223,284 @@
       const pl = S.playlists.find(p => p.id === pid); if (!pl) return;
       pl.ids = pl.ids.filter(x => x !== tid); dbPut('playlists', pl); refresh();
     }
+
+    /* ---- Phase 3A: song info editor (title, artist, album, genre) ----
+       The effective values stay in the track record's own title/artist/album/genre fields, so every list, search, sort, queue, backup and older restore keeps working.
+       The FIRST save also stores a one-time snapshot of the values as they were before it in t.origMeta = {title, artist, album, genre} (all text); it is never
+       rewritten afterwards, and "Revert to originals" copies it back. Nothing here touches the audio Blob, the file's own tags, id, url, queue, playlists, likes,
+       plays, timestamps or duration. Saved web songs can be edited too; songs that are only shown (not in the library) cannot. Contract: BACKUP_FORMAT.md. */
+    const META = { fields: ['title', 'artist', 'album', 'genre'], label: { title: 'Title', artist: 'Artist', album: 'Album', genre: 'Genre' }, max: { title: 200, artist: 200, album: 200, genre: 80 }, dflt: { artist: 'Unknown artist', album: 'Unknown album' } };
+    const metaOf = t => ({ title: t.title, artist: t.artist, album: t.album, genre: typeof t.genre === 'string' ? t.genre : '' });
+    const metaEdited = t => !!(t.origMeta && META.fields.some(f => metaOf(t)[f] !== t.origMeta[f]));
+    const metaWell = s => s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '\uFFFD');
+    // control and invisible direction characters become spaces, runs of spaces collapse, ends are trimmed; too long is REFUSED, never silently cut
+    const metaClean = v => metaWell(String(v == null ? '' : v)).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, ' ').replace(/\s+/g, ' ').trim();
+    async function saveMeta(tid, epoch, base, vals) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const cur = metaOf(t);
+      if (epoch !== S.epoch || META.fields.some(f => cur[f] !== base[f])) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+      const next = {};
+      for (const f of META.fields) {
+        next[f] = metaClean(vals[f]);
+        if (next[f].length > META.max[f]) return { ok: false, field: f, msg: `${META.label[f]} is too long (at most ${META.max[f]} characters). Nothing was saved.` };
+      }
+      if (!next.title) return { ok: false, field: 'title', msg: 'Title can’t be empty.' };
+      if (!next.artist) next.artist = META.dflt.artist; if (!next.album) next.album = META.dflt.album;
+      const changed = META.fields.filter(f => next[f] !== cur[f]);
+      if (!changed.length) return { ok: true, none: true };
+      const before = { ...cur };
+      // the same change applied to a CLONE (what is written) and, once that write is durable, to the shared record: only this editor's own fields, never a whole stale copy
+      const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+      const apply = o => { if (!has(o, 'origMeta')) o.origMeta = { ...cur }; o.title = next.title; o.artist = next.artist; o.album = next.album; if (next.genre) o.genre = next.genre; else delete o.genre; };
+      return trackWrite(tid, async () => {
+        // the queue made this wait for earlier writes of the song: re-check that the editor's basis still holds
+        if (S.tracks.get(tid) !== t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        const now = metaOf(t);
+        if (epoch !== S.epoch || META.fields.some(f => now[f] !== base[f])) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the changes (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }   // nothing was applied to the shared record: nothing to undo
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, changed, before, memoryOnly: !DB.ok };
+      });
+    }
+    function metaRefresh(t, before) {
+      const v = S.view, id = t.id;
+      // an album or artist page whose group the edit just emptied follows the song to its new group instead of saying it is gone
+      if (v.name === 'album' && albumKey(t) !== v.key && before.album !== t.album && ![...S.tracks.values()].some(x => albumKey(x) === v.key)) v.key = albumKey(t);
+      if (v.name === 'artist' && artistKey(t) !== v.key && before.artist !== t.artist && ![...S.tracks.values()].some(x => artistKey(x) === v.key)) v.key = artistKey(t);
+      if (['library', 'album', 'artist', 'playlist'].includes(v.name)) render(true);   // local-only views: re-read the records (no network request)
+      else if (v.name === 'search' && $('#sLibBody')) { $('#sLibBody').innerHTML = searchLocal(v.q || '', (v.src || 'all') === 'all'); }
+      const sel = (window.CSS && CSS.escape) ? CSS.escape(id) : id.replace(/["\\]/g, '\\$&');
+      $$(`.row[data-tid="${sel}"]`).forEach(r => {
+        const a = $('.r-t', r); if (a) a.textContent = t.title;
+        const ar = $('.r-a', r); if (ar) { if (ar.firstChild && ar.firstChild.nodeType === 3) ar.firstChild.nodeValue = t.artist; else ar.insertBefore(document.createTextNode(t.artist), ar.firstChild); }
+        const al = $('.r-alb', r); if (al) al.textContent = t.album;
+      });
+      $$(`.card[data-tid="${sel}"]`).forEach(c => { const a = $('.card-t', c); if (a) a.textContent = t.title; });
+      if (S.cur === id) updateNowPlaying(t); else renderNP();   // text, tab title, media session and queue panel only: the audio element is never touched
+    }
+    function openMetaEditor(tid) {
+      const t0 = S.tracks.get(tid); if (!t0) return;
+      if (S.restoreBusy || S.restoring || S.backupBusy) { toast('A backup or restore is running. Try editing again when it finishes.', 3200); return; }
+      const base = metaOf(t0), epoch = S.epoch, orig = t0.origMeta ? { ...t0.origMeta } : null;
+      const d = dialog(`<h3>Edit song info</h3><form id="metaForm" class="meta-form" autocomplete="off" novalidate>${META.fields.map(f => `<label class="meta-l" for="meta_${f}">${META.label[f]}</label><input id="meta_${f}" data-f="${f}" type="text" maxlength="${META.max[f]}" spellcheck="false" autocomplete="off">`).join('')}
+        <p class="meta-note">This only changes how the song is shown in Plainsong. The audio file and the tags inside it are never changed.</p>
+        <div id="metaOrig" class="meta-orig"></div><div id="metaErr" class="meta-err" role="alert" aria-live="assertive"></div>
+        <div class="btn-row meta-btns"><button type="button" class="btn" id="metaRevert">Revert to originals</button><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="submit" class="btn primary" id="metaSave">Save</button></div></form>`);
+      d.onclose = null;   // the shared dialog may still carry another dialog's handler
+      d.addEventListener('close', () => {   // keyboard users land back on this song's ⋯ button (Save, Cancel and Esc alike); the list may have been redrawn, so look it up now
+        const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return;   // focus is still on a hidden dialog button (or nowhere): take it back
+        const b = $(`.row[data-tid="${(window.CSS && CSS.escape) ? CSS.escape(tid) : tid}"] [data-act="more"]`); if (b) b.focus();
+      }, { once: true });
+      const inp = f => $(`#meta_${f}`, d), err = $('#metaErr', d), draft = () => Object.fromEntries(META.fields.map(f => [f, inp(f).value]));
+      META.fields.forEach(f => { inp(f).value = base[f]; });
+      if (orig) $('#metaOrig', d).innerHTML = `<div class="mono dim">Original values (kept from before your first edit)</div><dl class="meta-dl">${META.fields.map(f => `<dt>${META.label[f]}</dt><dd>${orig[f] ? esc(orig[f]) : '<span class="dim">(empty)</span>'}</dd>`).join('')}</dl>`;
+      const rv = $('#metaRevert', d), syncRv = () => { rv.disabled = !orig || META.fields.every(f => inp(f).value === orig[f]); };
+      syncRv(); META.fields.forEach(f => inp(f).addEventListener('input', syncRv));
+      rv.onclick = () => { META.fields.forEach(f => { inp(f).value = orig[f]; }); syncRv(); err.textContent = ''; $('#metaSave', d).focus(); };   // fills the form; Save commits, Cancel discards
+      $('#dlgNo', d).onclick = () => d.close('no');
+      let busy = false;
+      $('#metaForm', d).onsubmit = async e => {
+        e.preventDefault(); if (busy) return; busy = true; $('#metaSave', d).disabled = true; err.textContent = '';
+        let r; try { r = await saveMeta(tid, epoch, base, draft()); } catch (x) { r = { ok: false, msg: 'Couldn’t save the changes. Nothing was changed.' }; }
+        busy = false; $('#metaSave', d).disabled = false;
+        if (!r.ok) { err.textContent = r.msg; const f = r.field && inp(r.field); (f || $('#metaSave', d)).focus(); return; }
+        d.close('ok');
+        const t = S.tracks.get(tid);
+        if (r.none) { toast('No changes'); return; }
+        if (t) metaRefresh(t, r.before);
+        toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Song info saved', 3000);
+      };
+      inp('title').focus(); inp('title').select();
+    }
+
+    /* ---- Phase 3B: custom cover for a library song ----
+       t.cover stays the EFFECTIVE cover (every list, album/artist page, media session and older backup keeps working). The first cover save also stores
+       t.origCover = the cover string as it was before (''/data URL/http URL), once, never rewritten; edited = origCover present and cover !== origCover.
+       The new cover is ONE text field in the same track record, so track+image are one atomic DB.put; no Blob, no audio, no id/order/metadata/plays/likes/queue is touched.
+       An uploaded file is judged by its BYTES (never its name or File.type): size, signature, header dimensions and truncation are checked before it is decoded,
+       then it is decoded and re-encoded through a canvas, which drops metadata, scripts and trailing data. SVG and everything else are refused. No network request. */
+    const COVER = { maxFile: 8 * 1024 ** 2, minSide: 16, maxSide: 8192, maxPixels: 40e6, out: 512, maxData: 700000, accept: 'image/png,image/jpeg,image/gif,image/webp' };
+    const coverCur = t => (typeof t.cover === 'string' ? t.cover : '');
+    const coverOrig = t => (typeof t.origCover === 'string' ? t.origCover : null);
+    const coverEdited = t => coverOrig(t) !== null && coverCur(t) !== coverOrig(t);
+    const COVER_NEW_RE = /^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]*={0,2}$/;
+    // header look at the bytes: { type, w, h } or { err }
+    function coverSniff(u8) {
+      const n = u8.length, be32 = o => ((u8[o] << 24) | (u8[o + 1] << 16) | (u8[o + 2] << 8) | u8[o + 3]) >>> 0, le16 = o => u8[o] | (u8[o + 1] << 8);
+      const le32 = o => (u8[o] | (u8[o + 1] << 8) | (u8[o + 2] << 16) | (u8[o + 3] << 24)) >>> 0;
+      const at = (o, str) => { if (o + str.length > n) return false; for (let i = 0; i < str.length; i++) if (u8[o + i] !== str.charCodeAt(i)) return false; return true; };
+      const cut = { err: 'cut' };
+      if (n >= 8 && u8[0] === 0x89 && at(1, 'PNG') && u8[4] === 0x0D && u8[5] === 0x0A && u8[6] === 0x1A && u8[7] === 0x0A) {
+        if (n < 33 || be32(8) !== 13 || !at(12, 'IHDR')) return cut;
+        let o = 8; for (; ;) {   // walk the chunks: IEND must be there and must end exactly at the end of the file
+          if (o + 12 > n) return cut; const len = be32(o); if (len > n - o - 12) return cut;
+          if (at(o + 4, 'IEND')) return (o + 12 + len === n) ? { type: 'image/png', w: be32(16), h: be32(20) } : { err: 'extra' };
+          o += 12 + len;
+        }
+      }
+      if (n >= 4 && u8[0] === 0xFF && u8[1] === 0xD8 && u8[2] === 0xFF) {
+        let o = 2, dims = null;
+        while (o + 4 <= n) {
+          if (u8[o] !== 0xFF) return cut; while (u8[o] === 0xFF && o < n) o++; const m = u8[o++];
+          if (m === 0xD9) break; if (m === 0x01 || (m >= 0xD0 && m <= 0xD7)) continue;
+          if (o + 2 > n) return cut; const len = (u8[o] << 8) | u8[o + 1]; if (len < 2 || o + len > n) return cut;
+          if (m >= 0xC0 && m <= 0xCF && m !== 0xC4 && m !== 0xC8 && m !== 0xCC) { if (len < 8) return cut; dims = { h: (u8[o + 3] << 8) | u8[o + 4], w: (u8[o + 5] << 8) | u8[o + 6] }; }
+          if (m === 0xDA) break; o += len;
+        }
+        if (!dims) return cut;
+        if (!(u8[n - 2] === 0xFF && u8[n - 1] === 0xD9)) return cut;   // a JPEG that was cut off does not end with the end-of-image marker
+        return { type: 'image/jpeg', w: dims.w, h: dims.h };
+      }
+      if (at(0, 'GIF87a') || at(0, 'GIF89a')) { if (n < 14) return cut; if (u8[n - 1] !== 0x3B) return cut; return { type: 'image/gif', w: le16(6), h: le16(8) }; }
+      if (at(0, 'RIFF') && at(8, 'WEBP')) {
+        if (n < 30) return cut; if (le32(4) !== n - 8) return cut;
+        if (at(12, 'VP8X')) return { type: 'image/webp', w: 1 + (u8[24] | (u8[25] << 8) | (u8[26] << 16)), h: 1 + (u8[27] | (u8[28] << 8) | (u8[29] << 16)) };
+        if (at(12, 'VP8L')) { if (u8[20] !== 0x2F) return cut; return { type: 'image/webp', w: 1 + (((u8[22] & 0x3F) << 8) | u8[21]), h: 1 + (((u8[24] & 0x0F) << 10) | (u8[23] << 2) | ((u8[22] & 0xC0) >> 6)) }; }
+        if (at(12, 'VP8 ')) { if (!(u8[23] === 0x9D && u8[24] === 0x01 && u8[25] === 0x2A)) return cut; return { type: 'image/webp', w: le16(26) & 0x3FFF, h: le16(28) & 0x3FFF }; }
+        return { err: 'type' };
+      }
+      return { err: 'type' };
+    }
+    // a File -> { ok:true, data } (a png/jpeg data URL, at most COVER.out px) or { ok:false, msg }
+    async function coverFromFile(file) {
+      const MB = x => (x / 1048576).toFixed(1);
+      try {
+        if (!file || typeof file.size !== 'number') return { ok: false, msg: 'No picture was chosen.' };
+        if (file.size === 0) return { ok: false, msg: 'That file is empty.' };
+        if (file.size > COVER.maxFile) return { ok: false, msg: `That file is ${MB(file.size)} MB; the limit is ${MB(COVER.maxFile)} MB.` };
+        const u8 = new Uint8Array(await file.arrayBuffer());
+        if (u8.length > COVER.maxFile) return { ok: false, msg: `That file is ${MB(u8.length)} MB; the limit is ${MB(COVER.maxFile)} MB.` };
+        const sn = coverSniff(u8);
+        if (sn.err === 'type') return { ok: false, msg: 'That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted.' };
+        if (sn.err) return { ok: false, msg: sn.err === 'extra' ? 'That picture has extra data after its end, so it was refused.' : 'That picture looks cut off or damaged.' };
+        if (!(sn.w >= COVER.minSide && sn.h >= COVER.minSide && sn.w <= COVER.maxSide && sn.h <= COVER.maxSide && sn.w * sn.h <= COVER.maxPixels))
+          return { ok: false, msg: `That picture is ${sn.w}×${sn.h} pixels; each side must be ${COVER.minSide} to ${COVER.maxSide} pixels (at most ${COVER.maxPixels / 1e6} megapixels).` };
+        let bmp; try { bmp = await Promise.race([createImageBitmap(new Blob([u8], { type: sn.type })), new Promise((_, rj) => setTimeout(() => rj(new Error('timeout')), 20000))]); } catch (e) { return { ok: false, msg: 'That picture couldn’t be read.' }; }
+        try {
+          if (bmp.width !== sn.w || bmp.height !== sn.h) return { ok: false, msg: 'That picture couldn’t be read.' };
+          for (const side of [COVER.out, 384, 256]) {
+            const k = Math.min(1, side / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+            const cx = c.getContext('2d'); cx.drawImage(bmp, 0, 0, c.width, c.height);
+            let alpha = false; const px = cx.getImageData(0, 0, c.width, c.height).data; for (let i = 3; i < px.length; i += 4) if (px[i] < 255) { alpha = true; break; }
+            let d = alpha ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', .85);
+            if (d.length > COVER.maxData && alpha) {   // too big as a transparent PNG: flatten it onto a dark background as a JPEG
+              cx.globalCompositeOperation = 'destination-over'; cx.fillStyle = '#1a1a1a'; cx.fillRect(0, 0, c.width, c.height); d = c.toDataURL('image/jpeg', .85);
+            }
+            if (COVER_NEW_RE.test(d) && d.length <= COVER.maxData) return { ok: true, data: d, w: c.width, h: c.height, from: sn.type };
+          }
+          return { ok: false, msg: 'That picture is too detailed to store. Try a simpler or smaller one.' };
+        } finally { try { bmp.close(); } catch (e) { } }
+      } catch (e) { return { ok: false, msg: 'That picture couldn’t be read.' }; }
+    }
+    // a value that may be committed as t's cover: '' or the stored original (revert), or a fresh png/jpeg data URL made by coverFromFile
+    const coverOk = (v, t) => typeof v === 'string' && (v === coverOrig(t) || (COVER_NEW_RE.test(v) && v.length <= COVER.maxData));
+    async function saveCover(tid, epoch, base, next) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const cur = coverCur(t);
+      if (epoch !== S.epoch || cur !== base) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+      if (next === cur) return { ok: true, none: true };
+      if (!coverOk(next, t)) return { ok: false, msg: 'That cover can’t be saved. Nothing was saved.' };
+      const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+      const apply = o => { if (!has(o, 'origCover')) o.origCover = cur; o.cover = next; };   // the original is captured ONCE, with this first change
+      return trackWrite(tid, async () => {
+        // the queue made this wait for earlier writes of the song: re-check that the editor's basis still holds
+        if (S.tracks.get(tid) !== t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        if (epoch !== S.epoch || coverCur(t) !== base) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);   // only the cover fields differ from the shared record; the write is durable BEFORE the shared record is touched
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the cover (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }   // nothing was applied: nothing to undo
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, memoryOnly: !DB.ok };
+      });
+    }
+    function coverRefresh(t) {
+      const v = S.view, id = t.id;
+      if (['library', 'album', 'artist', 'playlist'].includes(v.name)) render(true);   // local-only views: re-read the records (no network request)
+      else if (v.name === 'search' && $('#sLibBody')) { $('#sLibBody').innerHTML = searchLocal(v.q || '', (v.src || 'all') === 'all'); }
+      const sel = (window.CSS && CSS.escape) ? CSS.escape(id) : id.replace(/["\\]/g, '\\$&');
+      $$(`.row[data-tid="${sel}"] .cover, .card[data-tid="${sel}"] .cover`).forEach(c => setCover(c, t));
+      if (S.cur === id) updateNowPlaying(t); else renderNP();   // art, media session and queue panel only: the audio element is never touched
+    }
+    function openCoverEditor(tid) {
+      const t0 = S.tracks.get(tid); if (!t0) return;
+      if (S.restoreBusy || S.restoring || S.backupBusy) { toast('A backup or restore is running. Try editing again when it finishes.', 3200); return; }
+      const base = coverCur(t0), epoch = S.epoch, orig = coverOrig(t0) !== null ? coverOrig(t0) : base, hadOrig = coverOrig(t0) !== null;
+      const d = dialog(`<h3>Edit cover</h3><div class="cov-ed"><div class="cover xl cov-prev" id="covPrev" role="img" aria-label="Cover preview"></div>
+        <div class="cov-side"><p class="meta-note" style="margin:0">Pick a PNG, JPEG, GIF or WebP picture (up to 8 MB). It is resized to fit 512 pixels and stored inside your library. The audio file and its tags are never changed.</p>
+        <div><button type="button" class="btn" id="covPick">Choose image…</button><input type="file" id="covFile" accept="${COVER.accept}" hidden></div>
+        <div id="covState" class="mono dim" aria-live="polite"></div></div></div>
+        <div id="covOrig" class="meta-orig"></div><div id="covErr" class="meta-err" role="alert" aria-live="assertive"></div>
+        <div class="btn-row meta-btns"><button type="button" class="btn" id="covRevert">Revert to original</button><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="button" class="btn primary" id="covSave">Save</button></div>`);
+      d.onclose = null;
+      let closed = false, tok = 0, draft = base, busy = false, saving = false;
+      d.addEventListener('close', () => {
+        closed = true; tok++;   // a picture still being read when the editor closes is dropped
+        const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return;
+        const b = $(`.row[data-tid="${(window.CSS && CSS.escape) ? CSS.escape(tid) : tid}"] [data-act="more"]`); if (b) b.focus();
+      }, { once: true });
+      const err = $('#covErr', d), st = $('#covState', d), rv = $('#covRevert', d), sv = $('#covSave', d), pk = $('#covPick', d), fi = $('#covFile', d), no = $('#dlgNo', d);
+      const sync = () => {
+        setCover($('#covPrev', d), { ...t0, cover: draft });
+        st.textContent = saving ? 'Saving…' : busy ? 'Reading the picture…' : draft === base ? (draft ? 'Current cover' : 'No cover') : (draft === orig ? 'Original cover (not saved yet)' : 'New cover (not saved yet)');
+        // commit semantics: once Save is pressed the write is in flight and can not be called back, so until it settles NOTHING in the editor can be used (no Cancel, Escape, picker, Revert)
+        rv.disabled = saving || busy || draft === orig; sv.disabled = saving || busy || draft === base; pk.disabled = saving; no.disabled = saving;
+      };
+      d.addEventListener('cancel', e => { if (saving) e.preventDefault(); });   // the dialog's own Escape / close request
+      // Escape is stopped at the window (capture) while saving: when a focused control becomes disabled the focus leaves the dialog, so a listener on the dialog itself would not see the key and the
+      // browser would close the dialog (found by repeating the pending-save test: it failed 2 runs in 3)
+      const escGuard = e => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); } };
+      if (hadOrig) {
+        const o = $('#covOrig', d);
+        if (orig === '') o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="dim">No picture</div>';
+        else if (/^https?:/i.test(orig)) o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="dim">A web picture (its address is kept; it is not loaded here)</div>';
+        else { o.innerHTML = '<div class="mono dim">Original cover (kept from before your first change)</div><div class="cover sm cov-orig" id="covOrigImg"></div>'; setCover($('#covOrigImg', o), { ...t0, cover: orig }); }
+      }
+      sync();
+      pk.onclick = () => { if (!saving) fi.click(); };
+      fi.onchange = async () => {
+        const f = fi.files && fi.files[0]; fi.value = ''; if (!f || saving) return;
+        const mine = ++tok; busy = true; err.textContent = ''; sync();
+        let r; try { r = await coverFromFile(f); } catch (e) { r = { ok: false, msg: 'That picture couldn’t be read.' }; }
+        if (closed || mine !== tok || !d.open) return;   // the editor closed or a newer pick started meanwhile: this answer is stale
+        busy = false;
+        if (!r.ok) { err.textContent = r.msg; sync(); pk.focus(); return; }
+        draft = r.data; sync(); sv.focus();
+      };
+      rv.onclick = () => { if (saving) return; tok++; busy = false; draft = orig; err.textContent = ''; sync(); sv.focus(); };   // fills the preview; Save commits, Cancel discards
+      no.onclick = () => { if (!saving) d.close('no'); };
+      sv.onclick = async () => {
+        if (saving || busy) return; saving = true; err.textContent = ''; window.addEventListener('keydown', escGuard, true); sync(); d.tabIndex = -1; d.focus();   // keep the keyboard inside the dialog while its controls are disabled
+        let r; try { r = await saveCover(tid, epoch, base, draft); } catch (x) { r = { ok: false, msg: 'Couldn’t save the cover. Nothing was changed.' }; }
+        saving = false; window.removeEventListener('keydown', escGuard, true); sync();
+        if (!r.ok) { err.textContent = r.msg; sv.focus(); return; }   // the editor stays open with the reason; every control works again
+        d.close('ok');
+        const t = S.tracks.get(tid);
+        if (r.none) { toast('No changes'); return; }
+        if (t) coverRefresh(t);
+        toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Cover saved', 3000);
+      };
+      pk.focus();
+    }
     async function removeTrack(id) {
       const t = S.tracks.get(id); if (!t) return;
       if (!await confirmBox(`Remove “${t.title}” from your library?`, 'Remove')) return;
       S.tracks.delete(id); S.mem.delete(id);
-      await dbDel('tracks', id); await dbDel('blobs', id);
+      await dbDelTrack(id); await dbDel('blobs', id);
       S.playlists.forEach(p => { if (p.ids.includes(id)) { p.ids = p.ids.filter(x => x !== id); dbPut('playlists', p); } });
       if (t.kind === 'web') S.cache.set(id, t); else purgeFromQueue(id);
       libStat(); refresh(); toast('Removed from library');
@@ -1560,6 +1852,13 @@
       if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
       if (t.link !== undefined && !(typeof t.link === 'string' && (t.link === '' || isHttpUrl(t.link)))) add('link must be empty or an http(s) address');
       if (t.kind === 'web' && !(typeof t.url === 'string' && isHttpUrl(t.url))) add('a web song needs an http(s) url');
+      if (t.genre !== undefined && typeof t.genre !== 'string') add('genre must be text');
+      if (t.origMeta !== undefined) {   // Phase 3A snapshot of the values before the first edit: exactly these four text fields
+        if (!isObj(t.origMeta)) add('origMeta must be an object');
+        else { for (const k of ['title', 'artist', 'album', 'genre']) if (typeof t.origMeta[k] !== 'string') add(`origMeta.${k} must be text`); for (const k of Object.keys(t.origMeta)) if (!['title', 'artist', 'album', 'genre'].includes(k)) add(`origMeta.${k} is not a known field`); }
+      }
+      // Phase 3B: the cover as it was before the first custom-cover edit; the same rule as `cover` itself
+      if (t.origCover !== undefined && !(typeof t.origCover === 'string' && (t.origCover === '' || RS_COVER_RE.test(t.origCover) || isHttpUrl(t.origCover)))) add('origCover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
     }
     function rsSession(s, iss, L) {
       const add = m => { if (iss.length < 20) iss.push(`kv/session: ${m}`); };

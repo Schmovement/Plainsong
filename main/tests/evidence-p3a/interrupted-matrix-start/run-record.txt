@@ -1,0 +1,4 @@
+project: /home/claude/p3a
+served: http://localhost:8765/index.html
+start: 2026-11-06T10:41:36Z
+node: v22.23.4 python: Python 3.13.18

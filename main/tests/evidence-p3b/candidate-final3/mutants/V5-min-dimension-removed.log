@@ -1,0 +1,82 @@
+PASS S5 refused: SVG with scripts named .png: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: SVG named .svg: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: HTML named .png: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: plain text named .jpg: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: an audio file named .png (the RIFF header of a WAV): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: an empty file: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: JPEG signature followed by garbage: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: PNG cut off in the middle: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: PNG with a script appended after IEND (polyglot): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: JPEG cut in half (no end marker): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: GIF with its trailer byte missing: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: WebP cut in half (RIFF size no longer matches): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+PASS S5 refused: PNG with correct structure and CRCs but undecodable pixel data: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+FAIL S5 refused: PNG 8193 x 16 (one side over 8192): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected  :: That picture is 8193×16 pixels; each side must be 1 to 8192 pixels (at most 40 megapixels). | No cover | focus covPick | pwned undefined dom 0
+PASS S5 refused: PNG 8000 x 6000 (48 megapixels, over the 40 MP limit): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected
+FAIL S5 refused: PNG 15 x 16 (below the 16 pixel minimum): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected  ::  | New cover (not saved yet) | focus covSave | pwned undefined dom 0
+FAIL S5 refused: a file just over the 8 MB limit: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected  :: That file is 8.0 MB; the limit is 8.0 MB. | New cover (not saved yet) | focus covPick | pwned undefined dom 0
+PASS S5 refused: all 17 refused pictures together: zero writes, the database and the in-memory record are exactly as before
+FAIL S5 refused: the editor is still usable after the refusals (Save disabled, Cancel works)
+PASS S5 accepted: a JPEG named .txt: stored as a image/jpeg (magic bytes), 200x150 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 1: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 1: raw DB: same song ids in the same order (5)
+PASS S5 accepted 1: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 1: raw DB: history identical
+PASS S5 accepted 1: localStorage identical
+PASS S5 accepted: a different JPEG named .png: stored as a image/jpeg (magic bytes), 180x120 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 2: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 2: raw DB: same song ids in the same order (5)
+PASS S5 accepted 2: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 2: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 2: raw DB: history identical
+PASS S5 accepted 2: localStorage identical
+PASS S5 accepted: a GIF 16x16 named .png (the minimum size): stored as a image/jpeg (magic bytes), 16x16 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 3: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 3: raw DB: same song ids in the same order (5)
+PASS S5 accepted 3: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 3: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 3: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 3: raw DB: history identical
+PASS S5 accepted 3: localStorage identical
+PASS S5 accepted: a WebP: stored as a image/jpeg (magic bytes), 160x160 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 4: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 4: raw DB: same song ids in the same order (5)
+PASS S5 accepted 4: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 4: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 4: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 4: raw DB: history identical
+PASS S5 accepted 4: localStorage identical
+PASS S5 accepted: a PNG 2000x1000 (scaled down to fit 512, shape kept): stored as a image/jpeg (magic bytes), 512x256 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 5: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 5: raw DB: same song ids in the same order (5)
+PASS S5 accepted 5: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 5: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 5: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 5: raw DB: history identical
+PASS S5 accepted 5: localStorage identical
+PASS S5 accepted: a PNG 8192 x 16 (the maximum side): stored as a image/jpeg (magic bytes), 512x1 (never enlarged), canonical base64, origCover is the original ''
+PASS S5 accepted 6: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S5 accepted 6: raw DB: same song ids in the same order (5)
+PASS S5 accepted 6: raw DB: playlists identical (ids, order, references)
+PASS S5 accepted 6: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S5 accepted 6: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S5 accepted 6: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S5 accepted 6: raw DB: history identical
+PASS S5 accepted 6: localStorage identical
+PASS S5 accepted: a PNG with transparent pixels is stored as PNG and the transparency survives (left half alpha 0, right half 255)
+PASS S5 accepted: the origCover stayed the original through all of the above replacements
+PASS S5: no script from any hostile picture ran (window.__pwned never set)
+PASS S5: no page errors
+PASS network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3B: 76 / 80 pass

@@ -1,0 +1,130 @@
+{
+ "schema": "oracle_2c.compare.v1",
+ "A": "/tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/c3/work-matrix/p2c/controls/a-with-theme-warning.zip",
+ "B": "/tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad/c3/work-matrix/p2c/controls/good.zip",
+ "options": {
+  "bTheme": null,
+  "bSecretKeys": null,
+  "timeUnavailable": false
+ },
+ "results": [
+  {
+   "check": "A self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "A has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "entry names and order identical (11 entries)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/tracks.json byte-identical (sha256 69494f6b64f7)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/playlists.json byte-identical (sha256 c991668944a2)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000001.bin byte-identical (sha256 449f6d1d7d62)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000002.bin byte-identical (sha256 e5313e216fd0)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000003.bin byte-identical (sha256 fbbab289f7f9)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000004.bin byte-identical (sha256 d80a360ed9aa)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000005.bin byte-identical (sha256 f102eb734257)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000006.bin byte-identical (sha256 5d8d910591d2)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "audio list identical in order: key, MIME, size, SHA-256 for all 6 entries",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "tracks records identical, same order and same key order (6 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "playlists records identical, same order and same key order (2 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv key set and order identical: ['custom:pref', 'hist', 'session']",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:pref] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[hist] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[session] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "localstorage.json identical {\"ps-theme\": \"dark\"}",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "manifest compared leaf by leaf (66 values in A): 1 differ (each listed below)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "manifest.warnings (A ['1 stored audio file has no library entry; included as-is', 'ps-theme had an unrecognized value and was not exported'], B ['1 stored audio file has no library entry; included as-is'])",
+   "status": "allowed",
+   "detail": "the warning describes the OLD exporting browser's state (a ps-theme value that was deliberately not exported), so a restored browser cannot repeat it; only that exact warning, only its removal"
+  }
+ ],
+ "fail": 0,
+ "allowed": 1,
+ "exact": 22
+}

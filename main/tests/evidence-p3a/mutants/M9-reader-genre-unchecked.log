@@ -1,0 +1,101 @@
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (6 songs) and the policy theme
+PASS S8 p1 full: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 full: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 full edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 full edit: raw DB: same song ids in the same order (6)
+PASS S8 p1 full edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 full edit: raw DB: 6 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 full edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 full edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 full edit: raw DB: history identical
+PASS S8 p1 full edit: localStorage identical
+PASS S8 p1 full: no page errors
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {} (theme policy)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (1 songs) and the policy theme
+PASS S8 p1 minimal: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 minimal: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 minimal edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 minimal edit: raw DB: same song ids in the same order (1)
+PASS S8 p1 minimal edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 minimal edit: raw DB: 1 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 minimal edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 minimal edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 minimal edit: raw DB: history identical
+PASS S8 p1 minimal edit: localStorage identical
+PASS S8 p1 minimal: no page errors
+PASS S8-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S8-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S8-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S8: 10 new-field archives were generated by an independent Python helper (stdlib only)
+PASS S8 refused: bad-origmeta-number: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-number (origMeta is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-null: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-null (origMeta is null): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-array: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-array (origMeta is a list): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-array: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-missing-genre: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-missing-genre (origMeta lacks genre): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-missing-genre: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-title-number: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-title-number (origMeta.title is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-title-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-extra-key: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-extra-key (origMeta has an unknown key): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-extra-key: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-genre-number: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-genre-number (genre is a number): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-genre-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-genre-null: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-genre-null (genre is null): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-genre-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 ok-unchanged-resealed: no page errors
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: the unknown extra field on the record was kept exactly
+PASS S8 ok-unknown-extra-field: no page errors
+FAIL S8: the target browser was never changed or started playing by the refused archives  :: {"paused":true,"allPaused":true,"plays":0,"songs":5,"queue":["061ba0a5-43fe-4254-ac10-2df6dbb0b106","audius:W1","d33f062b-12d4-46cb-95ed-77055cf69d0c","audius:QW"],"view":"library","theme":"dark","lsTheme":"dark","restoring":false,"busy":false,"lock":false}
+PASS S8: no page errors
+PASS S8 target: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 25 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 94 / 99 pass

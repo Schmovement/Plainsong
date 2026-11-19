@@ -1,0 +1,183 @@
+{
+ "complete": true,
+ "only": "6",
+ "total": 35,
+ "failed": 0,
+ "results": [
+  {
+   "name": "S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed",
+   "ok": true,
+   "detail": "Couldn’t save the cover (injected storage failure). Nothing was changed."
+  },
+  {
+   "name": "S6a: the in-memory record is EXACTLY as before (cover unchanged, no origCover key, same key order)",
+   "ok": true,
+   "detail": "[\"id\",\"kind\",\"key\",\"title\",\"artist\",\"album\",\"track\",\"duration\",\"cover\",\"lyrics\",\"size\",\"added\",\"plays\",\"liked\"]"
+  },
+  {
+   "name": "S6a: the stored database is untouched",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the list row still shows the old (initial-letter) cover",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the chosen picture is still the draft so a retry is possible (state \"New cover\", Save enabled)",
+   "ok": true,
+   "detail": "\"New cover (not saved yet)\""
+  },
+  {
+   "name": "S6a: the retry succeeded, closed the editor, and stored cover + origCover",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"b8b51a07-196d-4b47-b96f-592ba79faccb\",\"audius:W1\",\"dc5ab83c-6d7e-459f-9f49-54d9aa119635\",\"audius:QW\"],[\"b8b51a07-196d-4b47-b96f-592ba79faccb\",\"audius:W1\",\"dc5ab83c-6d7e-459f-9f49-54d9aa119635\",\"audius:QW\"],0] vs [[\"b8b51a07-196d-4b47-b96f-592ba79faccb\",\"audius:W1\",\"dc5ab83c-6d7e-459f-9f49-54d9aa119635\",\"audius:QW\"],[\"b8b51a07-196d-4b47-b96f-592ba79faccb\",\"audius:W1\",\"dc5ab83c-6d7e-459f-9f49-54d9aa119635\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S6a retry: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (cover AND the existing origCover, key order included)",
+   "ok": true,
+   "detail": "Couldn’t save the cover (injected idb failure). Nothing was changed."
+  },
+  {
+   "name": "S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a backup is running Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a restore is busy Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: once the flags clear the same Save works",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6b: with a restore running the cover editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6b: with a backup running the cover editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6d: if the song disappeared while the editor was open Save is refused and writes nothing",
+   "ok": true,
+   "detail": "This song is no longer in your library. Nothing was saved."
+  },
+  {
+   "name": "S6e: a like, a play-count change and a title change made while the editor was open are NOT overwritten by the cover Save (no stale record written)",
+   "ok": true,
+   "detail": "{\"liked\":true,\"plays\":5,\"last\":1234567890123,\"title\":\"Renamed meanwhile\",\"open\":false,\"err\":\"\"}"
+  },
+  {
+   "name": "S6e: if the song's cover was changed elsewhere while the editor was open, Save is refused and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6f: saveCover itself refuses an SVG data URL, javascript:, a NEW http address, html, a number, null, bad base64 and an over-size data URL, writing nothing",
+   "ok": true,
+   "detail": "[false,false,false,false,false,false,false,false]"
+  },
+  {
+   "name": "S6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6g: while a picture is being read the state says so and both Save and Revert are disabled (no commit of a half-read draft)",
+   "ok": true,
+   "detail": "{\"open\":true,\"h\":\"Edit cover\",\"state\":\"Reading the picture…\",\"err\":\"\",\"save\":true,\"revert\":true,\"prev\":\"\",\"prevTxt\":\"S\",\"active\":\"covPick\",\"orig\":\"\",\"origImg\":null,\"accept\":\"image/png,image/jpeg,image/gif,image/webp\"}"
+  },
+  {
+   "name": "S6g: a newer pick that finishes first wins: when the older, slower read completes later its result is DROPPED (the draft is still the newer picture)",
+   "ok": true,
+   "detail": "url(\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ vs url(\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ"
+  },
+  {
+   "name": "S6g: if the editor is closed while a picture is still being read, the late result is dropped: nothing written, nothing changed, no error",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6g: a different song's editor opened right after starts clean (no leftover draft from the dropped read)",
+   "ok": true,
+   "detail": "\"No cover\""
+  },
+  {
+   "name": "S6g: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

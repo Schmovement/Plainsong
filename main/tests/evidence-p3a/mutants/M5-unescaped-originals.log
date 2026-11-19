@@ -1,0 +1,43 @@
+PASS S5 accepted: HTML image tag with an event handler: stored exactly as sanitised
+PASS S5 accepted: HTML image tag with an event handler: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): stored exactly as sanitised
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: lone surrogates: stored exactly as sanitised
+PASS S5 accepted: lone surrogates: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: emoji, CJK, accents kept exactly: stored exactly as sanitised
+PASS S5 accepted: emoji, CJK, accents kept exactly: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: leading/trailing/inner spaces: stored exactly as sanitised
+PASS S5 accepted: leading/trailing/inner spaces: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: __proto__ and constructor as text: stored exactly as sanitised
+PASS S5 accepted: __proto__ and constructor as text: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: empty artist and album get the app's default names: stored exactly as sanitised
+PASS S5 accepted: empty artist and album get the app's default names: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 200 characters in title (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 200 characters in title (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 80 characters in genre (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 80 characters in genre (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5: the hostile title/artist/album/genre never become markup anywhere (library list, queue panel): no injected img, script or svg, and no script ran
+PASS S5: the album page header shows the hostile album as text
+FAIL S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run  :: {"txt":"Original values (kept from before your first edit)\nTitle\nArtist\nAlbum\nGenre\n\">","inj":3,"pwned":4}
+PASS S5 refused: title of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: title of 5000 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: whitespace-only title: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: genre of 81 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: artist of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5: typing or pasting more than 200 characters is stopped by the field (maxlength)
+PASS S5-hostile: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S5-hostile: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S5-hostile: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S5 export vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S5 export vs live DB: playlists identical (ids order kept)
+PASS S5 export vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S5 export vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S5 export vs live DB: this browser's own secret: keys are untouched (1)
+PASS S5 export vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S5: the hostile record in the backup file holds the exact stored strings
+PASS S5: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 40 / 41 pass

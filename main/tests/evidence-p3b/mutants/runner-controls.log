@@ -1,0 +1,27 @@
+PASS valid, exit 1, intended check failed (name longer than 125 chars, needle beyond the old cut) -> DETECTED
+PASS valid, exit 1, only OTHER checks failed -> SURVIVED-OTHER (not a detection)
+PASS valid, exit 0, nothing failed -> SURVIVED
+PASS NEGATIVE: partial log shows the intended FAIL, no JSON, exit 2 (uncaught crash) -> ERROR
+PASS NEGATIVE: partial log shows the intended FAIL, no JSON, exit 124 (timeout) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 124 (timeout) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 137 (killed) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 2 -> ERROR
+PASS NEGATIVE: exit code not a number -> ERROR
+PASS NEGATIVE: JSON truncated mid-way -> ERROR
+PASS NEGATIVE: JSON is a list -> ERROR
+PASS NEGATIVE: no completion marker -> ERROR
+PASS NEGATIVE: completion marker is not boolean true -> ERROR
+PASS NEGATIVE: JSON is for another scenario -> ERROR
+PASS NEGATIVE: total does not equal the number of results -> ERROR
+PASS NEGATIVE: failed does not equal the number of failed results -> ERROR
+PASS NEGATIVE: a result has a non-boolean ok -> ERROR
+PASS NEGATIVE: a result has no name -> ERROR
+PASS NEGATIVE: log has no final PHASE line -> ERROR
+PASS NEGATIVE: log PHASE line disagrees with the JSON -> ERROR
+PASS NEGATIVE: exit 0 although checks failed -> ERROR
+PASS NEGATIVE: exit 1 although nothing failed -> ERROR
+PASS NEGATIVE: zero checks -> ERROR
+PASS CONTROL run: unmutated app passed everything and the needle matches a passing check -> OK
+PASS NEGATIVE control run: the unmutated app fails a check -> not OK
+PASS NEGATIVE control run: a needle that matches no check (typo) -> not OK
+RUNNER CONTROLS: 26 / 26 pass

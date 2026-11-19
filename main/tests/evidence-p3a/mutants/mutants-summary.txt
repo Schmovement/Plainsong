@@ -1,0 +1,34 @@
+M1-no-rollback: scenario S6 exit=1 failing checks=6 intended check failed=YES  | a failed save no longer restores the previous record
+      S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)  :: {"id":"5ec28e
+      S6a retry: title/artist/album are exactly ["Will Fail","F","Unknown album"]  :: {"title":"Song Three","artist":"Artist C","al
+      S6a retry: genre is "fg"
+      S6a retry: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (e
+M2-no-stale-check: scenario S6 exit=1 failing checks=3 intended check failed=YES  | the stale-epoch / changed-while-open check is removed
+      S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written
+      S6d: if the song disappeared while the editor was open Save is refused and writes nothing  :: This song is no longer in your 
+      S6e: if the song's title was changed elsewhere while the editor was open, Save is refused and nothing is written
+M3-no-busy-guard: scenario S6 exit=2 failing checks=2 intended check failed=YES  | Save no longer refuses during a backup/restore/write lock
+      S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved  :: Couldn’t save the chang
+      S6b: while a backup is running Save is refused with nothing saved
+M4-snapshot-overwritten: scenario S4 exit=1 failing checks=11 intended check failed=YES  | origMeta is rewritten on every save instead of captured once
+      S4 edit 2 (genre cleared): origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album",
+      S4: the snapshot is stable: byte-identical after the second edit  :: {"title":"T1","artist":"Artist B","album":"Unknown album
+      S4: "Revert to originals" fills the form with the originals, disables itself, and moves focus to Save  :: {"v":["T1","Artist 
+      S4 reverted: title/artist/album are exactly ["Song Two","Artist B","Unknown album"]  :: {"title":"T1","artist":"Artist B","al
+M5-unescaped-originals: scenario S5 exit=1 failing checks=1 intended check failed=YES  | original values are inserted into the editor as HTML
+      S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run  :: {"txt":"Original values (kept fro
+M6-playback-restart: scenario S2 exit=1 failing checks=1 intended check failed=YES  | refreshing the screens after an edit seeks the playing song to 0
+      S2: the playback position CONTINUED (did not restart or jump back)  :: 2.170737 -> 0.812336
+M7-search-refetch: scenario S1 exit=1 failing checks=2 intended check failed=YES  | saving from the search view re-renders it (refetching Audius/Archive)
+      S1: saving from the search view makes NO network request (the Audius/Archive lists are not refetched)  :: ["https://api.audiu
+      network: NO request was attempted during any song-info save  :: [{"scn":"S1","urls":["https://api.audius.co/v1/tracks/search?
+M8-reader-origmeta-unchecked: scenario S8 exit=1 failing checks=15 intended check failed=YES  | the strict reader no longer validates origMeta
+      S8 refused: bad-origmeta-number (origMeta is a number): the strict reader refuses it before any preview, naming invalid field
+      S8 refused: bad-origmeta-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+      S8 refused: bad-origmeta-null (origMeta is null): the strict reader refuses it before any preview, naming invalid fields  :: 
+      S8 refused: bad-origmeta-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+M9-reader-genre-unchecked: scenario S8 exit=1 failing checks=5 intended check failed=YES  | the strict reader no longer validates genre
+      S8 refused: bad-genre-number (genre is a number): the strict reader refuses it before any preview, naming invalid fields  :: 
+      S8 refused: bad-genre-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+      S8 refused: bad-genre-null (genre is null): the strict reader refuses it before any preview, naming invalid fields  :: Librar
+      S8 refused: bad-genre-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical

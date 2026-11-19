@@ -1,0 +1,19 @@
+# Files removed from tests/evidence-p2c/candidate-run (historical p2 proof) to fit the p3a ZIP under 30 MiB; the full set is inside the verified p2 ZIP plainsong-checkpoint-p2.zip (1cc6c32d8da693ad2fe1ddbfcb0d35e9720bce7dfd22faf44da05c18ee282e89). Format: sha256  path
+5bdb592c3f7996ca2503557bb79b46a812fb52440ed5f2288cb6b6bfc7f9b930  tests/evidence-p2c/candidate-run/p0-original/desktop.png
+0305dacaefc65a22a9368541ab1ebdcc413ed769b895d880b9e32a07a7cac21e  tests/evidence-p2c/candidate-run/p0-original/mobile.png
+38b3cfdaa0fc0e66c88dbecd9775206e93cc09f2d9721c1ac1539eb89789f22d  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-desktop.png
+a35ab4569eb95ba7502e7807629d31903cb3b8b41ca9930cbbe276310b560ebe  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-mobile.png
+d87c40c7ab323e45adb8c139d8f9ef8ec04c2e52ba7a99dafd70bddb0607afd2  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-problem.png
+cf8c6478eb12740936c6bcd81d66a4f5ce7ac05019d530d3a5c5701175a1403a  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-progress-light.png
+0b809cf589534b6f17a8181eea28b3640773f68ff5d83b4d1a82bfb49849f4a5  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-progress.png
+107c2131ad590930dd0bf051ba78ad65ec3e13716dd3d59634b32b6ccd531d48  tests/evidence-p2c/candidate-run/p1-adapted/shots/p1-ui-toobig.png
+38b3cfdaa0fc0e66c88dbecd9775206e93cc09f2d9721c1ac1539eb89789f22d  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-desktop.png
+a35ab4569eb95ba7502e7807629d31903cb3b8b41ca9930cbbe276310b560ebe  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-mobile.png
+9ce71435cbd8c8b2b736430091869e9fa652d89c4e4d4585a078955ecec4280a  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-problem.png
+cf8c6478eb12740936c6bcd81d66a4f5ce7ac05019d530d3a5c5701175a1403a  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-progress-light.png
+47470617ccedfe67223b2f4c19b72769a2a77ceeb4326b4c7b4241cfa841c653  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-progress.png
+e19682643d72f345189819f10f0802b0ddebc669e10f8de82c5c993875931138  tests/evidence-p2c/candidate-run/p1-original/shots/p1-ui-toobig.png
+845b8981c7caf80ea1114fbce47b7299b388f8e8c4095bbd4595998b648f7caa  tests/evidence-p2c/candidate-run/p2c/roundtrip-evidence/01-E1-source.zip
+afce5b210392de5ddd642dd98a328c71d5a8bae9cd7478fa088ec7e14a6cc670  tests/evidence-p2c/candidate-run/p2c/roundtrip-evidence/03-E2-from-populated-target.zip
+eac549791d4706032faa200b7981b236bae892336a06df1bde665e59d133b540  tests/evidence-p2c/candidate-run/p2c/roundtrip-evidence/04-E3-from-clean-target.zip
+470e2dfae5d84379c35e90f37fe036e32612f25a001da4912e798c20cf071a93  tests/evidence-p2c/candidate-run/p2c/roundtrip-evidence/05-E4-repeat.zip

@@ -1,0 +1,1776 @@
+{
+ "total": 354,
+ "failed": 0,
+ "results": [
+  {
+   "name": "S0: before any edit no song has genre or origMeta (the new fields are additive and appear only on edit)",
+   "ok": true,
+   "detail": "5 songs"
+  },
+  {
+   "name": "S0: seeded library has the shape the tests need (3 local, 2 saved web, playlist, saved queue)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S0: the ⋯ menu of a library song offers \"Edit info…\"",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Remove like | Go to album | Go to artist | Edit info… | Edit cover… | Remove from library"
+  },
+  {
+   "name": "S0: a song that is only SHOWN (not in the library) has no \"Edit info…\" entry",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Like"
+  },
+  {
+   "name": "S0: nothing playing, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"5f48f5b1-2858-4e3b-844b-90514dffe0fc\",\"audius:W1\",\"4e6faa48-97aa-4e1a-85f1-3ab7c6ec1d32\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: the editor opens on the song with its current values, title focused, bounds 200/200/200/80",
+   "ok": true,
+   "detail": "{\"h\":\"Edit song info\",\"v\":[\"Song Three\",\"Artist C\",\"Unknown album\",\"\"],\"mx\":[200,200,200,80],\"rv\":true,\"orig\":\"\",\"active\":\"meta_title\"}"
+  },
+  {
+   "name": "S1: a never-edited song: \"Revert to originals\" is disabled and no original-values block is shown",
+   "ok": true,
+   "detail": "{\"h\":\"Edit song info\",\"v\":[\"Song Three\",\"Artist C\",\"Unknown album\",\"\"],\"mx\":[200,200,200,80],\"rv\":true,\"orig\":\"\",\"active\":\"meta_title\"}"
+  },
+  {
+   "name": "S1: Save closes the editor without an error",
+   "ok": true,
+   "detail": "{\"open\":false,\"err\":\"\"}"
+  },
+  {
+   "name": "S1: exactly ONE write to the tracks store, a put of this song",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"faaaadea-5999-45e7-aa40-b881eba0861d\"}]"
+  },
+  {
+   "name": "S1 saved record: title/artist/album are exactly [\"Renamed Three\",\"New Artist\",\"New Album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Renamed Three\",\"artist\":\"New Artist\",\"album\":\"New Album\",\"genre\":\"Test Genre\"}"
+  },
+  {
+   "name": "S1 saved record: genre is \"Test Genre\"",
+   "ok": true,
+   "detail": "\"Test Genre\""
+  },
+  {
+   "name": "S1 saved record: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],0] vs [[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S1: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: in-memory record equals the stored record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: playback state untouched: still paused, same audio source, same time, no play()/loadstart, same current song, queue, playlists and library ids",
+   "ok": true,
+   "detail": "{\"paused\":true,\"src\":\"blob:http://localhost:8765/45b3ee0a-6aa4-4c34-afbc-34e6f3e1a3ef\",\"ct\":1.5,\"plays\":0,\"ls\":1,\"cur\":\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"qi\":0,\"queue\":[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"aa25fbd6-e17e-4980-bc95-a2b7289e2257\",\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"ghost-id\",\"faaaadea-5999-45e7-aa40-b881eba0861d\"]],\"lib\":[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"aa25fbd6-e17e-4980-bc95-a2b7289e2257\",\"archive:W2\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\"]} vs {\"paused\":true,\"src\":\"blob:http://localhost:8765/45b3ee0a-6aa4-4c34-afbc-34e6f3e1a3ef\",\"ct\":1.5,\"plays\":0,\"ls\":1,\"cur\":\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"qi\":0,\"queue\":[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"aa25fbd6-e1"
+  },
+  {
+   "name": "S1: the visible list row shows the new title, artist and album",
+   "ok": true,
+   "detail": "{\"t\":\"Renamed Three\",\"a\":\"New Artist\",\"al\":\"New Album\",\"html\":\"\\n    <div class=\\\"r-cov\\\"><div class=\\\"cover sm\\\" style=\\\"--h:87\\\">R</div><span class=\\\"r-btn\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" aria-hidden=\\\"true\\\"><polygon points=\\\"7 4 20 12 7 20 7 4\\\" fill=\\\"currentColor\\\" stroke=\\\"none\\\"></polygon></svg></span><span class=\\\"bars\\\"><i></i><i></i><i></i></span></div>\\n    <div class=\\\"r-main\\\"><div class=\\\"r-t\\\">Renamed Three</div><div class=\\\"r-a\\\">New Artist</div></div>\\n    <div class=\\\"r-alb\\\">New Album</div>\\n    <div class=\\\"r-dur\\\">0:12</div>\\n    <div class=\\\"r-act\\\"><button class=\\\"icon-btn like\\\" data-act=\\\"like\\\" aria-label=\\\"Like\\\" aria-pressed=\\\"false\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" "
+  },
+  {
+   "name": "S1: keyboard focus returned to this song's ⋯ button after Save",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: library filter finds the song by its new title, by its new album, and by its GENRE",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: library filter no longer finds the song by its old title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: the queue panel shows the new title and not the old one",
+   "ok": true,
+   "detail": "[\"Song One\",\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"Renamed Three\",\"Queued only ✓\"]"
+  },
+  {
+   "name": "S1: global search finds the song under its new title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: saving from the search view makes NO network request (the Audius/Archive lists are not refetched)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S1: the search block shows the new title",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: after an edit that no longer matches the query, the song leaves the search results",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: snapshot kept the FIRST originals through repeated edits",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S1: after RELOAD every record is byte-for-byte what was stored before (edited fields, origMeta, everything)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S1: after RELOAD the list shows the edited values",
+   "ok": true,
+   "detail": "{\"t\":\"Zzz\",\"a\":\"Qq\",\"al\":\"Qq\",\"html\":\"\\n    <div class=\\\"r-cov\\\"><div class=\\\"cover sm\\\" style=\\\"--h:104\\\">Z</div><span class=\\\"r-btn\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke-linecap=\\\"round\\\" stroke-linejoin=\\\"round\\\" aria-hidden=\\\"true\\\"><polygon points=\\\"7 4 20 12 7 20 7 4\\\" fill=\\\"currentColor\\\" stroke=\\\"none\\\"></polygon></svg></span><span class=\\\"bars\\\"><i></i><i></i><i></i></span></div>\\n    <div class=\\\"r-main\\\"><div class=\\\"r-t\\\">Zzz</div><div class=\\\"r-a\\\">Qq</div></div>\\n    <div class=\\\"r-alb\\\">Qq</div>\\n    <div class=\\\"r-dur\\\">0:12</div>\\n    <div class=\\\"r-act\\\"><button class=\\\"icon-btn like\\\" data-act=\\\"like\\\" aria-label=\\\"Like\\\" aria-pressed=\\\"false\\\"><svg class=\\\"ico\\\" width=\\\"18\\\" height=\\\"18\\\" viewBox=\\\"0 0 24 24\\\" fill=\\\"none\\\" stroke=\\\"currentColor\\\" stroke-width=\\\"2\\\" stroke"
+  },
+  {
+   "name": "S1: no autoplay after reload, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"065e0f24-090f-4e15-bbab-fc5c74375042\",\"audius:W1\",\"faaaadea-5999-45e7-aa40-b881eba0861d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: the clicked song really plays (not paused, time advancing, it is the current song)",
+   "ok": true,
+   "detail": "{\"p\":false,\"ct\":2.17483,\"cur\":\"6ff7245b-4883-4c12-88ed-c67d363e1196\"}"
+  },
+  {
+   "name": "S2: opening the editor does not pause the music",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ct\":2.312336}"
+  },
+  {
+   "name": "S2: after editing the CURRENT song it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8765/47e0d97a-3937-4363-8161-6843c9d9e592\",\"ct\":2.17483,\"plays\":1,\"ls\":1,\"cur\":\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"qi\":0,\"queue\":[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"2df7c308-aaec-4569-92f5-9602ae8d546b\",\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"ghost-id\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\"]],\"lib\":[\"2df7c308-aaec-4569-92f5-9602ae8d546b\",\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"archive:W2\",\"audius:W1\"]} | {\"paused\":false,\"src\":\"blob:http://localhost:8765/47e0d97a-3937-4363-8161-6843c9d9e592\",\"ct\":3.289388,\"plays\":1,\"ls\":1,\"cur\":\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"qi\":0,\"queue\":[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"2"
+  },
+  {
+   "name": "S2: the playback position CONTINUED (did not restart or jump back)",
+   "ok": true,
+   "detail": "2.17483 -> 3.289388"
+  },
+  {
+   "name": "S2: now-playing bar, panel and tab title show the new title/artist",
+   "ok": true,
+   "detail": "{\"bar\":\"Now Playing Edited\",\"barA\":\"Live Artist\",\"np\":\"Now Playing Edited\",\"npA\":\"Live Artist\",\"doc\":\"Now Playing Edited · Plainsong\",\"ms\":[\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]}"
+  },
+  {
+   "name": "S2: the media session (lock-screen/keyboard metadata) shows the new title, artist, album",
+   "ok": true,
+   "detail": "[\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]"
+  },
+  {
+   "name": "S2: the queue panel shows the new title on the playing row",
+   "ok": true,
+   "detail": "[[\"Now Playing Edited\",true],[\"Web ✓ <b>bold</b> & \\\"q\\\"\",false],[\"Song Three\",false],[\"Queued only ✓\",false]]"
+  },
+  {
+   "name": "S2: after editing a NON-current song the music is still playing, same source, no new play()/loadstart, same current song and queue",
+   "ok": true,
+   "detail": "{\"paused\":false,\"src\":\"blob:http://localhost:8765/47e0d97a-3937-4363-8161-6843c9d9e592\",\"ct\":4.222946,\"plays\":1,\"ls\":1,\"cur\":\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"qi\":0,\"queue\":[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],\"lists\":[[],[\"audius:W1\",\"2df7c308-aaec-4569-92f5-9602ae8d546b\",\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"ghost-id\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\"]],\"lib\":[\"2df7c308-aaec-4569-92f5-9602ae8d546b\",\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"archive:W2\",\"audius:W1\"]}"
+  },
+  {
+   "name": "S2: the bar still shows the current (edited) song, not the other one",
+   "ok": true,
+   "detail": "Now Playing Edited"
+  },
+  {
+   "name": "S2 current song record: title/artist/album are exactly [\"Now Playing Edited\",\"Live Artist\",\"Live Album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Now Playing Edited\",\"artist\":\"Live Artist\",\"album\":\"Live Album\",\"genre\":\"Live\"}"
+  },
+  {
+   "name": "S2 current song record: genre is \"Live\"",
+   "ok": true,
+   "detail": "\"Live\""
+  },
+  {
+   "name": "S2 current song record: origMeta is the pre-edit snapshot {\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S2 other song record: title/artist/album are exactly [\"Queued Edited\",\"Artist C\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Queued Edited\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"Q\"}"
+  },
+  {
+   "name": "S2 other song record: genre is \"Q\"",
+   "ok": true,
+   "detail": "\"Q\""
+  },
+  {
+   "name": "S2 other song record: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S2: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],0] vs [[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],[\"6ff7245b-4883-4c12-88ed-c67d363e1196\",\"audius:W1\",\"acdfd50f-4c1b-4177-a22f-d66b2903f4a6\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S2: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: likes, plays, added time, duration, size, key of both edited songs unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: Cancel closes the editor, writes nothing and changes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: after Cancel the focus is back on this song's ⋯ button",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: Escape cancels: zero writes, nothing changed, focus back on the ⋯ button",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: Save with no change closes with no write and changes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: typing a change and typing it back is a no-change Save: zero writes, no origMeta created",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: Tab order is Title, Artist, Album, Genre, Cancel, Save (disabled Revert is skipped), then wraps",
+   "ok": true,
+   "detail": "[\"meta_title\",\"meta_artist\",\"meta_album\",\"meta_genre\",\"dlgNo\",\"metaSave\"]"
+  },
+  {
+   "name": "S3: at 390 px the dialog and its three buttons are inside the screen and the page has no horizontal scroll",
+   "ok": true,
+   "detail": "{\"l\":17,\"r\":373,\"t\":133.59375,\"b\":710.40625,\"sw\":390,\"save\":[40,107.15625,687.40625],\"cancel\":[268.96875,350],\"revert\":[40,196.609375],\"vw\":390,\"vh\":844}"
+  },
+  {
+   "name": "S3: nothing played, nothing changed in playback state throughout",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: Enter in a field saves",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: title/artist/album are exactly [\"T1\",\"Artist B\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"T1\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"G1\"}"
+  },
+  {
+   "name": "S4 edit 1: genre is \"G1\"",
+   "ok": true,
+   "detail": "\"G1\""
+  },
+  {
+   "name": "S4 edit 1: origMeta is the pre-edit snapshot {\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4 edit 1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],0] vs [[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S4 edit 1: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 1: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: reopening an edited song shows the original values and enables Revert",
+   "ok": true,
+   "detail": "{\"orig\":\"Original values (kept from before your first edit)\\nTitle\\nSong Two\\nArtist\\nArtist B\\nAlbum\\nUnknown album\\nGenre\\n(empty)\",\"rv\":false}"
+  },
+  {
+   "name": "S4 edit 2 (genre cleared): title/artist/album are exactly [\"T2\",\"A2\",\"B2\"]",
+   "ok": true,
+   "detail": "{\"title\":\"T2\",\"artist\":\"A2\",\"album\":\"B2\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4 edit 2 (genre cleared): genre is \"\" and the genre key is absent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit 2 (genre cleared): origMeta is the pre-edit snapshot {\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4: the snapshot is stable: byte-identical after the second edit",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4: \"Revert to originals\" fills the form with the originals, disables itself, and moves focus to Save",
+   "ok": true,
+   "detail": "{\"v\":[\"Song Two\",\"Artist B\",\"Unknown album\",\"\"],\"rv\":true,\"foc\":\"metaSave\"}"
+  },
+  {
+   "name": "S4: until Save, the stored song is still the edited one (Revert only fills the form)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: Revert then Cancel changes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 reverted: title/artist/album are exactly [\"Song Two\",\"Artist B\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4 reverted: genre is \"\" and the genre key is absent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 reverted: origMeta is the pre-edit snapshot {\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4: after revert the record equals the never-edited record plus origMeta (no other difference at all)",
+   "ok": true,
+   "detail": "{\"id\":\"3f6d53c7-1aa4-470d-8a8e-5951f463b98b\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"\",\"size\":529244,\"added\":1794104930519,\"plays\":0,\"liked\":false,\"origMeta\":{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}} vs {\"id\":\"3f6d53c7-1aa4-470d-8a8e-5951f463b98b\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"\",\"size\":529244,\"added\":1794104930519,\"plays\":0,\"liked\":false}"
+  },
+  {
+   "name": "S4 revert: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],0] vs [[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],[\"fe157825-10e6-4074-ad9e-0ac088c493d7\",\"audius:W1\",\"253978a4-7f45-44fc-9bf6-51350a245370\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S4 revert: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 revert: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: right after a revert the form equals the originals, so Revert is disabled",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: title/artist/album are exactly [\"T3\",\"Artist B\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"T3\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4 edit after revert: genre is \"\" and the genre key is absent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4 edit after revert: origMeta is the pre-edit snapshot {\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S4: origMeta still the very first snapshot (byte-identical) after revert and another edit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: a different, never-edited song has Revert disabled",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: after RELOAD the final state and snapshot persist exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: HTML image tag with an event handler: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"<img src=x onerror=\\\"window.__pwned=1\\\">\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: HTML image tag with an event handler: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"A B C Z q\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: lone surrogates: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"�x�\",\"artist\":\"<b>bold</b>&amp; \\\"q\\\" 's'\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"} | "
+  },
+  {
+   "name": "S5 accepted: lone surrogates: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: emoji, CJK, accents kept exactly: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"歌曲 🎵 ü ß\",\"artist\":\"Ünï 日本\",\"album\":\"🎧\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: emoji, CJK, accents kept exactly: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: leading/trailing/inner spaces: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"spaced out\",\"artist\":\"a b\",\"album\":\"🎧\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: leading/trailing/inner spaces: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: __proto__ and constructor as text: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"__proto__\",\"artist\":\"constructor\",\"album\":\"toString\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: __proto__ and constructor as text: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: empty artist and album get the app's default names: stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"__proto__\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: empty artist and album get the app's default names: the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: exactly 200 characters in title (the maximum): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"Ж\"} | "
+  },
+  {
+   "name": "S5 accepted: exactly 200 characters in title (the maximum): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: exactly 80 characters in genre (the maximum): stored exactly as sanitised",
+   "ok": true,
+   "detail": "{\"title\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\",\"artist\":\"Unknown artist\",\"album\":\"Unknown album\",\"genre\":\"gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg\"} | "
+  },
+  {
+   "name": "S5 accepted: exactly 80 characters in genre (the maximum): the list row shows it as TEXT (textContent equals the stored value)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5: the hostile title/artist/album/genre never become markup anywhere (library list, queue panel): no injected img, script or svg, and no script ran",
+   "ok": true,
+   "detail": "{\"pwned\":0,\"imgs\":0,\"scripts\":0,\"svg\":0}"
+  },
+  {
+   "name": "S5: the album page header shows the hostile album as text",
+   "ok": true,
+   "detail": "{\"h1\":\"</dialog><script>window.__pwned=2</script>\",\"inj\":0,\"pwned\":0}"
+  },
+  {
+   "name": "S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run",
+   "ok": true,
+   "detail": "{\"txt\":\"Original values (kept from before your first edit)\\nTitle\\n<img src=x onerror=window.__pwned=4>\\nArtist\\n</dialog>\\nAlbum\\n<script>window.__pwned=5</script>\\nGenre\\n\\\"><svg onload=window.__pwned=6>\",\"inj\":0,\"pwned\":0}"
+  },
+  {
+   "name": "S5 refused: title of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title is too long (at most 200 characters). Nothing was saved. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: title of 5000 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title is too long (at most 200 characters). Nothing was saved. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: whitespace-only title: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Title can’t be empty. | focus meta_title"
+  },
+  {
+   "name": "S5 refused: genre of 81 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Genre is too long (at most 80 characters). Nothing was saved. | focus meta_genre"
+  },
+  {
+   "name": "S5 refused: artist of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged",
+   "ok": true,
+   "detail": "Artist is too long (at most 200 characters). Nothing was saved. | focus meta_artist"
+  },
+  {
+   "name": "S5: typing or pasting more than 200 characters is stopped by the field (maxlength)",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "name": "S5-hostile: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092908.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S5-hostile: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5-hostile: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 export vs live DB: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S5 export vs live DB: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 export vs live DB: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S5 export vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S5 export vs live DB: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lastfm\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}}]"
+  },
+  {
+   "name": "S5 export vs live DB: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5: the hostile record in the backup file holds the exact stored strings",
+   "ok": true,
+   "detail": "{\"title\":\"<img src=x onerror=\\\"window.__pwned=1\\\">\",\"artist\":\"<b>bold</b>\",\"album\":\"</dialog><script>window.__pwned=2</script>\",\"genre\":\"<svg onload=window.__pwned=3>\"}"
+  },
+  {
+   "name": "S5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed",
+   "ok": true,
+   "detail": "Couldn’t save the changes (injected storage failure). Nothing was changed."
+  },
+  {
+   "name": "S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)",
+   "ok": true,
+   "detail": "{\"id\":\"10189920-b4f9-4e15-98d0-87947fcbe314\",\"kind\":\"local\",\"key\":\"Artist C - Song Three.wav|529244|1793908062000\",\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"\",\"size\":529244,\"added\":1794104950981,\"plays\":0,\"liked\":false}"
+  },
+  {
+   "name": "S6a: the stored database is untouched",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the list row still shows the old values",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the typed values are still in the form so a retry is possible",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: title/artist/album are exactly [\"Will Fail\",\"F\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Will Fail\",\"artist\":\"F\",\"album\":\"Unknown album\",\"genre\":\"fg\"}"
+  },
+  {
+   "name": "S6a retry: genre is \"fg\"",
+   "ok": true,
+   "detail": "\"fg\""
+  },
+  {
+   "name": "S6a retry: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S6a retry: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"bae0c67c-a87b-4bf3-b8af-e4a297881251\",\"audius:W1\",\"10189920-b4f9-4e15-98d0-87947fcbe314\",\"audius:QW\"],[\"bae0c67c-a87b-4bf3-b8af-e4a297881251\",\"audius:W1\",\"10189920-b4f9-4e15-98d0-87947fcbe314\",\"audius:QW\"],0] vs [[\"bae0c67c-a87b-4bf3-b8af-e4a297881251\",\"audius:W1\",\"10189920-b4f9-4e15-98d0-87947fcbe314\",\"audius:QW\"],[\"bae0c67c-a87b-4bf3-b8af-e4a297881251\",\"audius:W1\",\"10189920-b4f9-4e15-98d0-87947fcbe314\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S6a retry: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the retry succeeded and closed the editor",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (genre and origMeta included)",
+   "ok": true,
+   "detail": "Couldn’t save the changes (injected idb failure). Nothing was changed."
+  },
+  {
+   "name": "S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a backup is running Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a restore is busy Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: once the flags clear the same Save works",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6b: with a restore running the editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6b: with a backup running the editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6d: if the song disappeared while the editor was open Save is refused and writes nothing",
+   "ok": true,
+   "detail": "This song is no longer in your library. Nothing was saved."
+  },
+  {
+   "name": "S6e: a like and a play-count change made while the editor was open are NOT overwritten by the Save (no stale record written)",
+   "ok": true,
+   "detail": "{\"liked\":true,\"plays\":5,\"last\":1234567890123,\"title\":\"Edit With Concurrent Writer\",\"open\":false,\"err\":\"\"}"
+  },
+  {
+   "name": "S6e: if the song's title was changed elsewhere while the editor was open, Save is refused and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: setup: four songs carry origMeta (one of them reverted to its originals), one web song carries genre, the untouched web song has neither",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092925.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S7-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S7 E1 file vs live DB: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 file vs live DB: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E1 file vs live DB: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S7 E1 file vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 file vs live DB: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lastfm\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}}]"
+  },
+  {
+   "name": "S7 E1 file vs live DB: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S7: the independent oracle reads genre and origMeta from the backup file exactly as stored (records, key order)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E1 -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S7 E1 -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E1 -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S7 E1 -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S7 E1 -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S7 E1 -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S7 E1 -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S7 E1 -> clean: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S7 E1 -> clean after RELOAD: still 5 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S7: after the restore the Library list shows the edited titles",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092929.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S7-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-08T02:29:25.018Z, B 2026-11-08T02:29:29.671Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lastfm'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "S7 E2 -> populated: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S7 E2 -> populated: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E2 -> populated: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E2 -> populated: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S7 E2 -> populated: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S7 E2 -> populated: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S7 E2 -> populated: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S7 E2 -> populated: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S7 E2 -> populated: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 E2 -> populated: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S7 E2 -> populated: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S7 E2 -> populated: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S7: the populated browser now has exactly the edited songs, genre and snapshots of the backup (none of its old songs)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E3: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092934.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S7-E3: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E3: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S7: E2 vs the re-export from the populated browser: oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: E2 vs the re-export from the populated browser: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S7: E2 vs the re-export from the populated browser: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S7: E2 vs the re-export from the populated browser: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: E2 vs the re-export from the populated browser: narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-08T02:29:29.671Z, B 2026-11-08T02:29:34.949Z) [wall-clock time of the export] | manifest.excluded.kv (A [], B ['secret:tgt']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "S7: after the restore the editor still knows the originals of an edited song and Revert is available",
+   "ok": true,
+   "detail": "{\"rv\":false,\"txt\":\"Original values (kept from before your first edit)\\nTitle\\nSong Three\\nArtist\\nArtist C\\nAlbum\\nUnknown album\\nGenre\\n(empty)\"}"
+  },
+  {
+   "name": "S7 revert after restore: title/artist/album are exactly [\"Song Three\",\"Artist C\",\"Unknown album\"]",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S7 revert after restore: genre is \"\" and the genre key is absent",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S7 revert after restore: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],0] vs [[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],[\"17551320-f5c1-4f01-9550-c20a34961a72\",\"audius:W1\",\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S7 revert after restore: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 revert after restore: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E4: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092935.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S7-E4: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7-E4: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S7: re-export after the revert: every OTHER song record identical to E2 and audio identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7: in that re-export the reverted song has its original title/artist/album, no genre, and the same origMeta",
+   "ok": true,
+   "detail": "{\"id\":\"d3529cb5-87b5-46dc-8870-4e700de312d3\",\"kind\":\"local\",\"key\":\"Artist C - Song Three.wav|529244|1793908062000\",\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"\",\"size\":529244,\"added\":1794104960386,\"plays\":0,\"liked\":false,\"origMeta\":{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}}"
+  },
+  {
+   "name": "S7 source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 clean: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S7 populated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (6 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 p1 full: the old archive carries none of the new fields and restores unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full: an old restored song can be edited, its snapshot holds the old file's values",
+   "ok": true,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: same song ids in the same order (6)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: 6 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0] vs [[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0]"
+  },
+  {
+   "name": "S8 p1 full edit: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full edit: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 full: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 p1 minimal: the old archive carries none of the new fields and restores unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal: an old restored song can be edited, its snapshot holds the old file's values",
+   "ok": true,
+   "detail": "{\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: same song ids in the same order (1)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: 1 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": " vs "
+  },
+  {
+   "name": "S8 p1 minimal edit: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal edit: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 p1 minimal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261108-092946.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S8-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S8: 10 new-field archives were generated by an independent Python helper (stdlib only)",
+   "ok": true,
+   "detail": "10"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-number: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-number (origMeta is a number): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta must be an object OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-null: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-null (origMeta is null): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta must be an object OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-array: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-array (origMeta is a list): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta must be an object OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-array: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-missing-genre: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-missing-genre (origMeta lacks genre): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta.genre must be text OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-missing-genre: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-title-number: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-title-number (origMeta.title is a number): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta.title must be text OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-title-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-extra-key: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-origmeta-extra-key (origMeta has an unknown key): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: origMeta.rating is not a known field OK"
+  },
+  {
+   "name": "S8 refused: bad-origmeta-extra-key: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-genre-number: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-genre-number (genre is a number): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: genre must be text OK"
+  },
+  {
+   "name": "S8 refused: bad-genre-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-genre-null: the refusal message can be dismissed with Escape",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 refused: bad-genre-null (genre is null): the strict reader refuses it before any preview, naming invalid fields",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: genre must be text OK"
+  },
+  {
+   "name": "S8 refused: bad-genre-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"ca11bbfc-2258-4e30-b0be-775baf351220\",\"audius:W1\",\"5cd074cf-b3ac-4ea6-8a0e-df399bebcfbc\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"ca11bbfc-2258-4e30-b0be-775baf351220\",\"audius:W1\",\"5cd074cf-b3ac-4ea6-8a0e-df399bebcfbc\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 ok-unchanged-resealed: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"ca11bbfc-2258-4e30-b0be-775baf351220\",\"audius:W1\",\"5cd074cf-b3ac-4ea6-8a0e-df399bebcfbc\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"ca11bbfc-2258-4e30-b0be-775baf351220\",\"audius:W1\",\"5cd074cf-b3ac-4ea6-8a0e-df399bebcfbc\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8 accepted: the unknown extra field on the record was kept exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 ok-unknown-extra-field: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8: the target browser was never changed or started playing by the refused archives",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":3,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S8: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S8 target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any song-info save",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 93 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

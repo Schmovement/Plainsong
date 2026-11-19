@@ -1,0 +1,133 @@
+{
+ "complete": true,
+ "only": "10",
+ "total": 25,
+ "failed": 3,
+ "results": [
+  {
+   "name": "S10 reject: while the save is in flight Save, Revert, Cancel and Choose image are all disabled and the state says \"Saving…\"",
+   "ok": true,
+   "detail": "{\"open\":true,\"save\":true,\"revert\":true,\"cancel\":true,\"pick\":true,\"state\":\"Saving…\",\"err\":\"\"}"
+  },
+  {
+   "name": "S10 reject: Escape (twice), a click on Cancel, on Revert and on Choose image, and choosing another file do NOTHING while saving: the dialog stays open, the draft and preview are unchanged, no file chooser opened, nothing committed yet",
+   "ok": true,
+   "detail": "{\"open\":true,\"same\":true,\"st\":\"Saving…\"}"
+  },
+  {
+   "name": "S10 reject: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of native keyboard dispatch or focus handling; the same event must be defaultPrevented and the dialog must still be open)",
+   "ok": false,
+   "detail": "{\"prevented\":false,\"open\":true}"
+  },
+  {
+   "name": "S10 reject: an error message becomes visible in the editor within 8 s of the failed write",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 reject: after the FAILED save the dialog is still open, the error is visible and truthful, all four controls are enabled again, and the chosen picture is still the draft so a retry is possible",
+   "ok": true,
+   "detail": "{\"open\":true,\"err\":\"Couldn’t save the cover (injected storage failure). Nothing was changed.\",\"save\":false,\"revert\":false,\"cancel\":false,\"pick\":false,\"state\":\"New cover (not saved yet)\",\"prev\":\"url(\\\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEB"
+  },
+  {
+   "name": "S10 reject: nothing was committed: raw database and in-memory record unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 reject: after the failed save settled a synthetic body-target Escape is no longer intercepted (SUPPLEMENTARY probe: non-interception after settlement, not proof of physical listener removal)",
+   "ok": true,
+   "detail": "{\"prevented\":false,\"open\":true}"
+  },
+  {
+   "name": "S10 reject: Cancel/Escape work again after the failure and write nothing",
+   "ok": false,
+   "detail": "{\"escClosed\":false}"
+  },
+  {
+   "name": "S10 release: while the save is in flight Save, Revert, Cancel and Choose image are all disabled and the state says \"Saving…\"",
+   "ok": true,
+   "detail": "{\"open\":true,\"save\":true,\"revert\":true,\"cancel\":true,\"pick\":true,\"state\":\"Saving…\",\"err\":\"\"}"
+  },
+  {
+   "name": "S10 release: Escape (twice), a click on Cancel, on Revert and on Choose image, and choosing another file do NOTHING while saving: the dialog stays open, the draft and preview are unchanged, no file chooser opened, nothing committed yet",
+   "ok": true,
+   "detail": "{\"open\":true,\"same\":true,\"st\":\"Saving…\"}"
+  },
+  {
+   "name": "S10 release: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of native keyboard dispatch or focus handling; the same event must be defaultPrevented and the dialog must still be open)",
+   "ok": false,
+   "detail": "{\"prevented\":false,\"open\":true}"
+  },
+  {
+   "name": "S10 release: the dialog stayed open until the write was durable, then closed; the new cover is stored and shown (a committed save is never \"cancelled\")",
+   "ok": true,
+   "detail": "{\"stillOpen\":true}"
+  },
+  {
+   "name": "S10 release: after the committed save settled a synthetic body-target Escape is not intercepted (SUPPLEMENTARY probe: non-interception after settlement, not proof of physical listener removal)",
+   "ok": true,
+   "detail": "{\"prevented\":false,\"open\":false}"
+  },
+  {
+   "name": "S10 release: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"9a3ea5f7-8c22-4302-ad8d-e6733d0f906e\",\"audius:W1\",\"8713a763-ba6e-4135-8c26-c59f87454156\",\"audius:QW\"],[\"9a3ea5f7-8c22-4302-ad8d-e6733d0f906e\",\"audius:W1\",\"8713a763-ba6e-4135-8c26-c59f87454156\",\"audius:QW\"],0] vs [[\"9a3ea5f7-8c22-4302-ad8d-e6733d0f906e\",\"audius:W1\",\"8713a763-ba6e-4135-8c26-c59f87454156\",\"audius:QW\"],[\"9a3ea5f7-8c22-4302-ad8d-e6733d0f906e\",\"audius:W1\",\"8713a763-ba6e-4135-8c26-c59f87454156\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S10 release: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10 release: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S10: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

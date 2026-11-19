@@ -1,0 +1,131 @@
+PASS S3: Cancel closes the editor, writes nothing and changes nothing
+PASS S3: after Cancel the focus is back on this song's ⋯ button
+PASS S3: Escape cancels: zero writes, nothing changed, focus back on the ⋯ button
+PASS S3: Save with no change closes with no write and changes nothing
+PASS S3: typing a change and typing it back is a no-change Save: zero writes, no origMeta created
+PASS S3: Tab order is Title, Artist, Album, Genre, Cancel, Save (disabled Revert is skipped), then wraps
+PASS S3: at 390 px the dialog and its three buttons are inside the screen and the page has no horizontal scroll
+PASS S3: nothing played, nothing changed in playback state throughout
+PASS S3: no page errors
+PASS S5 accepted: HTML image tag with an event handler: stored exactly as sanitised
+PASS S5 accepted: HTML image tag with an event handler: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): stored exactly as sanitised
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: lone surrogates: stored exactly as sanitised
+PASS S5 accepted: lone surrogates: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: emoji, CJK, accents kept exactly: stored exactly as sanitised
+PASS S5 accepted: emoji, CJK, accents kept exactly: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: leading/trailing/inner spaces: stored exactly as sanitised
+PASS S5 accepted: leading/trailing/inner spaces: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: __proto__ and constructor as text: stored exactly as sanitised
+PASS S5 accepted: __proto__ and constructor as text: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: empty artist and album get the app's default names: stored exactly as sanitised
+PASS S5 accepted: empty artist and album get the app's default names: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 200 characters in title (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 200 characters in title (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 80 characters in genre (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 80 characters in genre (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5: the hostile title/artist/album/genre never become markup anywhere (library list, queue panel): no injected img, script or svg, and no script ran
+PASS S5: the album page header shows the hostile album as text
+PASS S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run
+PASS S5 refused: title of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: title of 5000 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: whitespace-only title: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: genre of 81 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: artist of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5: typing or pasting more than 200 characters is stopped by the field (maxlength)
+PASS S5-hostile: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S5-hostile: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S5-hostile: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S5 export vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S5 export vs live DB: playlists identical (ids order kept)
+PASS S5 export vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S5 export vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S5 export vs live DB: this browser's own secret: keys are untouched (1)
+PASS S5 export vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S5: the hostile record in the backup file holds the exact stored strings
+PASS S5: no page errors
+PASS S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed
+PASS S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)
+PASS S6a: the stored database is untouched
+PASS S6a: the list row still shows the old values
+PASS S6a: the typed values are still in the form so a retry is possible
+PASS S6a retry: title/artist/album are exactly ["Will Fail","F","Unknown album"]
+PASS S6a retry: genre is "fg"
+PASS S6a retry: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S6a retry: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S6a retry: raw DB: same song ids in the same order (5)
+PASS S6a retry: raw DB: playlists identical (ids, order, references)
+PASS S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S6a retry: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S6a retry: raw DB: history identical
+PASS S6a retry: localStorage identical
+PASS S6a: the retry succeeded and closed the editor
+PASS S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (genre and origMeta included)
+PASS S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved
+PASS S6b: while a backup is running Save is refused with nothing saved
+PASS S6b: while a restore is busy Save is refused with nothing saved
+PASS S6b: once the flags clear the same Save works
+PASS S6b: with a restore running the editor does not even open (a message explains)
+PASS S6b: with a backup running the editor does not even open (a message explains)
+PASS S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written
+PASS S6d: if the song disappeared while the editor was open Save is refused and writes nothing
+FAIL S6e: a like and a play-count change made while the editor was open are NOT overwritten by the Save (no stale record written)  :: {"liked":true,"plays":5,"last":1234567890123,"title":"Song Two"}
+page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.row[data-tid="45e4f66a-ecfc-4f6f-acbd-35142f9087d9"] [data-act="more"]')[22m
+[2m    - locator resolved to <button data-act="more" class="icon-btn" aria-label="More actions">…</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <dialog open="" id="dlg">…</dialog> intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at openEditor (/home/claude/p3a/tests/phase3a.test.js:300:14)
+    at async /home/claude/p3a/tests/phase3a.test.js:603:37 {
+  log: [
+    `  - waiting for locator('.row[data-tid="45e4f66a-ecfc-4f6f-acbd-35142f9087d9"] [data-act="more"]')`,
+    '    - locator resolved to <button data-act="more" class="icon-btn" aria-label="More actions">…</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is visible, enabled and stable',
+    '      - scrolling into view if needed',
+    '      - done scrolling',
+    '      - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    58 × waiting for element to be visible, enabled and stable',
+    '       - element is visible, enabled and stable',
+    '       - scrolling into view if needed',
+    '       - done scrolling',
+    '       - <dialog open="" id="dlg">…</dialog> intercepts pointer events',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

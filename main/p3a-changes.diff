@@ -1,0 +1,214 @@
+--- a/index.html
++++ b/index.html
+@@ -971,7 +971,7 @@
+     const emptyLib = msg => `<div class="empty">${esc(msg || 'Your library is empty.')}<div class="btn-row"><button class="btn primary" data-act="import">Import music</button><button class="btn" data-act="importDir">Import folder</button></div></div>`;
+     const fmtLong = s => { if (s < 60) return `${Math.round(s)} sec`; const h = Math.floor(s / 3600), m = Math.round(s % 3600 / 60); return h ? `${h} h ${m} min` : `${m} min`; };
+     const tokens = q => q.toLowerCase().split(/\s+/).filter(Boolean);
+-    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album}`.toLowerCase(); return tk.every(x => s.includes(x)); };
++    const matches = (t, tk) => { const s = `${t.title} ${t.artist} ${t.album} ${t.genre || ''}`.toLowerCase(); return tk.every(x => s.includes(x)); };
+     const uniq = a => [...new Set(a)];
+     const byNo = (a, b) => (a.track || 999) - (b.track || 999) || a.title.localeCompare(b.title);
+     const SORTS = { added: (a, b) => b.added - a.added, title: (a, b) => a.title.localeCompare(b.title), artist: (a, b) => a.artist.localeCompare(b.artist) || a.album.localeCompare(b.album) || byNo(a, b), album: (a, b) => a.album.localeCompare(b.album) || byNo(a, b), duration: (a, b) => b.duration - a.duration, plays: (a, b) => (b.plays || 0) - (a.plays || 0) };
+@@ -1038,15 +1038,15 @@
+       archSearch(ARCH_PICKS[pick][1], 24).then(r => { if (tok !== S.vtok) return; const n = $('#exArc'); if (n) n.innerHTML = r ? (r.length ? archCards(r, true) : '<div class="empty">No results.</div>') : offlineMsg('the Internet Archive'); });
+     };
+ 
++    const searchLocal = (q, all) => { const local = [...S.tracks.values()].filter(t => matches(t, tokens(q))); return local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'; };
+     VIEWS.search = (el, v) => {
+       const q = v.q || '', src = v.src || 'all', tok = S.vtok, tk = tokens(q);
+       $('#q').value = q;
+-      const local = [...S.tracks.values()].filter(t => matches(t, tk));
+       const chips = [['all', 'All'], ['library', 'Library'], ['audius', 'Audius'], ['archive', 'Internet Archive']];
+       const all = src === 'all';
+       el.innerHTML = `<div class="page-h"><h1>Results for “${esc(q)}”</h1></div>
+   <div class="chips">${chips.map(([k, l]) => `<button class="chip${k === src ? ' on' : ''}" data-act="searchSrc" data-v="${k}">${l}</button>`).join('')}</div>
+-  ${(all || src === 'library') ? `<section class="blk"><div class="shelf-h"><h2>Your library</h2></div>${local.length ? trackList(local.slice(0, all ? 8 : 300), { play: !all }) : '<div class="empty">Nothing in your library matches.</div>'}</section>` : ''}
++  ${(all || src === 'library') ? `<section class="blk" id="sLib"><div class="shelf-h"><h2>Your library</h2></div><div id="sLibBody">${searchLocal(q, all)}</div></section>` : ''}
+   ${(all || src === 'audius') ? `<section class="blk"><div class="shelf-h"><h2>Audius</h2><span class="mono dim">full-length streams</span></div><div id="sAud">${skelRows(5)}</div></section>` : ''}
+   ${(all || src === 'archive') ? `<section class="blk"><div class="shelf-h"><h2>Internet Archive</h2><span class="mono dim">free albums and recordings</span></div><div id="sArc">${skelCards()}</div></section>` : ''}`;
+       const clean = q.replace(/[^\p{L}\p{N}\s'-]/gu, ' ').trim() || q;
+@@ -1148,6 +1148,7 @@
+       if (t.kind === 'local') { items.push({ label: 'Go to album', fn: () => go('album', { key: albumKey(t) }) }, { label: 'Go to artist', fn: () => go('artist', { key: artistKey(t) }) }); }
+       if (t.link) items.push({ label: 'Open source page', fn: () => window.open(t.link, '_blank', 'noopener') });
+       if (ctx.startsWith('pl:')) items.push({ label: 'Remove from this playlist', icon: 'x', fn: () => plRemove(ctx.slice(3), tid) });
++      if (S.tracks.has(tid)) items.push({ label: 'Edit info…', icon: 'edit', fn: () => openMetaEditor(tid) });
+       if (S.tracks.has(tid)) items.push({ label: 'Remove from library', icon: 'trash', danger: true, fn: () => removeTrack(tid) });
+       openMenu(items, x, y);
+     }
+@@ -1204,6 +1205,97 @@
+       const pl = S.playlists.find(p => p.id === pid); if (!pl) return;
+       pl.ids = pl.ids.filter(x => x !== tid); dbPut('playlists', pl); refresh();
+     }
++
++    /* ---- Phase 3A: song info editor (title, artist, album, genre) ----
++       The effective values stay in the track record's own title/artist/album/genre fields, so every list, search, sort, queue, backup and older restore keeps working.
++       The FIRST save also stores a one-time snapshot of the values as they were before it in t.origMeta = {title, artist, album, genre} (all text); it is never
++       rewritten afterwards, and "Revert to originals" copies it back. Nothing here touches the audio Blob, the file's own tags, id, url, queue, playlists, likes,
++       plays, timestamps or duration. Saved web songs can be edited too; songs that are only shown (not in the library) cannot. Contract: BACKUP_FORMAT.md. */
++    const META = { fields: ['title', 'artist', 'album', 'genre'], label: { title: 'Title', artist: 'Artist', album: 'Album', genre: 'Genre' }, max: { title: 200, artist: 200, album: 200, genre: 80 }, dflt: { artist: 'Unknown artist', album: 'Unknown album' } };
++    const metaOf = t => ({ title: t.title, artist: t.artist, album: t.album, genre: typeof t.genre === 'string' ? t.genre : '' });
++    const metaEdited = t => !!(t.origMeta && META.fields.some(f => metaOf(t)[f] !== t.origMeta[f]));
++    const metaWell = s => s.replace(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/g, '\uFFFD');
++    // control and invisible direction characters become spaces, runs of spaces collapse, ends are trimmed; too long is REFUSED, never silently cut
++    const metaClean = v => metaWell(String(v == null ? '' : v)).replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, ' ').replace(/\s+/g, ' ').trim();
++    async function saveMeta(tid, epoch, base, vals) {
++      const t = S.tracks.get(tid);
++      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
++      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
++      const cur = metaOf(t);
++      if (epoch !== S.epoch || META.fields.some(f => cur[f] !== base[f])) return { ok: false, msg: 'This song changed while the editor was open. Close it and open it again. Nothing was saved.' };
++      const next = {};
++      for (const f of META.fields) {
++        next[f] = metaClean(vals[f]);
++        if (next[f].length > META.max[f]) return { ok: false, field: f, msg: `${META.label[f]} is too long (at most ${META.max[f]} characters). Nothing was saved.` };
++      }
++      if (!next.title) return { ok: false, field: 'title', msg: 'Title can’t be empty.' };
++      if (!next.artist) next.artist = META.dflt.artist; if (!next.album) next.album = META.dflt.album;
++      const changed = META.fields.filter(f => next[f] !== cur[f]);
++      if (!changed.length) return { ok: true, none: true };
++      const prev = { cur, hadGenre: Object.prototype.hasOwnProperty.call(t, 'genre'), hadOrig: Object.prototype.hasOwnProperty.call(t, 'origMeta'), orig: t.origMeta };
++      const before = { ...cur };
++      // memory first, then the database with the SAME object every other writer (likes, plays) uses; any failure restores the exact previous state
++      if (!prev.hadOrig) t.origMeta = { ...cur };
++      t.title = next.title; t.artist = next.artist; t.album = next.album; if (next.genre) t.genre = next.genre; else delete t.genre;
++      try { if (DB.ok) await DB.put('tracks', t); }
++      catch (e) {
++        t.title = prev.cur.title; t.artist = prev.cur.artist; t.album = prev.cur.album;
++        if (prev.hadGenre) t.genre = prev.cur.genre; else delete t.genre;
++        if (prev.hadOrig) t.origMeta = prev.orig; else delete t.origMeta;
++        return { ok: false, msg: `Couldn’t save the changes (${(e && e.message) || 'storage error'}). Nothing was changed.` };
++      }
++      return { ok: true, changed, before, memoryOnly: !DB.ok };
++    }
++    function metaRefresh(t, before) {
++      const v = S.view, id = t.id;
++      // an album or artist page whose group the edit just emptied follows the song to its new group instead of saying it is gone
++      if (v.name === 'album' && albumKey(t) !== v.key && before.album !== t.album && ![...S.tracks.values()].some(x => albumKey(x) === v.key)) v.key = albumKey(t);
++      if (v.name === 'artist' && artistKey(t) !== v.key && before.artist !== t.artist && ![...S.tracks.values()].some(x => artistKey(x) === v.key)) v.key = artistKey(t);
++      if (['library', 'album', 'artist', 'playlist'].includes(v.name)) render(true);   // local-only views: re-read the records (no network request)
++      else if (v.name === 'search' && $('#sLibBody')) { $('#sLibBody').innerHTML = searchLocal(v.q || '', (v.src || 'all') === 'all'); }
++      const sel = (window.CSS && CSS.escape) ? CSS.escape(id) : id.replace(/["\\]/g, '\\$&');
++      $$(`.row[data-tid="${sel}"]`).forEach(r => {
++        const a = $('.r-t', r); if (a) a.textContent = t.title;
++        const ar = $('.r-a', r); if (ar) { if (ar.firstChild && ar.firstChild.nodeType === 3) ar.firstChild.nodeValue = t.artist; else ar.insertBefore(document.createTextNode(t.artist), ar.firstChild); }
++        const al = $('.r-alb', r); if (al) al.textContent = t.album;
++      });
++      $$(`.card[data-tid="${sel}"]`).forEach(c => { const a = $('.card-t', c); if (a) a.textContent = t.title; });
++      if (S.cur === id) updateNowPlaying(t); else renderNP();   // text, tab title, media session and queue panel only: the audio element is never touched
++    }
++    function openMetaEditor(tid) {
++      const t0 = S.tracks.get(tid); if (!t0) return;
++      if (S.restoreBusy || S.restoring || S.backupBusy) { toast('A backup or restore is running. Try editing again when it finishes.', 3200); return; }
++      const base = metaOf(t0), epoch = S.epoch, orig = t0.origMeta ? { ...t0.origMeta } : null;
++      const d = dialog(`<h3>Edit song info</h3><form id="metaForm" class="meta-form" autocomplete="off" novalidate>${META.fields.map(f => `<label class="meta-l" for="meta_${f}">${META.label[f]}</label><input id="meta_${f}" data-f="${f}" type="text" maxlength="${META.max[f]}" spellcheck="false" autocomplete="off">`).join('')}
++        <p class="meta-note">This only changes how the song is shown in Plainsong. The audio file and the tags inside it are never changed.</p>
++        <div id="metaOrig" class="meta-orig"></div><div id="metaErr" class="meta-err" role="alert" aria-live="assertive"></div>
++        <div class="btn-row meta-btns"><button type="button" class="btn" id="metaRevert">Revert to originals</button><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="submit" class="btn primary" id="metaSave">Save</button></div></form>`);
++      d.onclose = null;   // the shared dialog may still carry another dialog's handler
++      d.addEventListener('close', () => {   // keyboard users land back on this song's ⋯ button (Save, Cancel and Esc alike); the list may have been redrawn, so look it up now
++        const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return;   // focus is still on a hidden dialog button (or nowhere): take it back
++        const b = $(`.row[data-tid="${(window.CSS && CSS.escape) ? CSS.escape(tid) : tid}"] [data-act="more"]`); if (b) b.focus();
++      }, { once: true });
++      const inp = f => $(`#meta_${f}`, d), err = $('#metaErr', d), draft = () => Object.fromEntries(META.fields.map(f => [f, inp(f).value]));
++      META.fields.forEach(f => { inp(f).value = base[f]; });
++      if (orig) $('#metaOrig', d).innerHTML = `<div class="mono dim">Original values (kept from before your first edit)</div><dl class="meta-dl">${META.fields.map(f => `<dt>${META.label[f]}</dt><dd>${orig[f] ? esc(orig[f]) : '<span class="dim">(empty)</span>'}</dd>`).join('')}</dl>`;
++      const rv = $('#metaRevert', d), syncRv = () => { rv.disabled = !orig || META.fields.every(f => inp(f).value === orig[f]); };
++      syncRv(); META.fields.forEach(f => inp(f).addEventListener('input', syncRv));
++      rv.onclick = () => { META.fields.forEach(f => { inp(f).value = orig[f]; }); syncRv(); err.textContent = ''; $('#metaSave', d).focus(); };   // fills the form; Save commits, Cancel discards
++      $('#dlgNo', d).onclick = () => d.close('no');
++      let busy = false;
++      $('#metaForm', d).onsubmit = async e => {
++        e.preventDefault(); if (busy) return; busy = true; $('#metaSave', d).disabled = true; err.textContent = '';
++        let r; try { r = await saveMeta(tid, epoch, base, draft()); } catch (x) { r = { ok: false, msg: 'Couldn’t save the changes. Nothing was changed.' }; }
++        busy = false; $('#metaSave', d).disabled = false;
++        if (!r.ok) { err.textContent = r.msg; const f = r.field && inp(r.field); (f || $('#metaSave', d)).focus(); return; }
++        d.close('ok');
++        const t = S.tracks.get(tid);
++        if (r.none) { toast('No changes'); return; }
++        if (t) metaRefresh(t, r.before);
++        toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Song info saved', 3000);
++      };
++      inp('title').focus(); inp('title').select();
++    }
+     async function removeTrack(id) {
+       const t = S.tracks.get(id); if (!t) return;
+       if (!await confirmBox(`Remove “${t.title}” from your library?`, 'Remove')) return;
+@@ -1560,6 +1652,11 @@
+       if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
+       if (t.link !== undefined && !(typeof t.link === 'string' && (t.link === '' || isHttpUrl(t.link)))) add('link must be empty or an http(s) address');
+       if (t.kind === 'web' && !(typeof t.url === 'string' && isHttpUrl(t.url))) add('a web song needs an http(s) url');
++      if (t.genre !== undefined && typeof t.genre !== 'string') add('genre must be text');
++      if (t.origMeta !== undefined) {   // Phase 3A snapshot of the values before the first edit: exactly these four text fields
++        if (!isObj(t.origMeta)) add('origMeta must be an object');
++        else { for (const k of ['title', 'artist', 'album', 'genre']) if (typeof t.origMeta[k] !== 'string') add(`origMeta.${k} must be text`); for (const k of Object.keys(t.origMeta)) if (!['title', 'artist', 'album', 'genre'].includes(k)) add(`origMeta.${k} is not a known field`); }
++      }
+     }
+     function rsSession(s, iss, L) {
+       const add = m => { if (iss.length < 20) iss.push(`kv/session: ${m}`); };
+--- a/style.css
++++ b/style.css
+@@ -1762,3 +1762,64 @@
+   }
+ 
+ }
++
++/* Phase 3A: song info editor */
++.meta-form {
++  display: grid;
++  gap: 4px
++}
++
++.meta-l {
++  font: 500 12px var(--f-mono);
++  color: var(--dim);
++  margin-top: 8px
++}
++
++.meta-note {
++  margin: 12px 0 0;
++  font-size: 13px;
++  color: var(--dim)
++}
++
++.meta-orig {
++  margin-top: 10px;
++  font-size: 13px
++}
++
++.meta-dl {
++  display: grid;
++  grid-template-columns: auto 1fr;
++  gap: 2px 12px;
++  margin: 4px 0 0
++}
++
++.meta-dl dt {
++  color: var(--dim)
++}
++
++.meta-dl dd {
++  margin: 0;
++  overflow-wrap: anywhere
++}
++
++.meta-err {
++  min-height: 1.2em;
++  margin-top: 8px;
++  font-size: 13px;
++  color: var(--led-r)
++}
++
++.meta-btns {
++  align-items: center;
++  flex-wrap: wrap
++}
++
++.meta-gap {
++  flex: 1
++}
++
++.meta-btns .btn[disabled] {
++  opacity: .5;
++  cursor: default
++}
++

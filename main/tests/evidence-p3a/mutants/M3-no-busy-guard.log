@@ -1,0 +1,59 @@
+PASS S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed
+PASS S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)
+PASS S6a: the stored database is untouched
+PASS S6a: the list row still shows the old values
+PASS S6a: the typed values are still in the form so a retry is possible
+PASS S6a retry: title/artist/album are exactly ["Will Fail","F","Unknown album"]
+PASS S6a retry: genre is "fg"
+PASS S6a retry: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S6a retry: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S6a retry: raw DB: same song ids in the same order (5)
+PASS S6a retry: raw DB: playlists identical (ids, order, references)
+PASS S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S6a retry: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S6a retry: raw DB: history identical
+PASS S6a retry: localStorage identical
+PASS S6a: the retry succeeded and closed the editor
+PASS S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (genre and origMeta included)
+FAIL S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved  :: Couldn’t save the changes (Writes are paused while a backup file is being restored). Nothing was changed.
+FAIL S6b: while a backup is running Save is refused with nothing saved
+page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#metaSave')[22m
+[2m    - locator resolved to <button type="submit" id="metaSave" class="btn primary">Save</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is not visible[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is not visible[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+
+    at saveEd (/home/claude/p3a/tests/phase3a.test.js:309:76)
+    at /home/claude/p3a/tests/phase3a.test.js:584:98 {
+  log: [
+    "  - waiting for locator('#metaSave')",
+    '    - locator resolved to <button type="submit" id="metaSave" class="btn primary">Save</button>',
+    '  - attempting click action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying click action',
+    '      - waiting 100ms',
+    '    58 × waiting for element to be visible, enabled and stable',
+    '       - element is not visible',
+    '     - retrying click action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}

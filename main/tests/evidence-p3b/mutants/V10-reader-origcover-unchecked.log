@@ -1,0 +1,180 @@
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: playlists identical (ids order kept)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 full (written by the p1 exporter, no origCover) -> clean: UI shows the restored library (6 songs) and the policy theme
+PASS S8 p1 full: the old archive carries no origCover and restores unchanged
+PASS S8 p1 full: an old restored song can get a custom cover; origCover holds the old file's cover string exactly
+PASS S8 p1 full edit: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S8 p1 full edit: raw DB: same song ids in the same order (6)
+PASS S8 p1 full edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 full edit: raw DB: 6 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 full edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 full edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 full edit: raw DB: history identical
+PASS S8 p1 full edit: localStorage identical
+PASS S8 p1 full: no page errors
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: playlists identical (ids order kept)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: localStorage is exactly {} (theme policy)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 minimal (written by the p1 exporter, no origCover) -> clean: UI shows the restored library (1 songs) and the policy theme
+PASS S8 p1 minimal: the old archive carries no origCover and restores unchanged
+PASS S8 p1 minimal: an old restored song can get a custom cover; origCover holds the old file's cover string exactly
+PASS S8 p1 minimal edit: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S8 p1 minimal edit: raw DB: same song ids in the same order (1)
+PASS S8 p1 minimal edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 minimal edit: raw DB: 1 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 minimal edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 minimal edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 minimal edit: raw DB: history identical
+PASS S8 p1 minimal edit: localStorage identical
+PASS S8 p1 minimal: no page errors
+PASS S8-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S8-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S8-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S8: 19 origCover archives were generated by an independent Python helper (stdlib only)
+PASS S8 refused: bad-orig-number: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-number (origCover is a number): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-null: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-null (origCover is null): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-array: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-array (origCover is a list): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-array: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-object: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-object (origCover is an object): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-object: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-bool: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-bool (origCover is true): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-bool: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-svg-data: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-svg-data (origCover is an SVG data URL (script inside)): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-svg-data: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-javascript: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-javascript (origCover is a javascript: address): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-javascript: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-ftp: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-ftp (origCover is an ftp: address): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-ftp: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-base64-chars: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-base64-chars (origCover is a png data URL with characters outside base64): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-base64-chars: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-orig-html: the refusal message can be dismissed with Escape
+FAIL S8 refused: bad-orig-html (origCover is html text): the strict reader refuses it before any preview, naming invalid fields  :: Library restored  5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)  OK
+FAIL S8 refused: bad-orig-html: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-cover-svg-data: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-cover-svg-data (cover itself is an SVG data URL (the existing rule must still refuse it)): the strict reader refuses it before any preview, naming invalid fields
+FAIL S8 refused: bad-cover-svg-data: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper yields an accepted archive)) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 ok-unchanged-resealed: no page errors
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-empty (origCover is '' (the song had no cover before the first edit)) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 ok-orig-empty: no page errors
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-png-data (origCover is an embedded png data URL) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 ok-orig-png-data: no page errors
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-http (origCover is an http(s) address) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: an http origCover is carried as the exact string
+PASS S8 ok-orig-http: no page errors
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-gif-data (legacy origCover is an embedded GIF data URL) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: ok-orig-gif-data: the legacy GIF origCover is carried as the exact string
+PASS S8 ok-orig-gif-data: no page errors
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-webp-data (legacy origCover is an embedded WebP data URL) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: ok-orig-webp-data: the legacy WebP origCover is carried as the exact string
+PASS S8 ok-orig-webp-data: no page errors
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-orig-over-700k (legacy origCover is a real PNG data URL of more than 700,000 characters (the cap applies only to NEW covers)) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: ok-orig-over-700k: the oversize origCover (> 700,000 chars) is carried as the exact string (no new cap on old snapshots)
+PASS S8 ok-orig-over-700k: no page errors
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field next to origCover is kept as for any record) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: the unknown extra field on the record was kept exactly
+PASS S8 ok-unknown-extra-field: no page errors
+FAIL S8: the target browser was never changed or started playing by the refused archives  :: {"paused":true,"allPaused":true,"plays":0,"songs":5,"queue":["2112d569-31ee-4349-95a0-6088152ddee6","audius:W1","5b077f3c-9814-469c-ad1f-2b25999ad30a","audius:QW"],"view":"library","theme":"dark","lsTheme":"dark","restoring":false,"busy":false,"lock":false}
+PASS S8: no page errors
+PASS S8 target: no page errors
+PASS network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries
+PASS network: all 43 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3B: 156 / 178 pass

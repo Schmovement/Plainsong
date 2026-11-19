@@ -1,0 +1,166 @@
+{
+ "total": 32,
+ "failed": 6,
+ "results": [
+  {
+   "name": "S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed",
+   "ok": true,
+   "detail": "Couldn’t save the changes (injected storage failure). Nothing was changed."
+  },
+  {
+   "name": "S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)",
+   "ok": false,
+   "detail": "{\"id\":\"5ec28eba-cd88-46d4-9ddd-703989359e01\",\"kind\":\"local\",\"key\":\"Artist C - Song Three.wav|529244|1793908062000\",\"title\":\"Will Fail\",\"artist\":\"F\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,\"cover\":\"\",\"lyrics\":\"\",\"size\":529244,\"added\":1793961449114,\"plays\":0,\"liked\":false,\"origMeta\":{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"},\"genre\":\"fg\"}"
+  },
+  {
+   "name": "S6a: the stored database is untouched",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the list row still shows the old values",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the typed values are still in the form so a retry is possible",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: title/artist/album are exactly [\"Will Fail\",\"F\",\"Unknown album\"]",
+   "ok": false,
+   "detail": "{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"}"
+  },
+  {
+   "name": "S6a retry: genre is \"fg\"",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: origMeta is the pre-edit snapshot {\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"} (exact value and key order)",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"ef1a9567-1950-4e0c-af01-eaca719f13ca\",\"audius:W1\",\"5ec28eba-cd88-46d4-9ddd-703989359e01\",\"audius:QW\"],[\"ef1a9567-1950-4e0c-af01-eaca719f13ca\",\"audius:W1\",\"5ec28eba-cd88-46d4-9ddd-703989359e01\",\"audius:QW\"],0] vs [[\"ef1a9567-1950-4e0c-af01-eaca719f13ca\",\"audius:W1\",\"5ec28eba-cd88-46d4-9ddd-703989359e01\",\"audius:QW\"],[\"ef1a9567-1950-4e0c-af01-eaca719f13ca\",\"audius:W1\",\"5ec28eba-cd88-46d4-9ddd-703989359e01\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S6a retry: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a retry: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6a: the retry succeeded and closed the editor",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (genre and origMeta included)",
+   "ok": false,
+   "detail": "Couldn’t save the changes (injected idb failure). Nothing was changed."
+  },
+  {
+   "name": "S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a backup is running Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: while a restore is busy Save is refused with nothing saved",
+   "ok": true,
+   "detail": "A backup or restore is running. Try again when it finishes. Nothing was saved."
+  },
+  {
+   "name": "S6b: once the flags clear the same Save works",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6b: with a restore running the editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6b: with a backup running the editor does not even open (a message explains)",
+   "ok": true,
+   "detail": "{\"open\":false,\"toast\":\"A backup or restore is running. Try editing again when it finishes.\"}"
+  },
+  {
+   "name": "S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6d: if the song disappeared while the editor was open Save is refused and writes nothing",
+   "ok": true,
+   "detail": "This song is no longer in your library. Nothing was saved."
+  },
+  {
+   "name": "S6e: a like and a play-count change made while the editor was open are NOT overwritten by the Save (no stale record written)",
+   "ok": true,
+   "detail": "{\"liked\":true,\"plays\":5,\"last\":1234567890123,\"title\":\"Edit With Concurrent Writer\",\"open\":false,\"err\":\"\"}"
+  },
+  {
+   "name": "S6e: if the song's title was changed elsewhere while the editor was open, Save is refused and nothing is written",
+   "ok": true,
+   "detail": "This song changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "S6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any song-info save",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

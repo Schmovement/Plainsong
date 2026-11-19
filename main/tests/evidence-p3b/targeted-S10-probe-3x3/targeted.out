@@ -1,0 +1,19 @@
+control S10: OK - unmutated app passed all 25 checks; every needle of the scenario matches a passing check
+-- E2b run 1
+E2b-escape-guard-on-dialog-only: scenario S10 exit=1 total=25 failed=3 VERDICT=DETECTED (3 check(s) failed, including the intended one) | the Escape guard listens on the dialog element only (the earlier design: it misses the key once focus has left the dialog)
+      failed: S10 reject: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of n…
+      failed: S10 reject: Cancel/Escape work again after the failure and write nothing
+      failed: S10 release: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of …
+control S10: OK - unmutated app passed all 25 checks; every needle of the scenario matches a passing check
+-- E2b run 2
+E2b-escape-guard-on-dialog-only: scenario S10 exit=1 total=25 failed=3 VERDICT=DETECTED (3 check(s) failed, including the intended one) | the Escape guard listens on the dialog element only (the earlier design: it misses the key once focus has left the dialog)
+      failed: S10 reject: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of n…
+      failed: S10 reject: Cancel/Escape work again after the failure and write nothing
+      failed: S10 release: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of …
+control S10: OK - unmutated app passed all 25 checks; every needle of the scenario matches a passing check
+-- E2b run 3
+E2b-escape-guard-on-dialog-only: scenario S10 exit=1 total=25 failed=3 VERDICT=DETECTED (3 check(s) failed, including the intended one) | the Escape guard listens on the dialog element only (the earlier design: it misses the key once focus has left the dialog)
+      failed: S10 reject: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of n…
+      failed: S10 reject: Cancel/Escape work again after the failure and write nothing
+      failed: S10 release: synthetic body-target Escape is intercepted by the pending-save window guard (SUPPLEMENTARY probe: a dispatched KeyboardEvent on document.body, not proof of …
+DONE

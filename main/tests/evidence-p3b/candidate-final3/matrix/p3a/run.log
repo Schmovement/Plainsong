@@ -1,0 +1,356 @@
+PASS S0: before any edit no song has genre or origMeta (the new fields are additive and appear only on edit)
+PASS S0: seeded library has the shape the tests need (3 local, 2 saved web, playlist, saved queue)
+PASS S0: the ⋯ menu of a library song offers "Edit info…"
+PASS S0: a song that is only SHOWN (not in the library) has no "Edit info…" entry
+PASS S0: nothing playing, play() never called
+PASS S0: no page errors
+PASS S1: the editor opens on the song with its current values, title focused, bounds 200/200/200/80
+PASS S1: a never-edited song: "Revert to originals" is disabled and no original-values block is shown
+PASS S1: Save closes the editor without an error
+PASS S1: exactly ONE write to the tracks store, a put of this song
+PASS S1 saved record: title/artist/album are exactly ["Renamed Three","New Artist","New Album"]
+PASS S1 saved record: genre is "Test Genre"
+PASS S1 saved record: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S1: raw DB: same song ids in the same order (5)
+PASS S1: raw DB: playlists identical (ids, order, references)
+PASS S1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S1: raw DB: history identical
+PASS S1: localStorage identical
+PASS S1: in-memory record equals the stored record
+PASS S1: playback state untouched: still paused, same audio source, same time, no play()/loadstart, same current song, queue, playlists and library ids
+PASS S1: the visible list row shows the new title, artist and album
+PASS S1: keyboard focus returned to this song's ⋯ button after Save
+PASS S1: library filter finds the song by its new title, by its new album, and by its GENRE
+PASS S1: library filter no longer finds the song by its old title
+PASS S1: the queue panel shows the new title and not the old one
+PASS S1: global search finds the song under its new title
+PASS S1: saving from the search view makes NO network request (the Audius/Archive lists are not refetched)
+PASS S1: the search block shows the new title
+PASS S1: after an edit that no longer matches the query, the song leaves the search results
+PASS S1: snapshot kept the FIRST originals through repeated edits
+PASS S1: after RELOAD every record is byte-for-byte what was stored before (edited fields, origMeta, everything)
+PASS S1: after RELOAD the list shows the edited values
+PASS S1: no autoplay after reload, play() never called
+PASS S1: no page errors
+PASS S2: the clicked song really plays (not paused, time advancing, it is the current song)
+PASS S2: opening the editor does not pause the music
+PASS S2: after editing the CURRENT song it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue
+PASS S2: the playback position CONTINUED (did not restart or jump back)
+PASS S2: now-playing bar, panel and tab title show the new title/artist
+PASS S2: the media session (lock-screen/keyboard metadata) shows the new title, artist, album
+PASS S2: the queue panel shows the new title on the playing row
+PASS S2: after editing a NON-current song the music is still playing, same source, no new play()/loadstart, same current song and queue
+PASS S2: the bar still shows the current (edited) song, not the other one
+PASS S2 current song record: title/artist/album are exactly ["Now Playing Edited","Live Artist","Live Album"]
+PASS S2 current song record: genre is "Live"
+PASS S2 current song record: origMeta is the pre-edit snapshot {"title":"Song One","artist":"Artist A","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2 other song record: title/artist/album are exactly ["Queued Edited","Artist C","Unknown album"]
+PASS S2 other song record: genre is "Q"
+PASS S2 other song record: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S2: raw DB: same song ids in the same order (5)
+PASS S2: raw DB: playlists identical (ids, order, references)
+PASS S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S2: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S2: localStorage identical
+PASS S2: likes, plays, added time, duration, size, key of both edited songs unchanged
+PASS S2: no page errors
+PASS S3: Cancel closes the editor, writes nothing and changes nothing
+PASS S3: after Cancel the focus is back on this song's ⋯ button
+PASS S3: Escape cancels: zero writes, nothing changed, focus back on the ⋯ button
+PASS S3: Save with no change closes with no write and changes nothing
+PASS S3: typing a change and typing it back is a no-change Save: zero writes, no origMeta created
+PASS S3: Tab order is Title, Artist, Album, Genre, Cancel, Save (disabled Revert is skipped), then wraps
+PASS S3: at 390 px the dialog and its three buttons are inside the screen and the page has no horizontal scroll
+PASS S3: nothing played, nothing changed in playback state throughout
+PASS S3: no page errors
+PASS S4: Enter in a field saves
+PASS S4 edit 1: title/artist/album are exactly ["T1","Artist B","Unknown album"]
+PASS S4 edit 1: genre is "G1"
+PASS S4 edit 1: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4 edit 1: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 edit 1: raw DB: same song ids in the same order (5)
+PASS S4 edit 1: raw DB: playlists identical (ids, order, references)
+PASS S4 edit 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 edit 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 edit 1: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 edit 1: raw DB: history identical
+PASS S4 edit 1: localStorage identical
+PASS S4: reopening an edited song shows the original values and enables Revert
+PASS S4 edit 2 (genre cleared): title/artist/album are exactly ["T2","A2","B2"]
+PASS S4 edit 2 (genre cleared): genre is "" and the genre key is absent
+PASS S4 edit 2 (genre cleared): origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: the snapshot is stable: byte-identical after the second edit
+PASS S4: "Revert to originals" fills the form with the originals, disables itself, and moves focus to Save
+PASS S4: until Save, the stored song is still the edited one (Revert only fills the form)
+PASS S4: Revert then Cancel changes nothing
+PASS S4 reverted: title/artist/album are exactly ["Song Two","Artist B","Unknown album"]
+PASS S4 reverted: genre is "" and the genre key is absent
+PASS S4 reverted: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: after revert the record equals the never-edited record plus origMeta (no other difference at all)
+PASS S4 revert: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S4 revert: raw DB: same song ids in the same order (5)
+PASS S4 revert: raw DB: playlists identical (ids, order, references)
+PASS S4 revert: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S4 revert: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S4 revert: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S4 revert: raw DB: history identical
+PASS S4 revert: localStorage identical
+PASS S4: right after a revert the form equals the originals, so Revert is disabled
+PASS S4 edit after revert: title/artist/album are exactly ["T3","Artist B","Unknown album"]
+PASS S4 edit after revert: genre is "" and the genre key is absent
+PASS S4 edit after revert: origMeta is the pre-edit snapshot {"title":"Song Two","artist":"Artist B","album":"Unknown album","genre":""} (exact value and key order)
+PASS S4: origMeta still the very first snapshot (byte-identical) after revert and another edit
+PASS S4: a different, never-edited song has Revert disabled
+PASS S4: after RELOAD the final state and snapshot persist exactly
+PASS S4: no page errors
+PASS S5 accepted: HTML image tag with an event handler: stored exactly as sanitised
+PASS S5 accepted: HTML image tag with an event handler: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): stored exactly as sanitised
+PASS S5 accepted: control characters, U+2028 line separator, tab, bidi override, zero-width (a browser field strips raw newlines itself): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: lone surrogates: stored exactly as sanitised
+PASS S5 accepted: lone surrogates: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: emoji, CJK, accents kept exactly: stored exactly as sanitised
+PASS S5 accepted: emoji, CJK, accents kept exactly: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: leading/trailing/inner spaces: stored exactly as sanitised
+PASS S5 accepted: leading/trailing/inner spaces: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: __proto__ and constructor as text: stored exactly as sanitised
+PASS S5 accepted: __proto__ and constructor as text: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: empty artist and album get the app's default names: stored exactly as sanitised
+PASS S5 accepted: empty artist and album get the app's default names: the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 200 characters in title (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 200 characters in title (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5 accepted: exactly 80 characters in genre (the maximum): stored exactly as sanitised
+PASS S5 accepted: exactly 80 characters in genre (the maximum): the list row shows it as TEXT (textContent equals the stored value)
+PASS S5: the hostile title/artist/album/genre never become markup anywhere (library list, queue panel): no injected img, script or svg, and no script ran
+PASS S5: the album page header shows the hostile album as text
+PASS S5: hostile ORIGINAL values are shown as text in the editor, nothing is injected or run
+PASS S5 refused: title of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: title of 5000 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: whitespace-only title: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: genre of 81 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5 refused: artist of 201 characters: the editor stays open with a clear message, the field is focused, nothing is written, memory and DB unchanged
+PASS S5: typing or pasting more than 200 characters is stopped by the field (maxlength)
+PASS S5-hostile: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S5-hostile: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S5-hostile: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S5 export vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S5 export vs live DB: playlists identical (ids order kept)
+PASS S5 export vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S5 export vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S5 export vs live DB: this browser's own secret: keys are untouched (1)
+PASS S5 export vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S5: the hostile record in the backup file holds the exact stored strings
+PASS S5: no page errors
+PASS S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed
+PASS S6a: the in-memory record is EXACTLY as before (no origMeta, no genre key, original fields, same key order)
+PASS S6a: the stored database is untouched
+PASS S6a: the list row still shows the old values
+PASS S6a: the typed values are still in the form so a retry is possible
+PASS S6a retry: title/artist/album are exactly ["Will Fail","F","Unknown album"]
+PASS S6a retry: genre is "fg"
+PASS S6a retry: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S6a retry: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S6a retry: raw DB: same song ids in the same order (5)
+PASS S6a retry: raw DB: playlists identical (ids, order, references)
+PASS S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S6a retry: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S6a retry: raw DB: history identical
+PASS S6a retry: localStorage identical
+PASS S6a: the retry succeeded and closed the editor
+PASS S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (genre and origMeta included)
+PASS S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved
+PASS S6b: while a backup is running Save is refused with nothing saved
+PASS S6b: while a restore is busy Save is refused with nothing saved
+PASS S6b: once the flags clear the same Save works
+PASS S6b: with a restore running the editor does not even open (a message explains)
+PASS S6b: with a backup running the editor does not even open (a message explains)
+PASS S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written
+PASS S6d: if the song disappeared while the editor was open Save is refused and writes nothing
+PASS S6e: a like and a play-count change made while the editor was open are NOT overwritten by the Save (no stale record written)
+PASS S6e: if the song's title was changed elsewhere while the editor was open, Save is refused and nothing is written
+PASS S6: no page errors
+PASS S7: setup: four songs carry origMeta (one of them reverted to its originals), one web song carries genre, the untouched web song has neither
+PASS S7-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7 E1 file vs live DB: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 file vs live DB: playlists identical (ids order kept)
+PASS S7 E1 file vs live DB: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 file vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 file vs live DB: this browser's own secret: keys are untouched (1)
+PASS S7 E1 file vs live DB: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7: the independent oracle reads genre and origMeta from the backup file exactly as stored (records, key order)
+PASS S7 E1 -> clean: real UI restore finished with "Library restored"
+PASS S7 E1 -> clean: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 -> clean: playlists identical (ids order kept)
+PASS S7 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 -> clean: this browser's own secret: keys are untouched (0)
+PASS S7 E1 -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E1 -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S7 E1 -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S7 E1 -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S7 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS S7 E1 -> clean after RELOAD: playlists identical (ids order kept)
+PASS S7 E1 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS S7 E1 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E1 -> clean after RELOAD: this browser's own secret: keys are untouched (0)
+PASS S7 E1 -> clean after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E1 -> clean after RELOAD: still 5 songs, theme dark, paused, no play() call
+PASS S7: after the restore the Library list shows the edited titles
+PASS S7-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): tracks records identical (order and key order), playlists identical
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): every audio entry identical in order: key, MIME, size, SHA-256
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): kv keys identical
+PASS S7: E1 vs the re-export from the clean browser (edited metadata, snapshots and audio carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS S7 E2 -> populated: real UI restore finished with "Library restored"
+PASS S7 E2 -> populated: tracks identical to the backup (every field, key order, order)
+PASS S7 E2 -> populated: playlists identical (ids order kept)
+PASS S7 E2 -> populated: kv (everything but secret: keys) identical, including session and history
+PASS S7 E2 -> populated: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S7 E2 -> populated: this browser's own secret: keys are untouched (1)
+PASS S7 E2 -> populated: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S7 E2 -> populated: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)
+PASS S7 E2 -> populated: in-memory library has none of the target's old songs
+PASS S7 E2 -> populated: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S7 E2 -> populated: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S7 E2 -> populated: UI shows the restored library (5 songs) and the policy theme
+PASS S7: the populated browser now has exactly the edited songs, genre and snapshots of the backup (none of its old songs)
+PASS S7-E3: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E3: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E3: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: E2 vs the re-export from the populated browser: oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)
+PASS S7: E2 vs the re-export from the populated browser: tracks records identical (order and key order), playlists identical
+PASS S7: E2 vs the re-export from the populated browser: every audio entry identical in order: key, MIME, size, SHA-256
+PASS S7: E2 vs the re-export from the populated browser: kv keys identical
+PASS S7: E2 vs the re-export from the populated browser: narrowly allowed differences, each with its stated reason (not ignored fields): 2
+PASS S7: after the restore the editor still knows the originals of an edited song and Revert is available
+PASS S7 revert after restore: title/artist/album are exactly ["Song Three","Artist C","Unknown album"]
+PASS S7 revert after restore: genre is "" and the genre key is absent
+PASS S7 revert after restore: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S7 revert after restore: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S7 revert after restore: raw DB: same song ids in the same order (5)
+PASS S7 revert after restore: raw DB: playlists identical (ids, order, references)
+PASS S7 revert after restore: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S7 revert after restore: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S7 revert after restore: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S7 revert after restore: raw DB: history identical
+PASS S7 revert after restore: localStorage identical
+PASS S7-E4: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S7-E4: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S7-E4: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S7: re-export after the revert: every OTHER song record identical to E2 and audio identical
+PASS S7: in that re-export the reverted song has its original title/artist/album, no genre, and the same origMeta
+PASS S7 source: no page errors
+PASS S7 clean: no page errors
+PASS S7 populated: no page errors
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 full (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (6 songs) and the policy theme
+PASS S8 p1 full: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 full: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 full edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 full edit: raw DB: same song ids in the same order (6)
+PASS S8 p1 full edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 full edit: raw DB: 6 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 full edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 full edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 full edit: raw DB: history identical
+PASS S8 p1 full edit: localStorage identical
+PASS S8 p1 full: no page errors
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: real UI restore finished with "Library restored"
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: playlists identical (ids order kept)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: localStorage is exactly {} (theme policy)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 p1 minimal (written by the p1 exporter, no genre/origMeta) -> clean: UI shows the restored library (1 songs) and the policy theme
+PASS S8 p1 minimal: the old archive carries none of the new fields and restores unchanged
+PASS S8 p1 minimal: an old restored song can be edited, its snapshot holds the old file's values
+PASS S8 p1 minimal edit: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S8 p1 minimal edit: raw DB: same song ids in the same order (1)
+PASS S8 p1 minimal edit: raw DB: playlists identical (ids, order, references)
+PASS S8 p1 minimal edit: raw DB: 1 audio entries identical in order: key, MIME, size, SHA-256
+PASS S8 p1 minimal edit: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S8 p1 minimal edit: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S8 p1 minimal edit: raw DB: history identical
+PASS S8 p1 minimal edit: localStorage identical
+PASS S8 p1 minimal: no page errors
+PASS S8-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS S8-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS S8-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS S8: 10 new-field archives were generated by an independent Python helper (stdlib only)
+PASS S8 refused: bad-origmeta-number: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-number (origMeta is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-null: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-null (origMeta is null): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-array: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-array (origMeta is a list): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-array: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-missing-genre: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-missing-genre (origMeta lacks genre): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-missing-genre: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-title-number: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-title-number (origMeta.title is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-title-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-origmeta-extra-key: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-origmeta-extra-key (origMeta has an unknown key): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-origmeta-extra-key: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-genre-number: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-genre-number (genre is a number): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-genre-number: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 refused: bad-genre-null: the refusal message can be dismissed with Escape
+PASS S8 refused: bad-genre-null (genre is null): the strict reader refuses it before any preview, naming invalid fields
+PASS S8 refused: bad-genre-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unchanged-resealed (the same data, re-sealed by this helper (proves the helper itself yields an accepted archive)) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 ok-unchanged-resealed: no page errors
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: real UI restore finished with "Library restored"
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: tracks identical to the backup (every field, key order, order)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: playlists identical (ids order kept)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: this browser's own secret: keys are untouched (0)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS S8 accepted: ok-unknown-extra-field (an unknown extra field on a track that also has origMeta/genre is kept, as for any record) -> clean: UI shows the restored library (5 songs) and the policy theme
+PASS S8 accepted: the unknown extra field on the record was kept exactly
+PASS S8 ok-unknown-extra-field: no page errors
+PASS S8: the target browser was never changed or started playing by the refused archives
+PASS S8: no page errors
+PASS S8 target: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 93 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 354 / 354 pass

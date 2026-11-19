@@ -1,0 +1,64 @@
+PASS S9 reject: setup: the song is playing, never edited (cover '' and no origCover/origMeta/genre), a picture is chosen
+PASS S9 reject: the cover write is now HELD (pending): the editor is still open
+PASS S9 reject: the real writers all took effect in memory (liked toggled from the seeded value, +1 play, last-played time) while the cover write was pending
+PASS S9 reject: the 3A save that ran meanwhile reported success
+PASS S9 reject: RAW DATABASE equals the in-memory record exactly (every field and key order): no divergence between what is stored and what the app holds
+PASS S9 reject: the newer writers' data is preserved in the raw database: liked = the toggled value (!seeded), plays +1, last-played time, new title/genre, origMeta = the pre-edit values
+PASS S9 reject: the failed cover save left NO trace anywhere: raw cover is the original '' and the origCover key is ABSENT (exact presence) in the database AND in memory
+PASS S9 reject: the editor stays open and shows the truthful error that nothing was changed
+PASS S9 reject: every other record, the playlists and all 5 audio entries (SHA-256) are identical to before
+PASS S9 reject: write order recorded by the model (held cover write first, then the other writers' snapshots): HELD stat+cover, stat, meta, meta
+PASS S9 reject: after RELOAD the stored record is exactly what was stored before the reload (raw-before == raw-after; the reload itself wrote nothing to this record)
+PASS S9 reject: after RELOAD the app's in-memory record equals the stored record (memory == raw after reload)
+PASS S9 reject: no page errors
+PASS S9 release: setup: the song is playing, never edited (cover '' and no origCover/origMeta/genre), a picture is chosen
+PASS S9 release: the cover write is now HELD (pending): the editor is still open
+PASS S9 release: the real writers all took effect in memory (liked toggled from the seeded value, +1 play, last-played time) while the cover write was pending
+PASS S9 release: the 3A save that ran meanwhile reported success
+PASS S9 release: RAW DATABASE equals the in-memory record exactly (every field and key order): no divergence between what is stored and what the app holds
+PASS S9 release: the newer writers' data is preserved in the raw database: liked = the toggled value (!seeded), plays +1, last-played time, new title/genre, origMeta = the pre-edit values
+PASS S9 release: the cover committed: raw and memory hold the new JPEG cover and origCover is the original ''; the editor closed
+PASS S9 release: every other record, the playlists and all 5 audio entries (SHA-256) are identical to before
+PASS S9 release: write order recorded by the model (held cover write first, then the other writers' snapshots): HELD stat+cover, stat+cover, meta+cover, meta+cover
+PASS S9 release: after RELOAD the stored record is exactly what was stored before the reload (raw-before == raw-after; the reload itself wrote nothing to this record)
+PASS S9 release: after RELOAD the app's in-memory record equals the stored record (memory == raw after reload)
+PASS S9 release: no page errors
+PASS S9 meta: the cover save and the like that ran while the 3A save was pending succeeded
+PASS S9 meta: RAW DATABASE equals the in-memory record exactly
+PASS S9 meta: the failed 3A save left NO trace: title/artist/album are the originals, genre and origMeta are ABSENT (exact presence) in the database and in memory
+PASS S9 meta: the newer writers' data is preserved: the new cover (+ origCover ''), liked toggled (!seeded), plays +1 and last-played time
+PASS S9 meta: the 3A editor stays open with its truthful error
+PASS S9 meta: no page errors
+PASS S9d: the song is gone from the app immediately (memory), while its cover write is still held
+PASS S9d: RAW DB: the removed song and its audio are gone and stay gone (neither the held cover write nor the queued like resurrected it)
+PASS S9d: every other record and audio entry is identical to before
+PASS S9d: the cover save reports that the song is no longer in the library (it did not pretend to apply)
+PASS S9d: memory does not hold the song
+PASS S9d: no page errors
+PASS S9e release: RAW DB equals memory exactly
+FAIL S9e release: the first save committed (PNG, origCover ''); the second, queued with the same old base, was REFUSED as stale and wrote nothing  :: [{"ok":true,"memoryOnly":false},{"ok":true,"memoryOnly":false},"data:image/jpeg;base64,/"]
+PASS S9e release: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S9e release: raw DB: same song ids in the same order (5)
+PASS S9e release: raw DB: playlists identical (ids, order, references)
+PASS S9e release: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S9e release: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S9e release: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S9e release: raw DB: history identical
+PASS S9e release: localStorage identical
+PASS S9e release: no page errors
+PASS S9e reject: RAW DB equals memory exactly
+PASS S9e reject: the first save failed cleanly (error, no trace) and the queued second save then committed on the intact original (cover is the second picture, origCover '')
+PASS S9e reject: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S9e reject: raw DB: same song ids in the same order (5)
+PASS S9e reject: raw DB: playlists identical (ids, order, references)
+PASS S9e reject: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S9e reject: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S9e reject: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S9e reject: raw DB: history identical
+PASS S9e reject: localStorage identical
+PASS S9e reject: no page errors
+PASS network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries
+PASS network: all 42 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3B: 61 / 62 pass

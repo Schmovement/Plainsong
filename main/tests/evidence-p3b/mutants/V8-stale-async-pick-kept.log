@@ -1,0 +1,37 @@
+PASS S6a: a rejected database write: the editor stays open with a truthful message that states nothing was changed
+PASS S6a: the in-memory record is EXACTLY as before (cover unchanged, no origCover key, same key order)
+PASS S6a: the stored database is untouched
+PASS S6a: the list row still shows the old (initial-letter) cover
+PASS S6a: the chosen picture is still the draft so a retry is possible (state "New cover", Save enabled)
+PASS S6a: the retry succeeded, closed the editor, and stored cover + origCover
+PASS S6a retry: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song
+PASS S6a retry: raw DB: same song ids in the same order (5)
+PASS S6a retry: raw DB: playlists identical (ids, order, references)
+PASS S6a retry: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S6a retry: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S6a retry: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S6a retry: raw DB: history identical
+PASS S6a retry: localStorage identical
+PASS S6a2: an error thrown inside IndexedDB gives the same truthful message and restores the exact previous record (cover AND the existing origCover, key order included)
+PASS S6b: while the database write lock is on (restore in progress) Save is refused with nothing saved
+PASS S6b: while a backup is running Save is refused with nothing saved
+PASS S6b: while a restore is busy Save is refused with nothing saved
+PASS S6b: once the flags clear the same Save works
+PASS S6b: with a restore running the cover editor does not even open (a message explains)
+PASS S6b: with a backup running the cover editor does not even open (a message explains)
+PASS S6c: if the library was replaced while the editor was open, Save is refused as stale and nothing is written
+PASS S6d: if the song disappeared while the editor was open Save is refused and writes nothing
+PASS S6e: a like, a play-count change and a title change made while the editor was open are NOT overwritten by the cover Save (no stale record written)
+PASS S6e: if the song's cover was changed elsewhere while the editor was open, Save is refused and nothing is written
+PASS S6f: saveCover itself refuses an SVG data URL, javascript:, a NEW http address, html, a number, null, bad base64 and an over-size data URL, writing nothing
+PASS S6: no page errors
+PASS S6g: while a picture is being read the state says so and both Save and Revert are disabled (no commit of a half-read draft)
+FAIL S6g: a newer pick that finishes first wins: when the older, slower read completes later its result is DROPPED (the draft is still the newer picture)  :: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ vs url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQ
+PASS S6g: if the editor is closed while a picture is still being read, the late result is dropped: nothing written, nothing changed, no error
+PASS S6g: a different song's editor opened right after starts clean (no leftover draft from the dropped read)
+PASS S6g: no page errors
+PASS network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries
+PASS network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3B: 34 / 35 pass

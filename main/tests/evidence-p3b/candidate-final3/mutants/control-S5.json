@@ -1,0 +1,408 @@
+{
+ "complete": true,
+ "only": "5",
+ "total": 80,
+ "failed": 0,
+ "results": [
+  {
+   "name": "S5 refused: SVG with scripts named .png: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: SVG named .svg: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: HTML named .png: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: plain text named .jpg: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: an audio file named .png (the RIFF header of a WAV): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That isn’t a PNG, JPEG, GIF or WebP picture. SVG and other formats are not accepted. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: an empty file: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That file is empty. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: JPEG signature followed by garbage: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture looks cut off or damaged. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG cut off in the middle: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture looks cut off or damaged. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG with a script appended after IEND (polyglot): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture has extra data after its end, so it was refused. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: JPEG cut in half (no end marker): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture looks cut off or damaged. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: GIF with its trailer byte missing: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture looks cut off or damaged. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: WebP cut in half (RIFF size no longer matches): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture looks cut off or damaged. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG with correct structure and CRCs but undecodable pixel data: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture couldn’t be read. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG 8193 x 16 (one side over 8192): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture is 8193×16 pixels; each side must be 16 to 8192 pixels (at most 40 megapixels). | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG 8000 x 6000 (48 megapixels, over the 40 MP limit): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture is 8000×6000 pixels; each side must be 16 to 8192 pixels (at most 40 megapixels). | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: PNG 15 x 16 (below the 16 pixel minimum): a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That picture is 15×16 pixels; each side must be 16 to 8192 pixels (at most 40 megapixels). | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: a file just over the 8 MB limit: a clear message, nothing becomes the draft (preview, state and disabled Save unchanged), focus on Choose image…, no script ran, nothing injected",
+   "ok": true,
+   "detail": "That file is 8.0 MB; the limit is 8.0 MB. | No cover | focus covPick | pwned undefined dom 0"
+  },
+  {
+   "name": "S5 refused: all 17 refused pictures together: zero writes, the database and the in-memory record are exactly as before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 refused: the editor is still usable after the refusals (Save disabled, Cancel works)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a JPEG named .txt: stored as a image/jpeg (magic bytes), 200x150 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":2926,\"sha256\":\"d26acf17961481873b82541b71f0115a9bd11aa448385f424c81e27c5c08333e\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":200,\"h\":150} "
+  },
+  {
+   "name": "S5 accepted 1: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 1: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 1: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a different JPEG named .png: stored as a image/jpeg (magic bytes), 180x120 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":2613,\"sha256\":\"e1a7d4b53f51f12816ac343285a82333bafc135adaa071529d78e56b75903e3c\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":180,\"h\":120} "
+  },
+  {
+   "name": "S5 accepted 2: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 2: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 2: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a GIF 16x16 named .png (the minimum size): stored as a image/jpeg (magic bytes), 16x16 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":785,\"sha256\":\"a3baf610750f6c64b30fdc681472361c6c870a9134e7f2ec8504f89aa1f3fd25\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":16,\"h\":16} "
+  },
+  {
+   "name": "S5 accepted 3: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 3: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 3: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a WebP: stored as a image/jpeg (magic bytes), 160x160 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":2354,\"sha256\":\"08c464a16bfcc60db2888db522587299041b457a47c1f99f82181cb36c0b6145\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":160,\"h\":160} "
+  },
+  {
+   "name": "S5 accepted 4: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 4: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 4: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a PNG 2000x1000 (scaled down to fit 512, shape kept): stored as a image/jpeg (magic bytes), 512x256 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":15722,\"sha256\":\"b3d4d53501ccda2b53cf0fffaca8420c78b6b569d0e231d1162aa9bd94660b13\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":512,\"h\":256} "
+  },
+  {
+   "name": "S5 accepted 5: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 5: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 5: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a PNG 8192 x 16 (the maximum side): stored as a image/jpeg (magic bytes), 512x1 (never enlarged), canonical base64, origCover is the original ''",
+   "ok": true,
+   "detail": "{\"kind\":\"data\",\"declared\":\"image/jpeg\",\"bytes\":806,\"sha256\":\"e09cc344a90a3494e58c76ac8de5d70602983d728433ca33ddf53742fc6b9cae\",\"canonical\":true,\"mime\":\"image/jpeg\",\"w\":512,\"h\":1} "
+  },
+  {
+   "name": "S5 accepted 6: raw DB: every track record is identical (title/artist/album/genre/origMeta, id, likes, plays, timestamps, duration, lyrics, unknown fields; key order; list order) except the cover and origCover of the edited song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: raw DB: same song ids in the same order (5)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: raw DB: playlists identical (ids, order, references)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: raw DB: saved queue (order and ids) and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0] vs [[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],[\"47e591db-95cd-49f9-9d0b-1d2acc461832\",\"audius:W1\",\"c16e6a59-1c04-48a5-9450-d6c9173bf43a\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "S5 accepted 6: raw DB: history identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted 6: localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 accepted: a PNG with transparent pixels is stored as PNG and the transparency survives (left half alpha 0, right half 255)",
+   "ok": true,
+   "detail": "{\"cia\":{\"kind\":\"data\",\"declared\":\"image/png\",\"bytes\":295,\"sha256\":\"40e2867ac335105db6bf832dbdb6269ff1f8af88385e78fddc38f36460e59b35\",\"canonical\":true,\"mime\":\"image/png\",\"w\":64,\"h\":64},\"alpha\":[0,255]}"
+  },
+  {
+   "name": "S5 accepted: the origCover stayed the original through all of the above replacements",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5: no script from any hostile picture ran (window.__pwned never set)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any cover save (the seeded http cover address of a web song, which is merely DISPLAYED in a list, is excluded and counted separately below)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except displayed cover addresses of web songs that this suite seeded or that the p1 fixture carries",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a seeded web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

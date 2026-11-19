@@ -1,0 +1,146 @@
+[
+ {
+  "id": "C1-cover-mutate-then-put",
+  "desc": "saveCover goes back to the earlier design: mutate the shared record first, then put it (a failed write leaves the uncommitted cover in memory and in other writers' snapshots)",
+  "scenario": 9,
+  "needle": "S9 reject: the failed cover save left NO trace"
+ },
+ {
+  "id": "C2-meta-mutate-then-put",
+  "desc": "saveMeta goes back to the earlier design: mutate the shared record first, then put it",
+  "scenario": 9,
+  "needle": "S9 meta: the failed 3A save left NO trace"
+ },
+ {
+  "id": "C3-no-per-track-queue",
+  "desc": "the per-track write queue is removed: every writer runs immediately",
+  "scenario": 9,
+  "needle": "S9 release: RAW DATABASE equals"
+ },
+ {
+  "id": "C4-snapshot-at-enqueue",
+  "desc": "queued whole-record writers (likes, plays...) take their snapshot when queued instead of when they run",
+  "scenario": 9,
+  "needle": "S9 release: RAW DATABASE equals"
+ },
+ {
+  "id": "C5-stale-clone-applied",
+  "desc": "after a committed cover save the whole stale clone is copied over the shared record (newer likes/plays are overwritten)",
+  "scenario": 9,
+  "needle": "S9 release: the newer writers' data is preserved"
+ },
+ {
+  "id": "C6-no-runtime-basis-check",
+  "desc": "a queued cover save no longer re-checks, when it runs, that the cover it was based on is still the stored one",
+  "scenario": 9,
+  "needle": "S9e release: the first save committed"
+ },
+ {
+  "id": "E1-cancel-not-blocked",
+  "desc": "Cancel stays enabled and works while a save is in flight",
+  "scenario": 10,
+  "needle": "do NOTHING while saving"
+ },
+ {
+  "id": "E2-escape-not-blocked",
+  "desc": "Escape / the native cancel request close the dialog while a save is in flight",
+  "scenario": 10,
+  "needle": "do NOTHING while saving"
+ },
+ {
+  "id": "E2b-escape-guard-on-dialog-only",
+  "desc": "the Escape guard listens on the dialog element only (the earlier design: it misses the key once focus has left the dialog)",
+  "scenario": 10,
+  "needle": "synthetic body-target Escape is intercepted by the pending-save window guard"
+ },
+ {
+  "id": "E3-no-saving-state",
+  "desc": "the editor does not say \"Saving\u2026\"",
+  "scenario": 10,
+  "needle": "state says \"Saving\u2026\""
+ },
+ {
+  "id": "E4-stay-disabled-after-failure",
+  "desc": "after a failed save the controls stay disabled (the editor is stuck)",
+  "scenario": 10,
+  "needle": "after the FAILED save the dialog is still open"
+ },
+ {
+  "id": "E5-picked-file-accepted-while-saving",
+  "desc": "a file chosen while a save is in flight replaces the draft",
+  "scenario": 10,
+  "needle": "do NOTHING while saving"
+ },
+ {
+  "id": "V1-origcover-overwritten",
+  "desc": "origCover is rewritten on every save instead of captured once",
+  "scenario": 4,
+  "needle": "second replacement (a JPEG 800x600): origCover is STILL exactly the first original"
+ },
+ {
+  "id": "V2-jpeg-eoi-unchecked",
+  "desc": "a JPEG without its end marker is no longer refused by the byte check",
+  "scenario": 5,
+  "needle": "JPEG cut in half (no end marker)"
+ },
+ {
+  "id": "V3-png-extra-data-accepted",
+  "desc": "data after IEND (polyglot) is accepted",
+  "scenario": 5,
+  "needle": "polyglot"
+ },
+ {
+  "id": "V4-size-limit-removed",
+  "desc": "the 8 MB file limit is removed",
+  "scenario": 5,
+  "needle": "a file just over the 8 MB limit"
+ },
+ {
+  "id": "V5-min-dimension-removed",
+  "desc": "the 16 pixel minimum is removed",
+  "scenario": 5,
+  "needle": "below the 16 pixel minimum"
+ },
+ {
+  "id": "V6-megapixel-limit-removed",
+  "desc": "the 40 megapixel limit is removed (decode would be attempted)",
+  "scenario": 5,
+  "needle": "48 megapixels"
+ },
+ {
+  "id": "V7-playback-restart",
+  "desc": "refreshing the screens after a cover edit seeks the playing song to 0",
+  "scenario": 2,
+  "needle": "playback position CONTINUED"
+ },
+ {
+  "id": "V8-stale-async-pick-kept",
+  "desc": "a picture that finishes reading after the editor closed or after a newer pick is applied",
+  "scenario": 6,
+  "needle": "S6g"
+ },
+ {
+  "id": "V9-http-original-loaded",
+  "desc": "the editor loads an http(s) original as a picture (a network request, address leak)",
+  "scenario": 4,
+  "needle": "does NOT request it"
+ },
+ {
+  "id": "V10-reader-origcover-unchecked",
+  "desc": "the strict reader no longer validates origCover",
+  "scenario": 8,
+  "needle": "S8 refused: bad-orig-number"
+ },
+ {
+  "id": "V11-coverok-removed",
+  "desc": "saveCover no longer validates the value it commits",
+  "scenario": 6,
+  "needle": "S6f: saveCover itself refuses"
+ },
+ {
+  "id": "V12-700k-cap-on-revert",
+  "desc": "a legacy original larger than 700,000 characters can no longer be restored by Revert (cap applied to originals)",
+  "scenario": 11,
+  "needle": "S11 L3: Revert gives back the legacy original EXACTLY"
+ }
+]

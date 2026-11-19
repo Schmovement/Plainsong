@@ -1,0 +1,29 @@
+PASS S2: the clicked song really plays (not paused, time advancing, it is the current song)
+PASS S2: opening the editor does not pause the music
+PASS S2: after editing the CURRENT song it is still playing, same audio source, no new play() or loadstart, same current song/queue position/queue
+FAIL S2: the playback position CONTINUED (did not restart or jump back)  :: 2.170737 -> 0.812336
+PASS S2: now-playing bar, panel and tab title show the new title/artist
+PASS S2: the media session (lock-screen/keyboard metadata) shows the new title, artist, album
+PASS S2: the queue panel shows the new title on the playing row
+PASS S2: after editing a NON-current song the music is still playing, same source, no new play()/loadstart, same current song and queue
+PASS S2: the bar still shows the current (edited) song, not the other one
+PASS S2 current song record: title/artist/album are exactly ["Now Playing Edited","Live Artist","Live Album"]
+PASS S2 current song record: genre is "Live"
+PASS S2 current song record: origMeta is the pre-edit snapshot {"title":"Song One","artist":"Artist A","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2 other song record: title/artist/album are exactly ["Queued Edited","Artist C","Unknown album"]
+PASS S2 other song record: genre is "Q"
+PASS S2 other song record: origMeta is the pre-edit snapshot {"title":"Song Three","artist":"Artist C","album":"Unknown album","genre":""} (exact value and key order)
+PASS S2: raw DB: every track record is identical (all fields incl. id, likes, plays, timestamps, duration, cover, lyrics, unknown fields; key order; list order) except title/artist/album/genre/origMeta of the edited song
+PASS S2: raw DB: same song ids in the same order (5)
+PASS S2: raw DB: playlists identical (ids, order, references)
+PASS S2: raw DB: 5 audio entries identical in order: key, MIME, size, SHA-256
+PASS S2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys)
+PASS S2: raw DB: saved queue (order and ids) and queue position unchanged
+PASS S2: localStorage identical
+PASS S2: likes, plays, added time, duration, size, key of both edited songs unchanged
+PASS S2: no page errors
+PASS network: NO request was attempted during any song-info save
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S8
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 3A: 26 / 27 pass

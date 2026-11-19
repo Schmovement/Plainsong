@@ -1,0 +1,2556 @@
+{
+ "total": 510,
+ "failed": 0,
+ "results": [
+  {
+   "name": "oracle control: a backup compared with itself is all-exact (22 checks, 0 allowed, 0 failed)",
+   "ok": true,
+   "detail": "[22,0,0]"
+  },
+  {
+   "name": "oracle control audio-byte-flip: one bit of one audio entry flipped (file stays internally consistent) -> the intended check(s) FAIL: audio list identical + blobs/000003.bin byte-identical",
+   "ok": true,
+   "detail": "fail=3 allowed=0 nonexact: FAIL:blobs/000003.bin byte-identical (sha256 fbbab289f7f9) | FAIL:audio list identical in order: key, MIME, size, SHA-256 for all 6 entries | FAIL:manifest.blobs[blobs/000003.bin].crc32 differs (A \"04d0e435\", B \"52252e8c\")"
+  },
+  {
+   "name": "oracle control session-vol: session.vol 0.8 -> 0.7 -> the intended check(s) FAIL: kv[session] differs in fields",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:kv[session] differs in fields ['vol'] | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"41c17602\")"
+  },
+  {
+   "name": "oracle control tracks-key-order: two keys of one track record swapped (same values) -> the intended check(s) FAIL: tracks records identical + data/tracks.json byte-identical",
+   "ok": true,
+   "detail": "fail=3 allowed=0 nonexact: FAIL:data/tracks.json byte-identical (sha256 69494f6b64f7) | FAIL:tracks records identical, same order and same key order (6 records) | FAIL:manifest.files[data/tracks.json].crc32 differs (A \"01678aed\", B \"eaa11cdf\")"
+  },
+  {
+   "name": "oracle control playlist-order: playlist song order reversed -> the intended check(s) FAIL: playlists records identical + data/playlists.json byte-identical",
+   "ok": true,
+   "detail": "fail=3 allowed=0 nonexact: FAIL:data/playlists.json byte-identical (sha256 c991668944a2) | FAIL:playlists records identical, same order and same key order (2 records) | FAIL:manifest.files[data/playlists.json].crc32 differs (A \"d7174b69\", B \"f1eea327\")"
+  },
+  {
+   "name": "oracle control blob-mime-manifest: one audio MIME type changed in the manifest -> the intended check(s) FAIL: audio list identical + manifest.blobs[blobs/000001.bin].type",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:audio list identical in order: key, MIME, size, SHA-256 for all 6 entries | FAIL:manifest.blobs[blobs/000001.bin].type differs (A \"audio/wav\", B \"audio/mpeg\")"
+  },
+  {
+   "name": "oracle control kv-extra-key: an extra kv entry -> the intended check(s) FAIL: kv key set and order identical",
+   "ok": true,
+   "detail": "fail=5 allowed=0 nonexact: FAIL:kv key set and order identical: ['custom:pref', 'hist', 'session'] | FAIL:manifest.counts.kv differs (A 3, B 4) | FAIL:manifest.payloadBytes differs (A 5786246, B 5786277) | FAIL:manifest.files[data/kv.json].bytes differs (A 1183, B 1214) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"6eba335d\")"
+  },
+  {
+   "name": "oracle control localstorage-extra-key: an extra localStorage key -> the intended check(s) FAIL: localstorage.json differs",
+   "ok": true,
+   "detail": "fail=5 allowed=0 nonexact: FAIL:localstorage.json differs | FAIL:manifest.counts.localStorage differs (A 1, B 2) | FAIL:manifest.payloadBytes differs (A 5786246, B 5786261) | FAIL:manifest.files[data/localstorage.json].bytes differs (A 24, B 39) | FAIL:manifest.files[data/localstorage.json].crc32 differs (A \"57016ff8\", B \"4c53bca4\")"
+  },
+  {
+   "name": "oracle control extra-zip-entry: an extra ZIP entry not in the manifest -> the intended check(s) FAIL: entry names and order identical + B self-check",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:entry names and order identical (11 entries)"
+  },
+  {
+   "name": "oracle control secret-in-B: B carries a secret: key in kv.json -> the intended check(s) FAIL: B has no secret: key in kv.json + kv key set and order identical",
+   "ok": true,
+   "detail": "fail=6 allowed=0 nonexact: FAIL:B has no secret: key in kv.json (case-insensitive): ['secret:lastfm'] | FAIL:kv key set and order identical: ['custom:pref', 'hist', 'session'] | FAIL:manifest.counts.kv differs (A 3, B 4) | FAIL:manifest.payloadBytes differs (A 5786246, B 5786293) | FAIL:manifest.files[data/kv.json].bytes differs (A 1183, B 1230) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"96cb35da\")"
+  },
+  {
+   "name": "oracle control secret-upper-in-B: B carries SECRET:Token (case-insensitive prefix) -> the intended check(s) FAIL: B has no secret: key in kv.json",
+   "ok": true,
+   "detail": "fail=6 allowed=0 nonexact: FAIL:B has no secret: key in kv.json (case-insensitive): ['SECRET:Token'] | FAIL:kv key set and order identical: ['custom:pref', 'hist', 'session'] | FAIL:manifest.counts.kv differs (A 3, B 4) | FAIL:manifest.payloadBytes differs (A 5786246, B 5786292) | FAIL:manifest.files[data/kv.json].bytes differs (A 1183, B 1229) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"6069e7b8\")"
+  },
+  {
+   "name": "oracle control secret-in-A: A carries a secret: key (compared with a clean B) -> the intended check(s) FAIL: A has no secret: key in kv.json",
+   "ok": true,
+   "detail": "fail=6 allowed=0 nonexact: FAIL:A has no secret: key in kv.json (case-insensitive): ['SECRET:Token'] | FAIL:kv key set and order identical: ['SECRET:Token', 'custom:pref', 'hist', 'session'] | FAIL:manifest.counts.kv differs (A 4, B 3) | FAIL:manifest.payloadBytes differs (A 5786292, B 5786246) | FAIL:manifest.files[data/kv.json].bytes differs (A 1229, B 1183) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"6069e7b8\", B \"cd4ac88f\")"
+  },
+  {
+   "name": "oracle control time-drift-bounded: session.time 3 -> 3.2 (drift 0.2 s, inside the 0.25 s bound) -> ONLY these non-exact results, all allowed: kv[session] identical except time + manifest.files[data/kv.json].crc32 + manifest.files[data/kv.json].bytes + manifest.payloadBytes",
+   "ok": true,
+   "detail": "fail=0 allowed=4 nonexact: allowed:kv[session] identical except time (A 3, B 3.2): bounded drift <= 0.25 s | allowed:manifest.payloadBytes (A 5786246, B 5786248) | allowed:manifest.files[data/kv.json].bytes (A 1183, B 1185) | allowed:manifest.files[data/kv.json].crc32 (A cd4ac88f, B 3198d215)"
+  },
+  {
+   "name": "oracle control time-jump-forward: session.time 3 -> 8 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 3, B 8) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"fae2348a\")"
+  },
+  {
+   "name": "oracle control time-rewind-to-zero: session.time 3 -> 0 WITHOUT the explicit unavailable-position evidence flag -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 3, B 0) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"637b7320\")"
+  },
+  {
+   "name": "oracle control time-rewind-to-zero-with-evidence: session.time 3 -> 0 WITH --time-unavailable (harness proved the current song cannot report a position) -> ONLY these non-exact results, all allowed: kv[session] identical except time + manifest.files[data/kv.json].crc32",
+   "ok": true,
+   "detail": "fail=0 allowed=2 nonexact: allowed:kv[session] identical except time (A 3, B 0): position unavailable | allowed:manifest.files[data/kv.json].crc32 (A cd4ac88f, B 637b7320)"
+  },
+  {
+   "name": "oracle control time-flag-but-not-zero: --time-unavailable given but B.time is 1, not 0 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 3, B 1) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"06941a45\")"
+  },
+  {
+   "name": "oracle control time-negative: session.time -1 -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=4 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 3, B -1) | FAIL:manifest.payloadBytes differs (A 5786246, B 5786247) | FAIL:manifest.files[data/kv.json].bytes differs (A 1183, B 1184) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"e558ee36\")"
+  },
+  {
+   "name": "oracle control time-string: session.time \"3\" (a string) -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=4 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 3, B '3') | FAIL:manifest.payloadBytes differs (A 5786246, B 5786248) | FAIL:manifest.files[data/kv.json].bytes differs (A 1183, B 1185) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"cd4ac88f\", B \"c609a9b7\")"
+  },
+  {
+   "name": "oracle control time-large-backward-jump: session.time 120 -> 60 (a large backward jump that is not zero), with the evidence flag given -> the intended check(s) FAIL: kv[session].time changed beyond the allowance",
+   "ok": true,
+   "detail": "fail=4 allowed=0 nonexact: FAIL:kv[session].time changed beyond the allowance (A 120, B 60) | FAIL:manifest.payloadBytes differs (A 5786248, B 5786247) | FAIL:manifest.files[data/kv.json].bytes differs (A 1185, B 1184) | FAIL:manifest.files[data/kv.json].crc32 differs (A \"0ed4d916\", B \"9ddf7c42\")"
+  },
+  {
+   "name": "oracle control createdAt-later: manifest.createdAt later than A -> ONLY these non-exact results, all allowed: manifest.createdAt",
+   "ok": true,
+   "detail": "fail=0 allowed=1 nonexact: allowed:manifest.createdAt (A 2026-11-04T08:10:31.057Z, B 2026-11-06T01:02:03.004Z)"
+  },
+  {
+   "name": "oracle control createdAt-earlier: manifest.createdAt EARLIER than A -> the intended check(s) FAIL: manifest.createdAt",
+   "ok": true,
+   "detail": "fail=1 allowed=0 nonexact: FAIL:manifest.createdAt (A 2026-11-04T08:10:31.057Z, B 2026-11-04T08:10:30.000Z)"
+  },
+  {
+   "name": "oracle control theme-added-allowed: A has no theme; B carries the target browser's dark theme (--b-theme dark) -> ONLY these non-exact results, all allowed: localstorage.json: A had no ps-theme + manifest.counts.localStorage + manifest.files[data/localstorage.json].crc32 + manifest.files[data/localstorage.json].bytes + manifest.payloadBytes",
+   "ok": true,
+   "detail": "fail=0 allowed=5 nonexact: allowed:localstorage.json: A had no ps-theme; B carries the target browser's own theme 'dark' | allowed:manifest.counts.localStorage (A 0, B 1) | allowed:manifest.payloadBytes (A 5786225, B 5786246) | allowed:manifest.files[data/localstorage.json].bytes (A 3, B 24) | allowed:manifest.files[data/localstorage.json].crc32 (A dda1b006, B 57016ff8)"
+  },
+  {
+   "name": "oracle control theme-added-wrong-b-theme: A has no theme; B has dark but the target's theme was light -> the intended check(s) FAIL: localstorage.json differs",
+   "ok": true,
+   "detail": "fail=5 allowed=0 nonexact: FAIL:localstorage.json differs | FAIL:manifest.counts.localStorage differs (A 0, B 1) | FAIL:manifest.payloadBytes differs (A 5786225, B 5786246) | FAIL:manifest.files[data/localstorage.json].bytes differs (A 3, B 24) | FAIL:manifest.files[data/localstorage.json].crc32 differs (A \"dda1b006\", B \"57016ff8\")"
+  },
+  {
+   "name": "oracle control theme-added-no-evidence: A has no theme; B has dark and no --b-theme was given -> the intended check(s) FAIL: localstorage.json differs",
+   "ok": true,
+   "detail": "fail=5 allowed=0 nonexact: FAIL:localstorage.json differs | FAIL:manifest.counts.localStorage differs (A 0, B 1) | FAIL:manifest.payloadBytes differs (A 5786225, B 5786246) | FAIL:manifest.files[data/localstorage.json].bytes differs (A 3, B 24) | FAIL:manifest.files[data/localstorage.json].crc32 differs (A \"dda1b006\", B \"57016ff8\")"
+  },
+  {
+   "name": "oracle control theme-changed: A has dark; B has light (a theme in the backup must be kept exactly) -> the intended check(s) FAIL: localstorage.json differs",
+   "ok": true,
+   "detail": "fail=4 allowed=0 nonexact: FAIL:localstorage.json differs | FAIL:manifest.payloadBytes differs (A 5786246, B 5786247) | FAIL:manifest.files[data/localstorage.json].bytes differs (A 24, B 25) | FAIL:manifest.files[data/localstorage.json].crc32 differs (A \"57016ff8\", B \"b9bc29e6\")"
+  },
+  {
+   "name": "oracle control manifest-duplicate-file-entry: manifest.files lists data/tracks.json twice -> the intended check(s) FAIL: B self-check",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.files.<length> differs (A 4, B 5)"
+  },
+  {
+   "name": "oracle control manifest-duplicate-blob-entry: manifest.blobs lists blobs/000001.bin twice -> the intended check(s) FAIL: B self-check",
+   "ok": true,
+   "detail": "fail=3 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:audio list identical in order: key, MIME, size, SHA-256 for all 6 entries | FAIL:manifest.blobs.<length> differs (A 6, B 7)"
+  },
+  {
+   "name": "oracle control manifest-extra-top-key: an extra top-level manifest key -> the intended check(s) FAIL: B self-check + manifest.x differs",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.x differs (A \"<missing>\", B 1)"
+  },
+  {
+   "name": "oracle control manifest-missing-nested-key: manifest.counts lost a key -> the intended check(s) FAIL: B self-check + manifest.counts.localStorage differs",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.counts.localStorage differs (A 1, B \"<missing>\")"
+  },
+  {
+   "name": "oracle control manifest-extra-nested-key: manifest.excluded gained a key -> the intended check(s) FAIL: B self-check + manifest.excluded.extra differs",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.excluded.extra differs (A \"<missing>\", B 1)"
+  },
+  {
+   "name": "oracle control manifest-counts-wrong: manifest.counts.tracks says 99 -> the intended check(s) FAIL: B self-check + manifest.counts.tracks differs",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.counts.tracks differs (A 6, B 99)"
+  },
+  {
+   "name": "oracle control manifest-blobs-reordered: two manifest.blobs entries swapped -> the intended check(s) FAIL: B self-check",
+   "ok": true,
+   "detail": "fail=8 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:audio list identical in order: key, MIME, size, SHA-256 for all 6 entries | FAIL:manifest.blobs[blobs/000001.bin].key differs (A \"2b099514-30af-41b9-aad6-0d0ee10a3873\", B  | FAIL:manifest.blobs[blobs/000001.bin].path differs (A \"blobs/000001.bin\", B \"blobs/000002.bin\") | FAIL:manifest.blobs[blobs/000001.bin].crc32 differs (A \"3f209c58\", B \"f924b83e\") | FAIL:manifest.blobs[blobs/000002.bin].key "
+  },
+  {
+   "name": "oracle control manifest-excluded-not-a-secret: manifest.excluded.kv lists a non-secret name -> the intended check(s) FAIL: B self-check",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.excluded.kv differs (A [\"secret:lastfm\"], B [\"plain\"])"
+  },
+  {
+   "name": "oracle control manifest-complete-flipped: manifest.complete true -> false -> the intended check(s) FAIL: manifest.complete differs",
+   "ok": true,
+   "detail": "fail=1 allowed=0 nonexact: FAIL:manifest.complete differs (A true, B false)"
+  },
+  {
+   "name": "oracle control manifest-audioBytes-lie: manifest.audioBytes off by one -> the intended check(s) FAIL: B self-check + manifest.audioBytes differs",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest sh | FAIL:manifest.audioBytes differs (A 5782040, B 5782041)"
+  },
+  {
+   "name": "oracle control excluded-names-match-browser: excluded.kv names changed to the secret key this (harness-read) browser holds -> ONLY these non-exact results, all allowed: manifest.excluded.kv",
+   "ok": true,
+   "detail": "fail=0 allowed=1 nonexact: allowed:manifest.excluded.kv (A ['secret:lastfm'], B ['secret:zzz'])"
+  },
+  {
+   "name": "oracle control excluded-names-not-the-browsers: excluded.kv lists secret:zzz but the browser holds secret:yyy -> the intended check(s) FAIL: manifest.excluded.kv",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:manifest.excluded.kv differs (A [\"secret:lastfm\"], B [\"secret:zzz\"]) | FAIL:manifest.excluded.kv must list exactly the secret: keys the exporting browser holds ['secr"
+  },
+  {
+   "name": "oracle control excluded-names-missing: excluded.kv is empty although the browser holds secret:lastfm -> the intended check(s) FAIL: manifest.excluded.kv",
+   "ok": true,
+   "detail": "fail=2 allowed=0 nonexact: FAIL:manifest.excluded.kv differs (A [\"secret:lastfm\"], B []) | FAIL:manifest.excluded.kv must list exactly the secret: keys the exporting browser holds ['secr"
+  },
+  {
+   "name": "oracle control warning-theme-dropped: A has [orphan warning, theme warning]; B (a restored browser) has only the orphan warning -> ONLY these non-exact results, all allowed: manifest.warnings",
+   "ok": true,
+   "detail": "fail=0 allowed=1 nonexact: allowed:manifest.warnings (A ['1 stored audio file has no library entry; included as-is', 'ps-them"
+  },
+  {
+   "name": "oracle control warning-orphan-dropped: the orphan-audio warning disappeared (data-derived: must be a FAIL) -> the intended check(s) FAIL: manifest.warnings differs",
+   "ok": true,
+   "detail": "fail=1 allowed=0 nonexact: FAIL:manifest.warnings differs (A [\"1 stored audio file has no library entry; included as-is\"],"
+  },
+  {
+   "name": "oracle control warning-both-dropped: A has [orphan, theme]; B has none (the orphan warning may not vanish with it) -> the intended check(s) FAIL: manifest.warnings differs",
+   "ok": true,
+   "detail": "fail=1 allowed=0 nonexact: FAIL:manifest.warnings differs (A [\"1 stored audio file has no library entry; included as-is\", "
+  },
+  {
+   "name": "oracle control warning-theme-added: B gained the theme warning that A did not have -> the intended check(s) FAIL: manifest.warnings differs",
+   "ok": true,
+   "detail": "fail=1 allowed=0 nonexact: FAIL:manifest.warnings differs (A [\"1 stored audio file has no library entry; included as-is\"],"
+  },
+  {
+   "name": "harness control: a stale report left at the output path is NOT used when the oracle fails (exit 2, no new report -> error)",
+   "ok": true,
+   "detail": "oracle exit 2: ORACLE ERROR: FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-claude/19f526e8-4aef-506b-b629-1fa4d52da3f0/scratchpad"
+  },
+  {
+   "name": "harness control: exit 0 is rejected where a failing comparison (exit 1) was required",
+   "ok": true,
+   "detail": "oracle exit 0: "
+  },
+  {
+   "name": "harness control: an oracle KILLED BY A SIGNAL (SIGKILL, after writing an all-pass-looking report, with a stale all-pass report already at the path) is rejected, not accepted",
+   "ok": true,
+   "detail": "oracle did not finish: SIGKILL"
+  },
+  {
+   "name": "harness control: an oracle that exceeds the timeout is stopped and rejected (a stale all-pass report at the path is not used, and the stale file is gone)",
+   "ok": true,
+   "detail": "oracle did not finish: spawnSync python3 ETIMEDOUT / stale file present=false"
+  },
+  {
+   "name": "safe-delete control: refused = filesystem root, home directory, /home, a shallow dir, the project root, tests dir, fixtures, the WAV fixtures dir, a non-empty directory without the ownership marker, a symlink to the fixtures, a dangling symlink",
+   "ok": true,
+   "detail": "[true,true,true,true,true,true,true,true,true,true,true]"
+  },
+  {
+   "name": "safe-delete control: an owned, generated directory (with the marker) and a new path under an unrelated parent are accepted",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "safe-delete control: the immutable fixtures and tests are still present after the refusals",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "source library: 3 imported WAVs + 2 web songs, 2 playlists, session, history, 2 orphans, custom/unicode/unknown kv, 2 secret: keys, dark theme",
+   "ok": true,
+   "detail": "{\"t\":5,\"p\":2,\"b\":5}"
+  },
+  {
+   "name": "E1-source: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032602.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "E1-source: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1-source: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "E1 equals the source database: tracks, playlists, every kv key except secret:, every audio entry (key/MIME/size/SHA-256) and the theme",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 contains the unicode/unknown data: x_future field on a song, x_note on a playlist, custom unicode key, x-future kv key, orphan unicode key, unicode titles",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 orphan audio is exported (2 entries with no song) and the manifest warns about it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 playlist order and dangling ids are kept exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 session equals the saved session (the export re-writes it from the live player): differing fields = []",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "E1 -> own browser: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "E1 -> own browser: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> own browser: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> own browser: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E1 -> own browser: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> own browser: this browser's own secret: keys are untouched (2)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}},{\"key\":\"secret:other\",\"value\":{\"token\":\"S-SRC-OTHER-5c22d04e\"}}]"
+  },
+  {
+   "name": "E1 -> own browser: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E1 -> own browser: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E1 -> own browser: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "E1 -> own browser: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: this browser's own secret: keys are untouched (2)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}},{\"key\":\"secret:other\",\"value\":{\"token\":\"S-SRC-OTHER-5c22d04e\"}}]"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E1 -> own browser after RELOAD: still 5 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E1b-own-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032605.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "E1b-own-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1b-own-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "E1 vs re-export from the same browser: oracle comparison has ZERO failures (25 exact, 1 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs re-export from the same browser: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "E1 vs re-export from the same browser: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "E1 vs re-export from the same browser: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs re-export from the same browser: narrowly allowed differences, each with its stated reason (not ignored fields): 1",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:02.662Z, B 2026-11-06T20:26:05.491Z) [wall-clock time of the export]"
+  },
+  {
+   "name": "scenario 1 source browser: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "target library before: 2 imported WAVs + 1 web song, own playlist, orphan, colliding kv key, light theme, 2 secret: keys (different values from the source)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> populated target: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "E1 -> populated target: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> populated target: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> populated target: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E1 -> populated target: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> populated target: this browser's own secret: keys are untouched (2)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}},{\"key\":\"secret:target-extra\",\"value\":{\"token\":\"S-TGT2-SECRET-90ac1763\"}}]"
+  },
+  {
+   "name": "E1 -> populated target: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E1 -> populated target: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "E1 -> populated target: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> populated target: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E1 -> populated target: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "E1 -> populated target: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: this browser's own secret: keys are untouched (2)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}},{\"key\":\"secret:target-extra\",\"value\":{\"token\":\"S-TGT2-SECRET-90ac1763\"}}]"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E1 -> populated target after RELOAD: still 5 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E2-from-populated-target: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032612.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "E2-from-populated-target: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2-from-populated-target: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "E1 vs E2 (export, restore over a different populated library, export): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs E2 (export, restore over a different populated library, export): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "E1 vs E2 (export, restore over a different populated library, export): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "E1 vs E2 (export, restore over a different populated library, export): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs E2 (export, restore over a different populated library, export): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:02.662Z, B 2026-11-06T20:26:12.974Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lb-token', 'secret:other'], B ['secret:lb-token', 'secret:target-extra']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "E2 manifest lists the TARGET's credential key names only (never values)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "scenario 1 populated target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 -> clean browser: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "E2 -> clean browser: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E2 -> clean browser: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 -> clean browser: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E2 -> clean browser: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E2 -> clean browser: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "E2 -> clean browser: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E2 -> clean browser: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E2 -> clean browser: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "E2 -> clean browser: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E2 -> clean browser after RELOAD: still 5 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E3-from-clean-target: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032617.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "E3-from-clean-target: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E3-from-clean-target: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "E2 vs E3 (second hop, via a clean browser): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 vs E3 (second hop, via a clean browser): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "E2 vs E3 (second hop, via a clean browser): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "E2 vs E3 (second hop, via a clean browser): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E2 vs E3 (second hop, via a clean browser): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:12.974Z, B 2026-11-06T20:26:17.712Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lb-token', 'secret:target-extra'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "scenario 1 clean browser: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): this browser's own secret: keys are untouched (2)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}},{\"key\":\"secret:target-extra\",\"value\":{\"token\":\"S-TGT2-SECRET-90ac1763\"}}]"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "E3 -> same populated target again (it already holds E1's data): UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"79f83afb-f1a3-437a-b4f2-23751628e83d\",\"audius:W1\",\"5a9aac55-506a-4d54-ac8f-9005fdef282f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "E4-repeat: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032618.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "E4-repeat: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E4-repeat: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "E3 vs E4 (third hop): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E3 vs E4 (third hop): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "E3 vs E4 (third hop): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "E3 vs E4 (third hop): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E3 vs E4 (third hop): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:17.712Z, B 2026-11-06T20:26:18.443Z) [wall-clock time of the export] | manifest.excluded.kv (A [], B ['secret:lb-token', 'secret:target-extra']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "E1 vs E4 (whole chain: source -> populated -> clean -> populated): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs E4 (whole chain: source -> populated -> clean -> populated): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "E1 vs E4 (whole chain: source -> populated -> clean -> populated): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "E1 vs E4 (whole chain: source -> populated -> clean -> populated): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "E1 vs E4 (whole chain: source -> populated -> clean -> populated): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:02.662Z, B 2026-11-06T20:26:18.443Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lb-token', 'secret:other'], B ['secret:lb-token', 'secret:target-extra']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "across the chain the three hops reach a fixed point: E2, E3 and E4 have identical audio/tracks/playlists bytes",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "scenario 1 populated target (second restore): no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032623.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S2 full -> clean-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S2 full -> clean source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S2 full -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S2 full -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S2 full -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S2 full -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S2 full -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S2 full -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"9ef1d890-dd93-4d26-8bc8-6416f09f959a\",\"audius:W1\",\"60d275cc-6362-4de5-bbd2-64dcdf30e281\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S2 full -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S2 full -> clean: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"9ef1d890-dd93-4d26-8bc8-6416f09f959a\",\"audius:W1\",\"60d275cc-6362-4de5-bbd2-64dcdf30e281\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S2 full -> clean after RELOAD: still 5 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"9ef1d890-dd93-4d26-8bc8-6416f09f959a\",\"audius:W1\",\"60d275cc-6362-4de5-bbd2-64dcdf30e281\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S2 full -> clean-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032628.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S2 full -> clean-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S2 full -> clean: E1 vs E2: oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S2 full -> clean: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S2 full -> clean: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S2 full -> clean: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:23.533Z, B 2026-11-06T20:26:28.392Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lb-token'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "S2 full -> clean target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032633.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S3 light -> dark target-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S3 light -> dark target source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to light. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S3 light -> dark target: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S3 light -> dark target: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S3 light -> dark target: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S3 light -> dark target: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S3 light -> dark target: localStorage is exactly {\"ps-theme\":\"light\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "S3 light -> dark target: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S3 light -> dark target: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"bf2a9252-919b-4b63-baf1-166b8f830f7a\",\"audius:W1\",\"ed03698a-cab4-473a-a8cf-55088a463c42\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S3 light -> dark target: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S3 light -> dark target: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"bf2a9252-919b-4b63-baf1-166b8f830f7a\",\"audius:W1\",\"ed03698a-cab4-473a-a8cf-55088a463c42\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: localStorage is exactly {\"ps-theme\":\"light\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "S3 light -> dark target after RELOAD: still 5 songs, theme light, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"bf2a9252-919b-4b63-baf1-166b8f830f7a\",\"audius:W1\",\"ed03698a-cab4-473a-a8cf-55088a463c42\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S3 light -> dark target-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032640.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S3 light -> dark target-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S3 light -> dark target: E1 vs E2: oracle comparison has ZERO failures (25 exact, 1 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S3 light -> dark target: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S3 light -> dark target: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 light -> dark target: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 1",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:33.407Z, B 2026-11-06T20:26:40.836Z) [wall-clock time of the export]"
+  },
+  {
+   "name": "S3 light -> dark target target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S3 policy: the backup's light theme REPLACED the target's dark theme (both in localStorage and on screen), and E2 carries light",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032645.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S4a absent theme -> light target-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S4a absent theme -> light target source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S4a absent theme -> light target: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4a absent theme -> light target: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S4a absent theme -> light target: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4a absent theme -> light target: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S4a absent theme -> light target: localStorage is exactly {\"ps-theme\":\"light\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "S4a absent theme -> light target: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S4a absent theme -> light target: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"5bf0fe9e-485e-4b25-a652-52317a3563aa\",\"audius:W1\",\"e5297814-f586-4ee8-862c-3da942c9d5e9\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4a absent theme -> light target: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S4a absent theme -> light target: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"5bf0fe9e-485e-4b25-a652-52317a3563aa\",\"audius:W1\",\"e5297814-f586-4ee8-862c-3da942c9d5e9\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: localStorage is exactly {\"ps-theme\":\"light\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "S4a absent theme -> light target after RELOAD: still 5 songs, theme light, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"5bf0fe9e-485e-4b25-a652-52317a3563aa\",\"audius:W1\",\"e5297814-f586-4ee8-862c-3da942c9d5e9\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4a absent theme -> light target-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032653.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S4a absent theme -> light target-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S4a absent theme -> light target: E1 vs E2: oracle comparison has ZERO failures (24 exact, 6 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S4a absent theme -> light target: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S4a absent theme -> light target: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a absent theme -> light target: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 6",
+   "ok": true,
+   "detail": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'light' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-06T20:26:45.908Z, B 2026-11-06T20:26:53.310Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 1595065, B 1595087) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 25) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B b9bc29e6) [derived from the allowed theme difference; proven against B's real bytes by the self-check]"
+  },
+  {
+   "name": "S4a absent theme -> light target target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4a policy: a backup WITHOUT a theme left the target's light theme alone; E1 had none; E2 carries the target's light",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032658.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S4b absent theme -> clean target-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S4b absent theme -> clean target source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S4b absent theme -> clean target: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4b absent theme -> clean target: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S4b absent theme -> clean target: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4b absent theme -> clean target: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S4b absent theme -> clean target: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S4b absent theme -> clean target: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"a1561bb7-3cfa-4b73-b585-1a71d7a23541\",\"audius:W1\",\"52a049a2-71e6-4f76-b3b0-f4074306869c\",\"audius:QW\"],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4b absent theme -> clean target: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S4b absent theme -> clean target: UI shows the restored library (5 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"a1561bb7-3cfa-4b73-b585-1a71d7a23541\",\"audius:W1\",\"52a049a2-71e6-4f76-b3b0-f4074306869c\",\"audius:QW\"],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S4b absent theme -> clean target after RELOAD: still 5 songs, theme unset, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"a1561bb7-3cfa-4b73-b585-1a71d7a23541\",\"audius:W1\",\"52a049a2-71e6-4f76-b3b0-f4074306869c\",\"audius:QW\"],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S4b absent theme -> clean target-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032702.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S4b absent theme -> clean target-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S4b absent theme -> clean target: E1 vs E2: oracle comparison has ZERO failures (25 exact, 1 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S4b absent theme -> clean target: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S4b absent theme -> clean target: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b absent theme -> clean target: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 1",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:26:58.252Z, B 2026-11-06T20:27:02.906Z) [wall-clock time of the export]"
+  },
+  {
+   "name": "S4b absent theme -> clean target target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S4b policy: absent theme into a clean browser stays absent: no theme in the browser, E1 and E2 both have an empty localStorage block",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032707.zip Backup downloaded  1 song, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file "
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-local -> pop after RELOAD: still 1 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032715.zip Backup downloaded  1 song, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file "
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: E1 vs E2: oracle comparison has ZERO failures (14 exact, 7 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S5 minimal min-local -> pop: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> pop: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 7",
+   "ok": true,
+   "detail": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'dark' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-06T20:27:07.727Z, B 2026-11-06T20:27:15.103Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 529541, B 529562) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 24) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B 57016ff8) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.excluded"
+  },
+  {
+   "name": "S5 minimal min-local -> pop target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 min-local: the minimal library has the expected shape (1 songs, 0 playlists, 1 audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032719.zip Backup downloaded  1 song, 0 playlists, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file ba"
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 0 audio files (1 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: 0 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: 0 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-web -> pop after RELOAD: still 1 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032726.zip Backup downloaded  1 song, 0 playlists, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file ba"
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: E1 vs E2: oracle comparison has ZERO failures (13 exact, 7 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S5 minimal min-web -> pop: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-web -> pop: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 7",
+   "ok": true,
+   "detail": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'dark' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-06T20:27:19.353Z, B 2026-11-06T20:27:26.650Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 245, B 266) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 24) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B 57016ff8) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.excluded.kv (A"
+  },
+  {
+   "name": "S5 minimal min-web -> pop target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 min-web: the minimal library has the expected shape (1 songs, 0 playlists, 0 audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032730.zip Backup downloaded  0 songs, 1 playlist, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file ba"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n0 songs, 1 playlist and 0 audio files (1 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: 0 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: UI shows the restored library (0 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: 0 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop after RELOAD: still 0 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032738.zip Backup downloaded  0 songs, 1 playlist, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file ba"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: E1 vs E2: oracle comparison has ZERO failures (13 exact, 7 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 7",
+   "ok": true,
+   "detail": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'dark' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-06T20:27:30.850Z, B 2026-11-06T20:27:38.120Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 88, B 109) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 24) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B 57016ff8) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.excluded.kv (A "
+  },
+  {
+   "name": "S5 minimal min-playlist -> pop target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 min-playlist: the minimal library has the expected shape (0 songs, 1 playlists, 0 audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032742.zip Backup downloaded  0 songs, 0 playlists, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file b"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n0 songs, 0 playlists and 1 audio file (1 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: UI shows the restored library (0 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lb-token\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop after RELOAD: still 0 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":0,\"queue\":[],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032749.zip Backup downloaded  0 songs, 0 playlists, 2 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file b"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: E1 vs E2: oracle comparison has ZERO failures (14 exact, 7 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 7",
+   "ok": true,
+   "detail": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'dark' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-06T20:27:42.304Z, B 2026-11-06T20:27:49.568Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 76, B 97) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 24) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B 57016ff8) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.excluded.kv (A ["
+  },
+  {
+   "name": "S5 minimal min-orphan -> pop target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 min-orphan: the minimal library has the expected shape (0 songs, 0 playlists, 1 audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032754.zip Backup downloaded  1 song, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file "
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S5 minimal min-local -> clean after RELOAD: still 1 songs, theme unset, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032759.zip Backup downloaded  1 song, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file "
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: E1 vs E2: oracle comparison has ZERO failures (15 exact, 1 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean: E1 vs E2: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: E1 vs E2: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean: E1 vs E2: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 minimal min-local -> clean: E1 vs E2: narrowly allowed differences, each with its stated reason (not ignored fields): 1",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-06T20:27:54.442Z, B 2026-11-06T20:27:59.006Z) [wall-clock time of the export]"
+  },
+  {
+   "name": "S5 minimal min-local -> clean target: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S5 min-local: the minimal library has the expected shape (1 songs, 0 playlists, 1 audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean: UI shows the restored library (6 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "S6 p1-main-backup -> clean after RELOAD: still 6 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-main-backup-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032804.zip Backup downloaded  6 songs, 2 playlists, 5.8 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "S6 p1-main-backup-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S6 p1-main-backup: the original p1 file vs this build's re-export: oracle comparison has ZERO failures (23 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup: the original p1 file vs this build's re-export: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S6 p1-main-backup: the original p1 file vs this build's re-export: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S6 p1-main-backup: the original p1 file vs this build's re-export: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-main-backup: the original p1 file vs this build's re-export: narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-04T08:10:31.057Z, B 2026-11-06T20:28:04.014Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lastfm'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "S6 p1-main-backup: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "S6 p1-minimal-backup -> clean after RELOAD: still 1 songs, theme unset, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "S6 p1-minimal-backup-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261107-032808.zip Backup downloaded  1 song, 0 playlists, 532 KB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file "
+  },
+  {
+   "name": "S6 p1-minimal-backup-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "S6 p1-minimal-backup: the original p1 file vs this build's re-export: oracle comparison has ZERO failures (15 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup: the original p1 file vs this build's re-export: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "S6 p1-minimal-backup: the original p1 file vs this build's re-export: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "S6 p1-minimal-backup: the original p1 file vs this build's re-export: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "S6 p1-minimal-backup: the original p1 file vs this build's re-export: narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-04T08:10:40.421Z, B 2026-11-06T20:28:08.810Z) [wall-clock time of the export] | manifest.warnings (A ['ps-theme had an unrecognized value and was not exported'], B []) [the warning describes the OLD exporting browser's state (a ps-theme value that was deliberately not exported), so a restored browser cannot repeat it; only that exact warning, only its removal]"
+  },
+  {
+   "name": "S6 p1-minimal-backup: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed cover of the p1 fixture's web song in S6",
+   "ok": true,
+   "detail": "[] | cover-only entries: 1"
+  },
+  {
+   "name": "network: all 165 non-local requests made by any page were ABORTED by the block; they went only to the app's own Home-screen/startup hosts (api.audius.co, archive.org, fonts.googleapis.com) or were the fixture cover; none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}
