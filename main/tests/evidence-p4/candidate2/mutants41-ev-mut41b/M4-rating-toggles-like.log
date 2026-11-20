@@ -1,0 +1,14 @@
+PASS R2: setup: L1 is liked in the seed, L2 is not
+PASS R2: rating a liked song 3 stars leaves it liked (raw and memory) and stores 3
+FAIL R2: rating an unliked song 5 stars does not like it  :: {"liked":true,"rating":5,"memLiked":true,"memRating":5}
+PASS R2: unliking L1 with the heart keeps its 3 stars
+FAIL R2: liking L2 through the ⋯ menu keeps its 5 stars  :: {"liked":false,"rating":5,"memLiked":false,"memRating":5}
+FAIL R2: clearing L1's rating (still unliked) does not like it  :: {"liked":true,"rating":0,"memLiked":true,"memRating":0}
+FAIL R2: the L key likes the current song and keeps its 2 stars; rating it did not like it  :: {"liked":false,"rating":2,"memLiked":false,"memRating":2}
+FAIL R2: L again unlikes it, still 2 stars  :: {"liked":true,"rating":2,"memLiked":true,"memRating":2}
+PASS R2: the heart state of every other song is unchanged (W1 liked, W2 and others not)
+PASS R2: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data
+
+PHASE 4: 7 / 12 pass

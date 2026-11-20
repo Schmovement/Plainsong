@@ -1,0 +1,19 @@
+== runner controls (classifier negative/positive controls)
+RUNNER CONTROLS: 100 / 100 pass
+41 mutants written
+== controls on the UNMUTATED app (one per scenario used by a mutant)
+control R9: OK - unmutated app passed all 127 checks; every needle of the scenario resolves to exactly one passing check
+== mutants
+B3-reader-rejects-zero: scenario R9 exit=1 total=127 failed=50 VERDICT=DETECTED (50 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses a present rating 0
+      failed: R9 E1 -> clean: real UI restore finished with "Library restored"
+      failed: R9 E1 -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: playlists identical (ids order kept)
+      failed: R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E1 -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+B4-reader-requires-rating: scenario R9 exit=1 total=127 failed=87 VERDICT=DETECTED (87 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses archives that carry no rating (old backups)
+      failed: R9 E0 (old-style, no rating) -> clean: real UI restore finished with "Library restored"
+      failed: R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)
+      failed: R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E0 (old-style, no rating) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+TOTAL: 2 mutants | DETECTED (valid, complete, intended check failed): 2 | SURVIVED or intended check not failed: 0 | ERROR/INCOMPLETE: 0 | control runs invalid: 0

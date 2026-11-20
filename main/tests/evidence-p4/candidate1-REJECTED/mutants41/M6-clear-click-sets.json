@@ -1,0 +1,453 @@
+{
+ "complete": true,
+ "only": "1",
+ "total": 89,
+ "failed": 4,
+ "results": [
+  {
+   "name": "R1 local L1: click star 1: raw DB rating is 1, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 1: UI shows exactly star 1 checked with 1 filled stars, one tab stop on it, and says \"Rated … 1 star\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[1],\"filled\":1,\"glyphs\":\"★☆☆☆☆\",\"tab0\":[1],\"unrated\":false}Rated “Song One” 1 star"
+  },
+  {
+   "name": "R1 local L1: star 1: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\"}]"
+  },
+  {
+   "name": "R1 local L1 1: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 2: raw DB rating is 2, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 2: UI shows exactly star 2 checked with 2 filled stars, one tab stop on it, and says \"Rated … 2 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[2],\"filled\":2,\"glyphs\":\"★★☆☆☆\",\"tab0\":[2],\"unrated\":false}Rated “Song One” 2 stars"
+  },
+  {
+   "name": "R1 local L1: star 2: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\"}]"
+  },
+  {
+   "name": "R1 local L1 2: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 3: raw DB rating is 3, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 3: UI shows exactly star 3 checked with 3 filled stars, one tab stop on it, and says \"Rated … 3 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}Rated “Song One” 3 stars"
+  },
+  {
+   "name": "R1 local L1: star 3: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\"}]"
+  },
+  {
+   "name": "R1 local L1 3: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 4: raw DB rating is 4, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 4: UI shows exactly star 4 checked with 4 filled stars, one tab stop on it, and says \"Rated … 4 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}Rated “Song One” 4 stars"
+  },
+  {
+   "name": "R1 local L1: star 4: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\"}]"
+  },
+  {
+   "name": "R1 local L1 4: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 5: raw DB rating is 5, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 5: UI shows exactly star 5 checked with 5 filled stars, one tab stop on it, and says \"Rated … 5 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}Rated “Song One” 5 stars"
+  },
+  {
+   "name": "R1 local L1: star 5: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\"}]"
+  },
+  {
+   "name": "R1 local L1 5: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and \"Cleared\"",
+   "ok": false,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}"
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: after a RELOAD the rating 4 is still in the raw DB, in memory and on screen; raw before reload == after",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R1 local L1: a cleared rating survives a reload as present 0 (not absent) and shows unrated",
+   "ok": false,
+   "detail": "{\"id\":\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R1 saved web W1: click star 1: raw DB rating is 1, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 1: UI shows exactly star 1 checked with 1 filled stars, one tab stop on it, and says \"Rated … 1 star\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[1],\"filled\":1,\"glyphs\":\"★☆☆☆☆\",\"tab0\":[1],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 1 star"
+  },
+  {
+   "name": "R1 saved web W1: star 1: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 2: raw DB rating is 2, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 2: UI shows exactly star 2 checked with 2 filled stars, one tab stop on it, and says \"Rated … 2 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[2],\"filled\":2,\"glyphs\":\"★★☆☆☆\",\"tab0\":[2],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 2 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 2: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 3: raw DB rating is 3, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 3: UI shows exactly star 3 checked with 3 filled stars, one tab stop on it, and says \"Rated … 3 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 3 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 3: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 4: raw DB rating is 4, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 4: UI shows exactly star 4 checked with 4 filled stars, one tab stop on it, and says \"Rated … 4 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 4 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 4: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 5: raw DB rating is 5, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 5: UI shows exactly star 5 checked with 5 filled stars, one tab stop on it, and says \"Rated … 5 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 5 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 5: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and \"Cleared\"",
+   "ok": false,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}"
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0] vs [[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: after a RELOAD the rating 4 is still in the raw DB, in memory and on screen; raw before reload == after",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R1 saved web W1: a cleared rating survives a reload as present 0 (not absent) and shows unrated",
+   "ok": false,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"al"
+  },
+  {
+   "name": "R1: the other three songs never gained a rating field",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1: nothing playing, play() never called, song and playlist counts unchanged",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"331e1d56-a6b0-4fd4-b6bd-707bad190f8a\",\"audius:W1\",\"d1a7744f-4914-48bd-bfc1-10bbcebe048c\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 18 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

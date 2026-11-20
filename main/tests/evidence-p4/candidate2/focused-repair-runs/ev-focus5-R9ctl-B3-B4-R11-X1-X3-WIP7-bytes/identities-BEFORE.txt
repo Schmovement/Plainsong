@@ -1,0 +1,8 @@
+d639dea4b2baee3509f366cafdf436e8fd9ce0b5f876963f8e1ed8840fc8cd11  /home/claude/p4/index.html
+ea49f27f1715176d77e457681c6284c818934533230e4b5fd6b544c1645f714c  /home/claude/p4/style.css
+639c4a59fe1c8915b284520258413701304b91fd1ee373299c2abcddef678639  /home/claude/p4/tests/phase4.test.js
+429c407562b3db4a61f24742e4e10a95eece9707a4417771cb11420e9635004e  /home/claude/p4/tests/mutants_4.py
+3678472d8ece3c552e1b77f0b518d7da235fa38b440e4a030f18bbb22f0e13a4  /home/claude/p4/tests/run_mutants_4.sh
+135bc22c7cdd33f1264ef0e7164594573928817d7d524c386b30ddafe0cdd67e  /home/claude/p4/tests/mutant_verdict_4.py
+3916698491466018ffc2cb07d7910cf3cb4203a046a9f5207b5441e8a44470d0  /home/claude/p4/tests/test_mutant_verdict_4.py
+497257fe460143d412c4a0cc265aee78f4c37ae3e1bc53a5017a9035cc80df21  /home/claude/p4/tests/make_rating_archives.py

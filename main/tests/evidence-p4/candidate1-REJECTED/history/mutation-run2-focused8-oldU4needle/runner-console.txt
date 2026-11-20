@@ -1,0 +1,47 @@
+== runner controls (classifier negative/positive controls)
+RUNNER CONTROLS: 26 / 26 pass
+38 mutants written
+== controls on the UNMUTATED app (one per scenario used by a mutant)
+control R3: OK - unmutated app passed all 24 checks; every needle of the scenario matches a passing check
+control R5: OK - unmutated app passed all 21 checks; every needle of the scenario matches a passing check
+control R8: OK - unmutated app passed all 18 checks; every needle of the scenario matches a passing check
+control R9: OK - unmutated app passed all 127 checks; every needle of the scenario matches a passing check
+control R10: OK - unmutated app passed all 122 checks; every needle of the scenario matches a passing check
+== mutants
+P1-rating-seeks-playing-song: scenario R8 exit=1 total=18 failed=2 VERDICT=DETECTED (2 check(s) failed, including the intended one) | rating a song seeks the playing song back to 0
+      failed: R8: click star 3 on the PLAYING song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart), current time kept …
+      failed: R8: clear the playing song's rating: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart), current time kept m…
+P2-rating-skips-queue: scenario R8 exit=1 total=18 failed=7 VERDICT=DETECTED (7 check(s) failed, including the intended one) | rating the playing song advances the queue
+      failed: R8: click star 3 on the PLAYING song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: click star 5 on another song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: rate a saved web song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: clear the playing song's rating: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: key 4 on the playing song's star: current song, queue position, queue order, library order and playlists unchanged
+F8-empty-state-generic: scenario R5 exit=1 total=14 failed=2 VERDICT=DETECTED (2 check(s) failed, including the intended one) | the empty state no longer says which filters match nothing
+      failed: R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"
+      failed: R5: the scenario ABORTED with an exception before its last check (a test or app fault, not a pass)
+F9-text-filter-ignored-with-rating: scenario R5 exit=1 total=14 failed=3 VERDICT=DETECTED (3 check(s) failed, including the intended one) | a rating filter replaces the text filter instead of combining with it
+      failed: R5: the rating filter combines with the text filter (3 stars and up AND "song"): the independently computed set and "n of 8 songs"
+      failed: R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"
+      failed: R5: the scenario ABORTED with an exception before its last check (a test or app fault, not a pass)
+U4-all-tab-stops: scenario R3 exit=1 total=24 failed=1 VERDICT=SURVIVED-OTHER (1 other check(s) failed but NONE names the intended safeguard) | every star is a tab stop (no roving tabindex)
+      failed: R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop (star 1): a single roving tab stop per group
+B3-reader-rejects-zero: scenario R9 exit=1 total=88 failed=15 VERDICT=DETECTED (15 check(s) failed, including the intended one) | the strict reader refuses a present rating 0
+      failed: R9 E1 -> clean: real UI restore finished with "Library restored"
+      failed: R9 E1 -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: playlists identical (ids order kept)
+      failed: R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E1 -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+B4-reader-requires-rating: scenario R9 exit=1 total=36 failed=21 VERDICT=DETECTED (21 check(s) failed, including the intended one) | the strict reader refuses archives that carry no rating (old backups)
+      failed: R9 E0 (old-style, no rating) -> clean: real UI restore finished with "Library restored"
+      failed: R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)
+      failed: R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E0 (old-style, no rating) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)
+B9-reader-negzero-accepted: scenario R10 exit=1 total=122 failed=7 VERDICT=DETECTED (7 check(s) failed, including the intended one) | the strict reader accepts the JSON literal -0
+      failed: R10 refused: bad-rating-neg-zero (rating -0 (the literal -0)): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" …
+      failed: R10 refused: bad-rating-neg-zero: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-on-web-song: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-in-history-snapshot: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-in-session-web: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+TOTAL: 8 mutants | DETECTED (valid, complete, intended check failed): 7 | SURVIVED or intended check not failed: 1 | ERROR/INCOMPLETE: 0 | control runs invalid: 0

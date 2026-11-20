@@ -1,0 +1,14 @@
+PASS R2: setup: L1 is liked in the seed, L2 is not
+PASS R2: rating a liked song 3 stars leaves it liked (raw and memory) and stores 3
+PASS R2: rating an unliked song 5 stars does not like it
+PASS R2: unliking L1 with the heart keeps its 3 stars
+PASS R2: liking L2 through the ⋯ menu keeps its 5 stars
+PASS R2: clearing L1's rating (still unliked) does not like it
+PASS R2: the L key likes the current song and keeps its 2 stars; rating it did not like it
+PASS R2: L again unlikes it, still 2 stars
+PASS R2: the heart state of every other song is unchanged (W1 liked, W2 and others not)
+PASS R2: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 12 / 12 pass

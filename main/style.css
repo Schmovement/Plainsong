@@ -499,6 +499,60 @@ dialog input {
   cursor: pointer
 }
 
+/* Phase 4: rating column (rows made by row() carry .has-rate; the queue's .qrow rows are unchanged) */
+.row.has-rate {
+  grid-template-columns: 44px minmax(0, 1fr) minmax(0, .8fr) 108px 52px 76px
+}
+
+.r-rate {
+  display: flex;
+  align-items: center
+}
+
+.row.head .r-rate {
+  display: block
+}
+
+.rate {
+  display: inline-flex
+}
+
+.rate button {
+  width: 21px;
+  height: 30px;
+  padding: 0;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--dim);
+  opacity: .6;
+  border-radius: 5px
+}
+
+.rate button.f {
+  color: var(--accent-text);
+  opacity: 1
+}
+
+.rate button:hover {
+  color: var(--accent-text);
+  opacity: 1
+}
+
+.rate button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  opacity: 1
+}
+
+.rate.unrated button:not(:hover):not(:focus-visible) {
+  opacity: .35
+}
+
+.row:hover .rate.unrated button,
+.row:focus-within .rate.unrated button {
+  opacity: .8
+}
+
 .row:hover,
 .qrow:hover {
   background: var(--hover)
@@ -1358,6 +1412,10 @@ dialog input {
     grid-template-columns: 44px minmax(0, 1fr) minmax(0, .7fr) 48px 70px
   }
 
+  .row.has-rate {
+    grid-template-columns: 44px minmax(0, 1fr) minmax(0, .7fr) 108px 48px 70px
+  }
+
   .vol input {
     width: 70px
   }
@@ -1428,6 +1486,11 @@ dialog input {
   .qrow {
     grid-template-columns: 44px minmax(0, 1fr) auto 70px;
     gap: 12px
+  }
+
+  .row.has-rate {
+    grid-template-columns: 44px minmax(0, 1fr) auto auto 70px;
+    gap: 10px
   }
 
   .r-alb {
@@ -1847,4 +1910,15 @@ dialog input {
 
 .cov-orig {
   margin-top: 6px
+}
+
+/* Phase 4: on a narrow screen the star column is hidden; the ⋯ menu has Rate… */
+@media (max-width:600px) {
+  .row.has-rate {
+    grid-template-columns: 44px minmax(0, 1fr) auto 70px
+  }
+
+  .row.has-rate .r-rate {
+    display: none
+  }
 }

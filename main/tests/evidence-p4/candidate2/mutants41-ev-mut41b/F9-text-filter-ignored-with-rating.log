@@ -1,0 +1,23 @@
+PASS R5: filter "unrated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "rated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "5": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "4": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "3": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "2": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: filter "any": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)
+PASS R5: "Unrated" counts both the cleared song (0) and the never-rated song (absent)
+FAIL R5: the rating filter combines with the text filter (3 stars and up AND "song"): the independently computed set and "n of 8 songs"  :: ["d8042882-1b66-42da-a312-ec2e49e48dc9","b880ac1b-9582-483b-930f-8aac17435dab","73616964-2210-4fc9-a945-a656c1d45afc","audius:D2","audius:D1","audius:W1"]6 of 8 songs
+FAIL R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"  ::  | 2 of 8 songs
+FAIL R5: "Clear the filters" resets the rating filter and the text filter and shows all 8 songs again ("8 songs")  :: the public "Clear the filters" control could not be clicked: page.click: Timeout 4000ms exceeded. | {"r":"unrated","q":"zzzz","n":2,"c":"2 of 8 songs"}
+PASS R5: with the rating filter on "Any rating" a text filter that matches nothing still says "No songs match that filter."
+PASS R5: rating E1 while the "Unrated" filter is on removes it from the list at once and the count follows ("1 of 8 songs")
+PASS R5: with sort "high to low", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group
+PASS R5: clearing D1 while "Rated" is on drops it from the list ("rated" = 1 star or more) and D2 stays
+PASS R5: in a library where nothing is rated, "Rated" says no songs match “Rated (1 star or more)” and counts "0 of 5 songs"
+PASS R5: no page errors
+PASS R5 unrated: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data
+
+PHASE 4: 18 / 21 pass

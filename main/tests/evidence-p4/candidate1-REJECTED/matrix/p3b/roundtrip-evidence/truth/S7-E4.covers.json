@@ -1,0 +1,137 @@
+{
+ "schema": "cover_check_3b.v1",
+ "file": "/home/claude/w4/wr-matrix/p3b/exports/04-S7-E4.zip",
+ "tracks": [
+  {
+   "id": "03e72b8b-e2c7-43e7-beed-651798177aa7",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 6610,
+    "sha256": "b4d15d7f17d9dfea1b4359a8f13f23a164b47ad47fde323edb90c50bfcb90b02",
+    "w": 512,
+    "h": 384,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "empty"
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "2139fc50-50c0-468d-aa36-7e97bf4cb561",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 2165,
+    "sha256": "2ffad01daac3ecf43f86ff51920a86a2acfda992d6fabeb5c0ce885468e52962",
+    "w": 120,
+    "h": 90,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 2165,
+    "sha256": "2ffad01daac3ecf43f86ff51920a86a2acfda992d6fabeb5c0ce885468e52962",
+    "w": 120,
+    "h": 90,
+    "container_ok": true
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "408d6d2f-aacc-4259-babc-5cbc468294a9",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 2170,
+    "sha256": "628fb18ca08601bcddab100d31a7cbf2c15f7f7ffe0a35ed6c3c90e90d2b0540",
+    "w": 90,
+    "h": 120,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 2170,
+    "sha256": "628fb18ca08601bcddab100d31a7cbf2c15f7f7ffe0a35ed6c3c90e90d2b0540",
+    "w": 90,
+    "h": 120,
+    "container_ok": true
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "archive:W2",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 2283,
+    "sha256": "5dc9096cf5f0f8d625c76f7f41c086c4aea33807f99443bc1330490d0ea58cee",
+    "w": 120,
+    "h": 120,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "url",
+    "value": "https://example.invalid/cover-w2.jpg"
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "audius:W1",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 916,
+    "sha256": "72135da2b50e8121ee06ede01d21c1eabdfca99b5febe0f4cf1ffcffb925a27d",
+    "w": 32,
+    "h": 32,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/png",
+    "decodes": true,
+    "magic_mime": "image/png",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 70,
+    "sha256": "c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77",
+    "w": 1,
+    "h": 1,
+    "container_ok": true
+   },
+   "has_origCover": true
+  }
+ ]
+}

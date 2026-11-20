@@ -1,0 +1,110 @@
+{
+ "complete": true,
+ "only": "11",
+ "scenariosSelected": [
+  11
+ ],
+ "scenariosFinished": [
+  11
+ ],
+ "scenariosAborted": [],
+ "total": 19,
+ "failed": 2,
+ "results": [
+  {
+   "name": "R11a: handleAct has no duplicated action label (a later duplicate silently never runs)",
+   "ok": true,
+   "detail": "{\"n\":33,\"dup\":[]}"
+  },
+  {
+   "name": "R11a: the seeded session starts at a speed other than 1.5x (so the first preset click is a real change)",
+   "ok": true,
+   "detail": "{\"rate\":1.25,\"label\":\"1.25×\",\"on\":[]}"
+  },
+  {
+   "name": "R11a: clicking the 1.5x speed preset sets the speed, the button label and the highlighted chip",
+   "ok": true,
+   "detail": "{\"rate\":1.5,\"label\":\"1.5×\",\"on\":[1.5]}"
+  },
+  {
+   "name": "R11a: giving a song 3 stars does not change the speed (still 1.5x) and the speed preset did not rate anything",
+   "ok": true,
+   "detail": "{\"rate\":1.5,\"label\":\"1.5×\",\"on\":[]}"
+  },
+  {
+   "name": "R11a: another preset (0.75x) changes the speed and leaves every rating exactly as it was",
+   "ok": true,
+   "detail": "{\"rate\":0.75,\"label\":\"0.75×\",\"on\":[0.75]}"
+  },
+  {
+   "name": "R11a: \"Reset to 1×\" still works",
+   "ok": true,
+   "detail": "{\"rate\":1,\"label\":\"1×\",\"on\":[1]}"
+  },
+  {
+   "name": "R11-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-104958.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R11-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R11b: the song is removed from memory at once while its delete waits behind the slow write; the stored copy is still there",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11b: a real restore of the earlier backup (which holds the SAME song id) completes while the delete is still queued",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: bro"
+  },
+  {
+   "name": "R11b: the restored library holds the song (memory, track record, audio blob)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library",
+   "ok": false,
+   "detail": "[\"1d6115df-6564-4df6-b40b-78e71ed647de\",\"archive:W2\",\"audius:W1\",\"e4448d79-640c-4c3a-97f5-8b3649ab9601\"]"
+  },
+  {
+   "name": "R11b: the old removal did not touch the restored library either: memory still has the song, playlists and queue are exactly as restored, stored playlists unchanged",
+   "ok": true,
+   "detail": "{\"memF\":{\"has\":true,\"pl\":\"[[\\\"pl-b\\\",[]],[\\\"pl-a\\\",[\\\"audius:W1\\\",\\\"9890c195-de79-473a-93df-9d64b21a938b\\\",\\\"1d6115df-6564-4df6-b40b-78e71ed647de\\\",\\\"ghost-id\\\",\\\"e4448d79-640c-4c3a-97f5-8b3649ab9601\\\"]]]\",\"q\":[\"1d6115df-6564-4df6-b40b-78e71ed647de\",\"audius:W1\",\"e4448d79-640c-4c3a-97f5-8b3649ab9601\""
+  },
+  {
+   "name": "R11b: after a reload the restored library still has every song of the backup (same ids and records)",
+   "ok": false,
+   "detail": "[\"1d6115df-6564-4df6-b40b-78e71ed647de\",\"archive:W2\",\"audius:W1\",\"e4448d79-640c-4c3a-97f5-8b3649ab9601\"]"
+  },
+  {
+   "name": "R11c: normal removal (no restore) behind a slow write: song, audio blob and playlist entries are gone after the write ends, and it is gone after a reload",
+   "ok": true,
+   "detail": "playlistsContaining=1"
+  },
+  {
+   "name": "R11: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "10 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; offending: []"
+  }
+ ]
+}

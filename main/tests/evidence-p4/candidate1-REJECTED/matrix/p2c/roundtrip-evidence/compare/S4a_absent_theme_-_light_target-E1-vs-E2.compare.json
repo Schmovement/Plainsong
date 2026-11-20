@@ -1,0 +1,167 @@
+{
+ "schema": "oracle_2c.compare.v1",
+ "A": "/home/claude/w4/wr-matrix/p2c/exports/10-S4a_absent_theme_-_light_target-E1.zip",
+ "B": "/home/claude/w4/wr-matrix/p2c/exports/11-S4a_absent_theme_-_light_target-E2.zip",
+ "options": {
+  "bTheme": "light",
+  "bSecretKeys": [
+   "secret:lb-token"
+  ],
+  "timeUnavailable": false
+ },
+ "results": [
+  {
+   "check": "A self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "A has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "entry names and order identical (10 entries)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/tracks.json byte-identical (sha256 77d463dc0bad)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/playlists.json byte-identical (sha256 b6e370675295)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000001.bin byte-identical (sha256 449f6d1d7d62)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000002.bin byte-identical (sha256 e5313e216fd0)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000003.bin byte-identical (sha256 f102eb734257)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000004.bin byte-identical (sha256 416b6d6783fb)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000005.bin byte-identical (sha256 785b0751fc2c)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "audio list identical in order: key, MIME, size, SHA-256 for all 5 entries",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "tracks records identical, same order and same key order (5 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "playlists records identical, same order and same key order (2 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv key set and order identical: ['custom:plain', 'custom:zero', 'custom:ключ/日本', 'hist', 'session', 'x-future:setting']",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:plain] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:zero] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:ключ/日本] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[hist] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[session] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[x-future:setting] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "localstorage.json: A had no ps-theme; B carries the target browser's own theme 'light'",
+   "status": "allowed",
+   "detail": "a backup without a theme leaves the target's theme alone, so its re-export contains that theme"
+  },
+  {
+   "check": "manifest compared leaf by leaf (60 values in A): 5 differ (each listed below)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "manifest.createdAt (A 2026-11-08T17:47:53.415Z, B 2026-11-08T17:48:00.662Z)",
+   "status": "allowed",
+   "detail": "wall-clock time of the export"
+  },
+  {
+   "check": "manifest.counts.localStorage (A 0, B 1)",
+   "status": "allowed",
+   "detail": "follows the allowed theme difference and equals the real number of keys in B"
+  },
+  {
+   "check": "manifest.payloadBytes (A 1595065, B 1595087)",
+   "status": "allowed",
+   "detail": "derived from an allowed file difference; B's number is proven against B's real bytes by the self-check"
+  },
+  {
+   "check": "manifest.files[data/localstorage.json].bytes (A 3, B 25)",
+   "status": "allowed",
+   "detail": "derived from the allowed theme difference; proven against B's real bytes by the self-check"
+  },
+  {
+   "check": "manifest.files[data/localstorage.json].crc32 (A dda1b006, B b9bc29e6)",
+   "status": "allowed",
+   "detail": "derived from the allowed theme difference; proven against B's real bytes by the self-check"
+  },
+  {
+   "check": "manifest.excluded.kv equals the secret: key names the exporting browser holds ['secret:lb-token']",
+   "status": "exact",
+   "detail": ""
+  }
+ ],
+ "fail": 0,
+ "allowed": 6,
+ "exact": 24
+}

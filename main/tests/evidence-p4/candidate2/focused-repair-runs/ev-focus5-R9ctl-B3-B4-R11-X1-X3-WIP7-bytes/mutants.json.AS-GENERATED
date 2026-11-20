@@ -1,0 +1,385 @@
+[
+ {
+  "id": "M1-zero-counts-as-absent-on-clear",
+  "desc": "clearing a song that was never rated writes a 0 (missing turned into 0)",
+  "scenario": 0,
+  "must_fail": [
+   "R0: clearing a song that was never rated is a no-op"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M2-no-noop-shortcut",
+  "desc": "setting the value a song already has still writes",
+  "scenario": 6,
+  "must_fail": [
+   "R6: setting the value a song already has"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M3-validation-removed",
+  "desc": "setRating no longer validates the value (NaN, 6, \"3\", -0 ... are stored)",
+  "scenario": 6,
+  "must_fail": [
+   "R6: every invalid rating"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M4-rating-toggles-like",
+  "desc": "rating a song also likes it",
+  "scenario": 2,
+  "must_fail": [
+   "R2: rating an unliked song 5 stars does not like it"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M5-backup-restore-guard-removed",
+  "desc": "a rating can be written while a backup or restore runs (both guards removed)",
+  "scenario": 6,
+  "must_fail": [
+   "R6: while a backup or restore is running"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M6-clear-click-sets",
+  "desc": "clicking the star a song already has sets it again instead of clearing",
+  "scenario": 1,
+  "must_fail": [
+   "R1 local L1: clicking the current star clears",
+   "R1 saved web W1: clicking the current star clears"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "M7-eager-legacy-rewrite",
+  "desc": "showing the library list rewrites legacy songs with an explicit rating 0",
+  "scenario": 0,
+  "must_fail": [
+   "R0: sorting by rating both ways and trying every filter makes NO write"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "W1-mutate-then-put",
+  "desc": "setRating mutates the shared record first and then writes it (a failed write leaves the uncommitted rating in memory and in other writers' snapshots)",
+  "scenario": 7,
+  "must_fail": [
+   "R7b: after the REJECTED rating write nothing of the rating exists anywhere"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "W2-no-per-track-queue",
+  "desc": "the per-track write queue is removed: every writer runs immediately",
+  "scenario": 7,
+  "must_fail": [
+   "R7a: the like is queued behind the held rating write"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "W3-stale-clone-applied",
+  "desc": "after a committed rating write the whole stale clone is copied over the shared record (a like made while the write was pending is overwritten)",
+  "scenario": 7,
+  "must_fail": [
+   "R7a: after the release BOTH changes are in the raw DB"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "W4-removed-song-resurrected",
+  "desc": "a rating write that finishes after the song was removed still reports success and touches the detached record",
+  "scenario": 7,
+  "must_fail": [
+   "R7e: removing the song while its rating write is held"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "W5-epoch-ignored",
+  "desc": "a library replaced by a restore while the write was pending is not noticed",
+  "scenario": 7,
+  "must_fail": [
+   "R7f: if the library epoch changed while the write was pending"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "P1-rating-seeks-playing-song",
+  "desc": "rating a song seeks the playing song back to 0",
+  "scenario": 8,
+  "must_fail": [
+   "R8: click star 3 on the PLAYING song: the playback position (currentTime) was not reset"
+  ],
+  "must_pass": [
+   "R8: click star 3 on the PLAYING song: the same audio source keeps playing",
+   "R8: click star 3 on the PLAYING song: current song, queue position"
+  ]
+ },
+ {
+  "id": "P2-rating-skips-queue",
+  "desc": "rating the playing song advances the queue",
+  "scenario": 8,
+  "must_fail": [
+   "R8: click star 3 on the PLAYING song: current song, queue position"
+  ],
+  "must_pass": [
+   "R8: click star 3 on the PLAYING song: the same audio source keeps playing",
+   "R8: click star 3 on the PLAYING song: the playback position (currentTime) was not reset"
+  ]
+ },
+ {
+  "id": "F1-sort-no-ties",
+  "desc": "rating sort has no tie-break (ties keep an arbitrary earlier order)",
+  "scenario": 4,
+  "must_fail": [
+   "R4: \"Rating: high to low\" shows the order"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F2-low-reverses-ties",
+  "desc": "low-to-high is the exact reverse of high-to-low (ties reversed too)",
+  "scenario": 4,
+  "must_fail": [
+   "R4: \"Rating: low to high\" shows the independently computed order"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F3-high-direction-swapped",
+  "desc": "high-to-low sorts ascending",
+  "scenario": 4,
+  "must_fail": [
+   "R4: \"Rating: high to low\" shows the order"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F4-unrated-only-absent",
+  "desc": "the Unrated filter matches only songs with no rating field (a cleared 0 is not unrated)",
+  "scenario": 5,
+  "must_fail": [
+   "R5: filter \"unrated\""
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F5-rated-includes-zero",
+  "desc": "the Rated filter includes unrated songs",
+  "scenario": 5,
+  "must_fail": [
+   "R5: filter \"rated\""
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F6-four-plus-exact",
+  "desc": "the \"4 stars and up\" filter matches only exactly 4",
+  "scenario": 5,
+  "must_fail": [
+   "R5: filter \"4\""
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F7-count-wrong",
+  "desc": "the count line shows the number shown out of the number shown",
+  "scenario": 5,
+  "must_fail": [
+   "R5: filter \"5\""
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F8-empty-state-generic",
+  "desc": "the empty state no longer says which filters match nothing",
+  "scenario": 5,
+  "must_fail": [
+   "R5: an empty result says which filters match nothing"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F9-text-filter-ignored-with-rating",
+  "desc": "a rating filter replaces the text filter instead of combining with it",
+  "scenario": 5,
+  "must_fail": [
+   "R5: the rating filter combines with the text filter"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F10-list-not-refreshed",
+  "desc": "rating a song while a rating filter is on leaves the list as it was",
+  "scenario": 5,
+  "must_fail": [
+   "R5: rating E1 while the \"Unrated\" filter is on removes it from the list"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F11-focus-lost",
+  "desc": "after the list is re-read the keyboard focus is dropped",
+  "scenario": 5,
+  "must_fail": [
+   "the keyboard focus stays on that song's star group"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "U1-group-unlabelled",
+  "desc": "the star group has no accessible name",
+  "scenario": 0,
+  "must_fail": [
+   "R0: each of the 3 local and 2 saved web songs shows a labelled 5-star radio group"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "U2-stars-on-unsaved-song",
+  "desc": "a song that is only shown (not in the library) also gets stars",
+  "scenario": 0,
+  "must_fail": [
+   "R0: a song that is only SHOWN"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "U3-arrow-keys-leak",
+  "desc": "arrow keys on a star also reach the global shortcuts (volume / seek)",
+  "scenario": 3,
+  "must_fail": [
+   "R3: ArrowUp moves focus on (star 4) and does not change the volume"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "U4-all-tab-stops",
+  "desc": "every star is a tab stop (no roving tabindex)",
+  "scenario": 3,
+  "must_fail": [
+   "R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B1-export-writes-zero",
+  "desc": "the backup writes rating 0 for songs that never had one (missing turned into 0)",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E0: the backup of a library in which nothing was ever rated carries NO rating"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B2-restore-normalises-zero",
+  "desc": "restore drops a present rating 0 (zero turned into missing)",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E1 -> clean: tracks identical to the backup"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B3-reader-rejects-zero",
+  "desc": "the strict reader refuses a present rating 0",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E1 -> clean: real UI restore finished"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B4-reader-requires-rating",
+  "desc": "the strict reader refuses archives that carry no rating (old backups)",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E0 (old-style, no rating) -> clean: real UI restore finished"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B5-reader-unchecked",
+  "desc": "the strict reader no longer validates rating",
+  "scenario": 10,
+  "must_fail": [
+   "R10 refused: bad-rating-6 "
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B6-reader-accepts-fraction",
+  "desc": "the strict reader accepts any number (2.5, 0.5, 5.000001)",
+  "scenario": 10,
+  "must_fail": [
+   "R10 refused: bad-rating-2.5 "
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B7-reader-coerces-text",
+  "desc": "the strict reader coerces text and booleans to numbers (\"3\", true, null)",
+  "scenario": 10,
+  "must_fail": [
+   "R10 refused: bad-rating-text-3 "
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B8-reader-range-widened",
+  "desc": "the strict reader accepts ratings above 5",
+  "scenario": 10,
+  "must_fail": [
+   "R10 refused: bad-rating-6 "
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B9-reader-negzero-accepted",
+  "desc": "the strict reader accepts the JSON literal -0",
+  "scenario": 10,
+  "must_fail": [
+   "R10 refused: bad-rating-neg-zero "
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "X1-star-action-shadows-speed-preset",
+  "desc": "the star action reuses the name of the playback-speed preset action (the first matching case wins, so the speed presets stop working)",
+  "scenario": 11,
+  "must_fail": [
+   "R11a: clicking the 1.5x speed preset sets the speed"
+  ],
+  "must_pass": [
+   "R11b: a real restore of the earlier backup"
+  ]
+ },
+ {
+  "id": "X2-stale-delete-after-restore",
+  "desc": "a queued track delete still runs after a restore replaced the library (it erases the restored song with the same id)",
+  "scenario": 11,
+  "must_fail": [
+   "R11b: after the slow write ends, the stale delete did NOT erase the restored song"
+  ],
+  "must_pass": [
+   "R11b: a real restore of the earlier backup",
+   "R11a: clicking the 1.5x speed preset sets the speed"
+  ]
+ },
+ {
+  "id": "X3-old-removal-touches-restored-library",
+  "desc": "the removal continues after the library was replaced: it deletes the restored audio and edits the restored playlists and queue",
+  "scenario": 11,
+  "must_fail": [
+   "R11b: the old removal did not touch the restored library either"
+  ],
+  "must_pass": [
+   "R11b: a real restore of the earlier backup"
+  ]
+ }
+]

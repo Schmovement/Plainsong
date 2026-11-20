@@ -1,0 +1,57 @@
+PASS R9-E0-unrated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS R9-E0-unrated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS R9-E0-unrated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS R9 E0: the backup of a library in which nothing was ever rated carries NO rating field on any of its 8 songs (a missing rating is not written as 0)
+FAIL R9 E0 (old-style, no rating) -> clean: real UI restore finished with "Library restored"  :: This backup can’t be restored
+
+Some songs have invalid fields. Nothing was changed.
+
+tracks[0]: rating must be a whole number from 0 to 5
+tracks[1]: rating must be a whole number from 0 to 5
+tracks[2]: rating must be a whole number from 0 to 5
+tracks[3]: rating must be a whole number from 0 to 5
+tra
+FAIL R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)  :: 0 vs 8
+FAIL R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)
+FAIL R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history  :: [] vs ["custom:plain","custom:zero","custom:ключ/日本","hist","session","x-future:setting"]
+FAIL R9 E0 (old-style, no rating) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)  :: 0 vs 5
+PASS R9 E0 (old-style, no rating) -> clean: this browser's own secret: keys are untouched (0)
+FAIL R9 E0 (old-style, no rating) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)  :: {}
+PASS R9 E0 (old-style, no rating) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS R9 E0 (old-style, no rating) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+FAIL R9 E0 (old-style, no rating) -> clean: UI shows the restored library (8 songs) and the policy theme  :: {"paused":true,"allPaused":true,"plays":0,"songs":0,"queue":[],"view":"library","theme":null,"lsTheme":null,"restoring":false,"busy":true,"lock":false}
+PASS R9 E0: restored with no rating field invented on any song, and every song shows empty stars
+FAIL R9 E0 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)  :: 0 vs 8
+FAIL R9 E0 -> clean after RELOAD: playlists identical (ids order kept)
+FAIL R9 E0 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history  :: [] vs ["custom:plain","custom:zero","custom:ключ/日本","hist","session","x-future:setting"]
+FAIL R9 E0 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)  :: 0 vs 5
+PASS R9 E0 -> clean after RELOAD: this browser's own secret: keys are untouched (0)
+FAIL R9 E0 -> clean after RELOAD: localStorage is exactly {"ps-theme":"dark"} (theme policy)  :: {}
+FAIL R9 E0 -> clean after RELOAD: still 8 songs, theme dark, paused, no play() call  :: {"paused":true,"allPaused":true,"plays":0,"songs":0,"queue":[],"view":"library","theme":null,"lsTheme":null,"restoring":false,"busy":false,"lock":false}
+FAIL R9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with "Library restored"  :: This backup can’t be restored
+
+Some songs have invalid fields. Nothing was changed.
+
+tracks[0]: rating must be a whole number from 0 to 5
+tracks[1]: rating must be a whole number from 0 to 5
+tracks[2]: rating must be a whole number from 0 to 5
+tracks[3]: rating must be a whole number from 0 to 5
+tra
+FAIL R9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)  :: 0 vs 6
+FAIL R9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)
+FAIL R9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history  :: [] vs ["custom:pref","hist","session"]
+FAIL R9 p1 full (written by the p1 exporter) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)  :: 0 vs 6
+PASS R9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched (0)
+FAIL R9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly {"ps-theme":"dark"} (theme policy)  :: {}
+PASS R9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS R9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+FAIL R9 p1 full (written by the p1 exporter) -> clean: UI shows the restored library (6 songs) and the policy theme  :: {"paused":true,"allPaused":true,"plays":0,"songs":0,"queue":[],"view":"library","theme":null,"lsTheme":null,"restoring":false,"busy":true,"lock":false}
+PASS R9 p1 full: the old archive has no rating field and restores unchanged: no rating was written for any song
+FAIL R9: the scenario ABORTED with an exception before its last check (a test or app fault, not a pass)  :: TypeError: Cannot read properties of undefined (reading 'id')
+    at /home/claude/fx4/plainsong-p4/tests/phase4.test.js:703:121
+    at async scn (/home/claude/fx4/plainsong-p4/tests/phase4.test.js:357:62)
+    at async /home/claude/fx4/plainsong-p4/tests/phase4.test.js:687:3
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 18 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 15 / 36 pass

@@ -238,7 +238,8 @@
     }
     // a plain whole-record write (like, play counter, duration, lyrics, a new web song): snapshot at execution; skipped if the song was removed or the library replaced meanwhile
     const dbPutTrack = t => trackWrite(t.id, async () => { if (S.tracks.get(t.id) !== t) return; await DB.put('tracks', t); }).catch(() => { });
-    const dbDelTrack = id => trackWrite(id, () => DB.del('tracks', id)).catch(() => { });
+    // a queued delete belongs to the library that existed when the song was removed: if a restore replaced the library (epoch changed) while it waited behind an earlier write, it must NOT run (resolves true only when the delete ran)
+    const dbDelTrack = (id, epoch) => trackWrite(id, async () => { if (epoch !== S.epoch) return false; await DB.del('tracks', id); return true; }).catch(() => false);
 
     const ascii = (b, o, n) => { let s = ''; for (let i = 0; i < n && o + i < b.length; i++) s += String.fromCharCode(b[o + i]); return s; };
     const syncsafe = (b, o) => (b[o] << 21) | (b[o + 1] << 14) | (b[o + 2] << 7) | b[o + 3];
@@ -957,10 +958,11 @@
       return `<div class="cover ${cls}" style="--h:${h}${img ? `;background-image:url(&quot;${esc(img)}&quot;)` : ''}">${img ? '' : ch}</div>`;
     }
     function row(t, i) {
-      return `<div class="row${S.cur === t.id ? ' playing' : ''}" tabindex="0" data-tid="${esc(t.id)}" data-i="${i}">
+      return `<div class="row has-rate${S.cur === t.id ? ' playing' : ''}" tabindex="0" data-tid="${esc(t.id)}" data-i="${i}">
     <div class="r-cov">${cov(t, 'sm')}<span class="r-btn">${ico('play', 18)}</span><span class="bars"><i></i><i></i><i></i></span></div>
     <div class="r-main"><div class="r-t">${esc(t.title)}</div><div class="r-a">${esc(t.artist)}${t.kind === 'web' ? `<span class="tag">${t.src === 'audius' ? 'Audius' : 'Archive'}</span>` : ''}</div></div>
     <div class="r-alb">${esc(t.album)}</div>
+    <div class="r-rate">${rateWidget(t)}</div>
     <div class="r-dur">${t.duration ? fmt(t.duration) : ''}</div>
     <div class="r-act"><button class="icon-btn like${t.liked ? ' on' : ''}" data-act="like" aria-label="Like" aria-pressed="${!!t.liked}">${ico(t.liked ? 'heartOn' : 'heart', 18)}</button><button class="icon-btn" data-act="more" aria-label="More actions">${ico('more', 18)}</button></div>
   </div>`;
@@ -968,7 +970,7 @@
     function trackList(ts, { play = false, head = false, ctx = '' } = {}) {
       ts = ts.map(reg); const li = S.lists.push(ts.map(t => t.id)) - 1;
       return `${play && ts.length ? `<div class="tl-tools"><button class="btn primary" data-act="playList" data-list="${li}">${ico('play', 16)} Play all</button><button class="btn" data-act="playList" data-list="${li}" data-shuffle="1">${ico('shuffle', 16)} Shuffle</button></div>` : ''}
-  <div class="tlist" data-list="${li}" data-ctx="${esc(ctx)}">${head ? '<div class="row head"><span></span><span>Title</span><span class="r-alb">Album</span><span class="r-dur">Time</span><span></span></div>' : ''}${ts.map((t, i) => row(t, i)).join('')}</div>`;
+  <div class="tlist" data-list="${li}" data-ctx="${esc(ctx)}">${head ? '<div class="row head has-rate"><span></span><span>Title</span><span class="r-alb">Album</span><span class="r-rate">Rating</span><span class="r-dur">Time</span><span></span></div>' : ''}${ts.map((t, i) => row(t, i)).join('')}</div>`;
     }
     function trackCards(ts) {
       ts = ts.map(reg); const li = S.lists.push(ts.map(t => t.id)) - 1;
@@ -993,6 +995,22 @@
     const uniq = a => [...new Set(a)];
     const byNo = (a, b) => (a.track || 999) - (b.track || 999) || a.title.localeCompare(b.title);
     const SORTS = { added: (a, b) => b.added - a.added, title: (a, b) => a.title.localeCompare(b.title), artist: (a, b) => a.artist.localeCompare(b.artist) || a.album.localeCompare(b.album) || byNo(a, b), album: (a, b) => a.album.localeCompare(b.album) || byNo(a, b), duration: (a, b) => b.duration - a.duration, plays: (a, b) => (b.plays || 0) - (a.plays || 0) };
+    /* ---- Phase 4: ratings ----
+       t.rating is an ADDITIVE optional whole number 1..5. Absent = never rated (legacy songs are not rewritten); 0 = rated once and then cleared. Absent and 0 both mean "unrated" for
+       display, sorting and filtering. A like is a separate field (t.liked) and the two never change each other. Sorting treats unrated as 0 and breaks every tie by title, artist, then id,
+       so the order is deterministic in both directions. */
+    const ratingOf = t => { const r = t && t.rating; return Number.isInteger(r) && r >= 1 && r <= 5 ? r : 0; };
+    const byRateTie = (a, b) => a.title.localeCompare(b.title) || a.artist.localeCompare(b.artist) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+    SORTS.ratingHigh = (a, b) => ratingOf(b) - ratingOf(a) || byRateTie(a, b);
+    SORTS.ratingLow = (a, b) => ratingOf(a) - ratingOf(b) || byRateTie(a, b);
+    const RATE_FILTERS = [['any', 'Any rating'], ['unrated', 'Unrated'], ['rated', 'Rated (1 star or more)'], ['5', '5 stars'], ['4', '4 stars and up'], ['3', '3 stars and up'], ['2', '2 stars and up']];
+    const rateMatch = (t, f) => { const r = ratingOf(t); return f === 'unrated' ? r === 0 : f === 'rated' ? r >= 1 : f === '5' ? r === 5 : (f === '4' || f === '3' || f === '2') ? r >= +f : true; };
+    const rateStars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+    function rateWidget(t) {
+      if (!S.tracks.has(t.id)) return '';   // only songs that are in the library can be rated (a search result that is not saved cannot)
+      const r = ratingOf(t), f = r || 1;
+      return `<span class="rate${r ? '' : ' unrated'}" role="radiogroup" aria-label="Rating for ${esc(t.title)}">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="${n <= r ? 'f' : ''}" role="radio" data-act="rateSong" data-v="${n}" aria-checked="${n === r}" aria-label="${n} star${n === 1 ? '' : 's'}" title="${n === r ? 'Click again to clear the rating' : `${n} star${n === 1 ? '' : 's'}`}" tabindex="${n === f ? 0 : -1}">${n <= r ? '★' : '☆'}</button>`).join('')}</span>`;
+    }
     function groupBy(keyFn) { const m = new Map(); for (const t of S.tracks.values()) { const k = keyFn(t); if (!m.has(k)) m.set(k, []); m.get(k).push(t); } return m; }
     function libStat() {
       const ts = [...S.tracks.values()], size = ts.reduce((s, t) => s + (t.size || 0), 0), dur = ts.reduce((s, t) => s + (t.duration || 0), 0);
@@ -1077,7 +1095,7 @@
       const tabs = [['songs', 'Songs'], ['albums', 'Albums'], ['artists', 'Artists'], ['playlists', 'Playlists'], ['liked', 'Liked'], ['history', 'History']];
       let body = '';
       if (tab === 'songs') {
-        body = n ? `<div class="toolbar"><input id="libFilter" type="search" placeholder="Filter songs" value="${esc(v.filter || '')}" aria-label="Filter songs"><select id="libSort" aria-label="Sort songs">${[['added', 'Recently added'], ['title', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['plays', 'Most played'], ['duration', 'Longest']].map(([k, l]) => `<option value="${k}"${(v.sort || 'added') === k ? ' selected' : ''}>${l}</option>`).join('')}</select></div><div id="songList"></div>` : emptyLib();
+        body = n ? `<div class="toolbar"><input id="libFilter" type="search" placeholder="Filter songs" value="${esc(v.filter || '')}" aria-label="Filter songs"><select id="libSort" aria-label="Sort songs">${[['added', 'Recently added'], ['title', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['plays', 'Most played'], ['duration', 'Longest'], ['ratingHigh', 'Rating: high to low'], ['ratingLow', 'Rating: low to high']].map(([k, l]) => `<option value="${k}"${(v.sort || 'added') === k ? ' selected' : ''}>${l}</option>`).join('')}</select><select id="libRate" aria-label="Filter by rating">${RATE_FILTERS.map(([k, l]) => `<option value="${k}"${(v.rate || 'any') === k ? ' selected' : ''}>${l}</option>`).join('')}</select></div><p class="sub mono" id="libCount" role="status" aria-live="polite"></p><div id="songList"></div>` : emptyLib();
       } else if (tab === 'albums' || tab === 'artists') {
         const isA = tab === 'albums', m = groupBy(isA ? albumKey : artistKey);
         const items = [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
@@ -1103,8 +1121,13 @@
     };
     function fillSongs() {
       const v = S.view, el = $('#songList'); if (!el) return;
-      const tk = tokens(v.filter || ''); const ts = [...S.tracks.values()].filter(t => matches(t, tk)).sort(SORTS[v.sort || 'added']);
-      el.innerHTML = ts.length ? trackList(ts, { play: true, head: true }) : '<div class="empty">No songs match that filter.</div>';
+      const tk = tokens(v.filter || ''), rf = v.rate || 'any', all = S.tracks.size;
+      const ts = [...S.tracks.values()].filter(t => matches(t, tk) && rateMatch(t, rf)).sort(SORTS[v.sort || 'added'] || SORTS.added);
+      const lab = (RATE_FILTERS.find(x => x[0] === rf) || RATE_FILTERS[0])[1];
+      el.innerHTML = ts.length ? trackList(ts, { play: true, head: true })
+        : rf === 'any' ? '<div class="empty">No songs match that filter.</div>'
+          : `<div class="empty">No songs match “${esc(lab)}”${tk.length ? ` and “${esc(v.filter || '')}”` : ''}.<div class="btn-row"><button class="btn" data-act="libClear">Clear the filters</button></div></div>`;
+      const cn = $('#libCount'); if (cn) cn.textContent = (tk.length || rf !== 'any') ? `${ts.length} of ${all} song${all === 1 ? '' : 's'}` : `${all} song${all === 1 ? '' : 's'}`;
     }
     VIEWS.album = (el, v) => {
       const ts = [...S.tracks.values()].filter(t => albumKey(t) === v.key).sort(byNo);
@@ -1161,6 +1184,7 @@
         { label: 'Add to queue', icon: 'queue', fn: () => enqueue(tid, false) },
         { label: 'Add to playlist…', icon: 'plus', fn: () => { openPlaylistMenu(tid, x, y, ctx); return 'keep'; } },
         { label: t.liked ? 'Remove like' : 'Like', icon: t.liked ? 'heartOn' : 'heart', fn: () => toggleLike(tid) },
+        ...(S.tracks.has(tid) ? [{ label: ratingOf(t) ? `Rating: ${rateStars(ratingOf(t))}…` : 'Rate…', fn: () => { openRatingMenu(tid, x, y, ctx); return 'keep'; } }] : []),
         { sep: true }
       ];
       if (t.kind === 'local') { items.push({ label: 'Go to album', fn: () => go('album', { key: albumKey(t) }) }, { label: 'Go to artist', fn: () => go('artist', { key: artistKey(t) }) }); }
@@ -1193,7 +1217,7 @@
       });
     }
     function showHelp() {
-      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['S', 'Shuffle'], ['R', 'Repeat'], ['A', 'A–B loop: set start, set end, clear'], ['[  ]', 'Slower or faster'], ['\\', 'Normal speed'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
+      const k = [['Space', 'Play or pause'], ['← →', 'Seek 5 seconds'], ['Shift + ← →', 'Previous or next song'], ['↑ ↓', 'Volume'], ['M', 'Mute'], ['L', 'Like current song'], ['On a rating star: ← →', 'Move; Space or Enter sets, 1–5 sets, 0 or Delete clears'], ['S', 'Shuffle'], ['R', 'Repeat'], ['A', 'A–B loop: set start, set end, clear'], ['[  ]', 'Slower or faster'], ['\\', 'Normal speed'], ['Q', 'Queue panel'], ['/', 'Search'], ['?', 'This list']];
       const d = dialog(`<h3>Keyboard shortcuts</h3><dl class="keys">${k.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl><div class="btn-row end"><button class="btn primary" id="dlgOk">Done</button></div>`);
       $('#dlgOk').onclick = () => d.close();
     }
@@ -1269,6 +1293,64 @@
         apply(t);
         return { ok: true, changed, before, memoryOnly: !DB.ok };
       });
+    }
+    /* ---- Phase 4: the rating write. It follows the same rules as the info and cover editors: one queue per song, re-validated when it RUNS, a CLONE carrying only the rating is what is
+       written, and the shared record is changed only after that write is durable (so a failed or rejected write leaves nothing to undo and no other writer's snapshot can carry an
+       uncommitted rating). Setting the value a song already has is a no-op and writes nothing; clearing a song that was never rated keeps the field absent. */
+    async function setRating(tid, value) {
+      const t = S.tracks.get(tid);
+      if (!t) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+      if (!Number.isInteger(value) || value < 0 || value > 5 || Object.is(value, -0)) return { ok: false, msg: 'A rating must be a whole number from 0 to 5. Nothing was saved.' };
+      if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+      const epoch = S.epoch;
+      const apply = o => { o.rating = value; };
+      return trackWrite(tid, async () => {
+        if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        if (S.restoreBusy || S.restoring || S.backupBusy || DB.lock) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was saved.' };
+        const before = ratingOf(t);
+        if (before === value) return { ok: true, none: true, value };
+        if (DB.ok) {
+          const clone = structuredClone(t); apply(clone);
+          try { await DB.put('tracks', clone); }
+          catch (e) { return { ok: false, msg: `Couldn’t save the rating (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }
+          if (S.tracks.get(tid) !== t || epoch !== S.epoch) return { ok: false, msg: 'This song is no longer in your library. Nothing was saved.' };
+        }
+        apply(t);
+        return { ok: true, value, before, memoryOnly: !DB.ok };
+      });
+    }
+    function refreshRatingUI(id) {
+      const t = S.tracks.get(id); if (!t) return; const r = ratingOf(t), f = r || 1;
+      $$('.row[data-tid]').forEach(row => {
+        if (row.dataset.tid !== id) return; const g = $('.rate', row); if (!g) return;
+        g.classList.toggle('unrated', !r);
+        $$('button', g).forEach(b => {
+          const n = +b.dataset.v; b.classList.toggle('f', n <= r); b.textContent = n <= r ? '★' : '☆'; b.setAttribute('aria-checked', n === r); b.tabIndex = n === f ? 0 : -1;
+          b.title = n === r ? 'Click again to clear the rating' : `${n} star${n === 1 ? '' : 's'}`;
+        });
+      });
+    }
+    async function applyRating(tid, value) {
+      const t0 = S.tracks.get(tid), act = document.activeElement, inGroup = !!(act && act.closest && act.closest('.rate') && act.dataset.v);
+      const r = await setRating(tid, value);
+      if (!r.ok) { toast(r.msg, 3600); return r; }
+      if (r.none) return r;
+      refreshRatingUI(tid);
+      const v = S.view, t = S.tracks.get(tid);
+      if (v.name === 'library' && (v.tab || 'songs') === 'songs' && $('#songList') && (v.sort === 'ratingHigh' || v.sort === 'ratingLow' || (v.rate && v.rate !== 'any'))) {
+        fillSongs();   // the song may move or drop out of the list: re-read it, and keep the keyboard where it was
+        if (inGroup && t) { const sel = (window.CSS && CSS.escape) ? CSS.escape(tid) : tid.replace(/["\\]/g, '\\$&'); const b = $(`.row[data-tid="${sel}"] .rate button[tabindex="0"]`); if (b) b.focus(); }
+      }
+      toast(value ? `Rated “${(t || t0).title}” ${value} star${value === 1 ? '' : 's'}` : `Cleared the rating of “${(t || t0).title}”`, 1600);
+      return r;
+    }
+    function rateAct(tid, n) { const t = S.tracks.get(tid); if (!t) return; return applyRating(tid, ratingOf(t) === n ? 0 : n); }   // clicking the star a song already has clears it
+    function openRatingMenu(tid, x, y, ctx) {
+      const t = S.tracks.get(tid); if (!t) return; const cur = ratingOf(t);
+      const items = [5, 4, 3, 2, 1].map(n => ({ label: `${rateStars(n)}  ${n} star${n === 1 ? '' : 's'}${n === cur ? '  (current)' : ''}`, fn: () => applyRating(tid, n) }));
+      if (cur) items.push({ sep: true }, { label: 'Clear rating', icon: 'x', fn: () => applyRating(tid, 0) });
+      items.push({ sep: true }, { label: 'Back', icon: 'back', fn: () => { openTrackMenu(tid, x, y, ctx); return 'keep'; } });
+      openMenu(items, x, y);
     }
     function metaRefresh(t, before) {
       const v = S.view, id = t.id;
@@ -1499,8 +1581,13 @@
     async function removeTrack(id) {
       const t = S.tracks.get(id); if (!t) return;
       if (!await confirmBox(`Remove “${t.title}” from your library?`, 'Remove')) return;
+      if (S.tracks.get(id) !== t) return;   // the library changed (a restore) while the question was open
+      const epoch = S.epoch;
       S.tracks.delete(id); S.mem.delete(id);
-      await dbDelTrack(id); await dbDel('blobs', id);
+      await dbDelTrack(id, epoch);
+      if (epoch !== S.epoch) return;   // a restore replaced the library while the delete waited: nothing of this removal may touch the restored one (its song, audio, playlists or queue)
+      await dbDel('blobs', id);
+      if (epoch !== S.epoch) return;   // (same, if the restore came while the audio delete was running)
       S.playlists.forEach(p => { if (p.ids.includes(id)) { p.ids = p.ids.filter(x => x !== id); dbPut('playlists', p); } });
       if (t.kind === 'web') S.cache.set(id, t); else purgeFromQueue(id);
       libStat(); refresh(); toast('Removed from library');
@@ -1847,6 +1934,7 @@
       for (const k of ['title', 'artist', 'album']) if (typeof t[k] !== 'string') add(`${k} must be text`);
       for (const k of ['duration', 'added', 'plays', 'size', 'track', 'last']) if (t[k] !== undefined && !(isNum(t[k]) && t[k] >= 0)) add(`${k} must be a non-negative number`);
       if (t.liked !== undefined && typeof t.liked !== 'boolean') add('liked must be true or false');
+      if (t.rating !== undefined && !(Number.isInteger(t.rating) && t.rating >= 0 && t.rating <= 5 && !Object.is(t.rating, -0))) add('rating must be a whole number from 0 to 5');   // Phase 4, additive and optional
       for (const k of ['key', 'lyrics', 'lrc', 'lyricsFrom', 'src']) if (t[k] !== undefined && typeof t[k] !== 'string') add(`${k} must be text`);
       if (t.srcId !== undefined && typeof t.srcId !== 'string' && !isNum(t.srcId)) add('srcId must be text or a number');
       if (t.cover !== undefined && !(typeof t.cover === 'string' && (t.cover === '' || RS_COVER_RE.test(t.cover) || isHttpUrl(t.cover)))) add('cover must be empty, an embedded png/jpeg/gif/webp image, or an http(s) address');
@@ -2212,6 +2300,8 @@
         case 'backup': runBackup(); break;
         case 'restore': if (!S.restoreBusy) $('#restoreIn').click(); break;
         case 'like': toggleLike(tidOf(a)); break;
+        case 'rateSong': rateAct(tidOf(a), +d.v); break;   // NOT 'rate': that is the playback-speed preset action below
+        case 'libClear': S.view.filter = ''; S.view.rate = 'any'; render(true); break;
         case 'more': { const r = a.getBoundingClientRect(); const c = a.closest('[data-ctx]'); openTrackMenu(tidOf(a), r.right, r.bottom, c ? c.dataset.ctx : ''); break; }
         case 'playList': { const ids = S.lists[+d.list]; if (ids && ids.length) playList(ids, 0, { shuffle: !!d.shuffle }); break; }
         case 'libTab': S.view.tab = d.tab; render(); break;
@@ -2261,6 +2351,19 @@
       const ll = e.target.closest('.ll[data-t]'); if (ll) { A.currentTime = +ll.dataset.t; return; }
       const r = e.target.closest('[data-tid][data-i]'); if (r) playFromList(r);
     });
+    // Phase 4: a focused star group owns its keys (the global shortcuts would seek or change the volume). Arrow keys/Home/End only MOVE focus; 1-5 set, 0/Delete/Backspace clear;
+    // Space and Enter activate the focused star through its normal click.
+    document.addEventListener('keydown', e => {
+      const b = e.target; if (!b || !b.closest || e.ctrlKey || e.metaKey || e.altKey) return;
+      const g = b.closest('.rate'); if (!g || !b.dataset || !b.dataset.v) return;
+      const k = e.key, btns = [...g.querySelectorAll('button')], i = btns.indexOf(b);
+      let to = -1;
+      if (k === 'ArrowRight' || k === 'ArrowUp') to = Math.min(4, i + 1); else if (k === 'ArrowLeft' || k === 'ArrowDown') to = Math.max(0, i - 1); else if (k === 'Home') to = 0; else if (k === 'End') to = 4;
+      if (to >= 0) { e.preventDefault(); e.stopPropagation(); btns.forEach((x, j) => { x.tabIndex = j === to ? 0 : -1; }); btns[to].focus(); return; }
+      if (/^[1-5]$/.test(k) || k === '0' || k === 'Delete' || k === 'Backspace') {
+        e.preventDefault(); e.stopPropagation(); const row = g.closest('[data-tid]'); if (row) applyRating(row.dataset.tid, /^[1-5]$/.test(k) ? +k : 0);
+      }
+    }, true);
     document.addEventListener('keydown', e => {
       const tg = e.target, typing = tg.matches && tg.matches('input,textarea,select');
       if (e.key === 'Escape') { closeMenu(); closeSpeed(); return; }
@@ -2326,6 +2429,7 @@
     document.addEventListener('change', e => {
       const t = e.target;
       if (t.id === 'libSort') { S.view.sort = t.value; fillSongs(); }
+      else if (t.id === 'libRate') { S.view.rate = t.value; fillSongs(); }
       else if (t.classList && t.classList.contains('spd-pitch')) { S.pitch = t.checked; applyRate(); syncSpeed(); saveSession(); }
       else if (t.id === 'eqPreset' && EQ_PRESETS[t.value]) {
         S.eqPreset = t.value; S.eq = EQ_PRESETS[t.value].slice(); applyEq(); renderNP(); saveSession();

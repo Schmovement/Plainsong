@@ -1,0 +1,113 @@
+{
+ "complete": true,
+ "only": "5",
+ "total": 21,
+ "failed": 0,
+ "results": [
+  {
+   "name": "R5: filter \"unrated\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:E1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"rated\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"5\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"4\": shows exactly the 4 songs the harness expects (local AND saved web), count line \"4 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"audius:D1\",\"audius:D2\",\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 4 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"3\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"2\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"any\": shows exactly the 8 songs the harness expects (local AND saved web), count line \"8 songs\"",
+   "ok": true,
+   "detail": "[\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"archive:W2\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"audius:W1\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"] | 8 songs"
+  },
+  {
+   "name": "R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)",
+   "ok": true,
+   "detail": "[\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\",\"audius:W1\"]"
+  },
+  {
+   "name": "R5: \"Unrated\" counts both the cleared song (0) and the never-rated song (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: the rating filter combines with the text filter (3 stars and up AND \"song\"): the independently computed set and \"n of 8 songs\"",
+   "ok": true,
+   "detail": "[\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\"]3 of 8 songs"
+  },
+  {
+   "name": "R5: an empty result says which filters match nothing (\"Unrated\" and \"zzzz\") and the count line says \"0 of 8 songs\"",
+   "ok": true,
+   "detail": "No songs match “Unrated” and “zzzz”. | Clear the filters | 0 of 8 songs"
+  },
+  {
+   "name": "R5: \"Clear the filters\" resets the rating filter and the text filter and shows all 8 songs again (\"8 songs\")",
+   "ok": true,
+   "detail": "{\"r\":\"any\",\"q\":\"\",\"n\":8,\"c\":\"8 songs\"}"
+  },
+  {
+   "name": "R5: with the rating filter on \"Any rating\" a text filter that matches nothing still says \"No songs match that filter.\"",
+   "ok": true,
+   "detail": "No songs match that filter."
+  },
+  {
+   "name": "R5: rating E1 while the \"Unrated\" filter is on removes it from the list at once and the count follows (\"1 of 8 songs\")",
+   "ok": true,
+   "detail": "[\"archive:W2\"]1 of 8 songs"
+  },
+  {
+   "name": "R5: with sort \"high to low\", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group",
+   "ok": true,
+   "detail": "{\"star\":5,\"tid\":\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"act\":\"rateSong\"}[\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"3411d038-fc87-459f-bb73-af1edc29aa48\",\"archive:W2\"]"
+  },
+  {
+   "name": "R5: clearing D1 while \"Rated\" is on drops it from the list (\"rated\" = 1 star or more) and D2 stays",
+   "ok": true,
+   "detail": "[\"bf791fb6-9a41-4a8c-89df-efa92cb21f2a\",\"72b0e238-a47c-404f-bd8b-e950020cdf38\",\"audius:W1\",\"audius:D2\",\"audius:E1\",\"3411d038-fc87-459f-bb73-af1edc29aa48\"]"
+  },
+  {
+   "name": "R5: in a library where nothing is rated, \"Rated\" says no songs match “Rated (1 star or more)” and counts \"0 of 5 songs\"",
+   "ok": true,
+   "detail": "No songs match “Rated (1 star or more)”. | Clear the filters0 of 5 songs"
+  },
+  {
+   "name": "R5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5 unrated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 18 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

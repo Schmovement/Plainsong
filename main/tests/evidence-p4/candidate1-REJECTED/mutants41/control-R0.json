@@ -1,0 +1,63 @@
+{
+ "complete": true,
+ "only": "0",
+ "total": 11,
+ "failed": 0,
+ "results": [
+  {
+   "name": "R0: the seeded (legacy, pre-Phase-4) library has no rating field on any of its 5 songs",
+   "ok": true,
+   "detail": "5 songs"
+  },
+  {
+   "name": "R0: the sort menu offers \"Rating: high to low\" and \"Rating: low to high\" and the filter menu offers any/unrated/rated/5/4+/3+/2+",
+   "ok": true,
+   "detail": "{\"sort\":[\"Recently added\",\"Title\",\"Artist\",\"Album\",\"Most played\",\"Longest\",\"Rating: high to low\",\"Rating: low to high\"],\"rate\":[\"any=Any rating\",\"unrated=Unrated\",\"rated=Rated (1 star or more)\",\"5=5 stars\",\"4=4 stars and up\",\"3=3 stars and up\",\"2=2 stars and up\"],\"count\":\"5 songs\"}"
+  },
+  {
+   "name": "R0: the count line reads \"5 songs\" with no filter",
+   "ok": true,
+   "detail": "5 songs"
+  },
+  {
+   "name": "R0: sorting by rating both ways and trying every filter makes NO write to the tracks store (no eager rewrite of legacy records) and leaves every record identical",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R0: each of the 3 local and 2 saved web songs shows a labelled 5-star radio group with nothing checked, empty stars and exactly one tab stop",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}"
+  },
+  {
+   "name": "R0: a song that is only SHOWN (a search result that is not in the library) has no rating stars; a library song has them",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R0: clearing a song that was never rated is a no-op: no write, and the field stays ABSENT (missing is not turned into 0)",
+   "ok": true,
+   "detail": "{\"a\":{\"ok\":true,\"none\":true,\"value\":0},\"has\":false}[]"
+  },
+  {
+   "name": "R0: nothing playing, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"bcfc77eb-638b-44aa-bce3-73bb2ddf84c6\",\"audius:W1\",\"2d872bd5-2fd1-4c18-b0b2-857fe66763f8\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

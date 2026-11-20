@@ -1,0 +1,126 @@
+{
+ "schema": "cover_check_3b.v1",
+ "file": "/home/claude/w4/wr-matrix/p3b/exports/06-S11-E.zip",
+ "tracks": [
+  {
+   "id": "145f01df-73af-47a2-892d-aa133717f155",
+   "cover": {
+    "kind": "data",
+    "declared": "image/webp",
+    "decodes": true,
+    "magic_mime": "image/webp",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 858,
+    "sha256": "20aa7d305f5bbc3952c4265e31f80dae6edf9fb100a649dec66bca8e5a8c1658",
+    "w": 64,
+    "h": 64,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/webp",
+    "decodes": true,
+    "magic_mime": "image/webp",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 858,
+    "sha256": "20aa7d305f5bbc3952c4265e31f80dae6edf9fb100a649dec66bca8e5a8c1658",
+    "w": 64,
+    "h": 64,
+    "container_ok": true
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "22bb9f2b-3488-4114-8b57-5428468443fc",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 865,
+    "sha256": "c7ce5e5d84601970b626087621ec0815846283b64e2483cf23914cfd64ce96de",
+    "w": 33,
+    "h": 44,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/png",
+    "decodes": true,
+    "magic_mime": "image/png",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 812033,
+    "sha256": "c52d207ffac2755f6b320aeeb80216bd991d9656dc0e1ef71a73290001b2960f",
+    "w": 520,
+    "h": 520,
+    "container_ok": true
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "ab414ff7-0a54-448c-ab5b-7045cc75c37f",
+   "cover": {
+    "kind": "data",
+    "declared": "image/jpeg",
+    "decodes": true,
+    "magic_mime": "image/jpeg",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 865,
+    "sha256": "c7ce5e5d84601970b626087621ec0815846283b64e2483cf23914cfd64ce96de",
+    "w": 33,
+    "h": 44,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "data",
+    "declared": "image/gif",
+    "decodes": true,
+    "magic_mime": "image/gif",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 1088,
+    "sha256": "ab029ff4e5ed496cf944cd60312e395aba70ef5d2ba4aa3b7a68f7afd8178ddd",
+    "w": 16,
+    "h": 16,
+    "container_ok": true
+   },
+   "has_origCover": true
+  },
+  {
+   "id": "archive:W2",
+   "cover": {
+    "kind": "empty"
+   },
+   "origCover": {
+    "kind": "absent"
+   },
+   "has_origCover": false
+  },
+  {
+   "id": "audius:W1",
+   "cover": {
+    "kind": "data",
+    "declared": "image/png",
+    "decodes": true,
+    "magic_mime": "image/png",
+    "agree": true,
+    "canonical_b64": true,
+    "bytes": 70,
+    "sha256": "c414cd0e204de974f73753c7e28d7638e7b3691bb8b1a2bab6b25bb7fed7ce77",
+    "w": 1,
+    "h": 1,
+    "container_ok": true
+   },
+   "origCover": {
+    "kind": "absent"
+   },
+   "has_origCover": false
+  }
+ ]
+}

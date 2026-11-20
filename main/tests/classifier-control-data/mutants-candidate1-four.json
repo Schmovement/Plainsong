@@ -1,0 +1,38 @@
+[
+ {
+  "id": "F8-empty-state-generic",
+  "desc": "the empty state no longer says which filters match nothing",
+  "scenario": 5,
+  "must_fail": [
+   "R5: an empty result says which filters match nothing"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "F9-text-filter-ignored-with-rating",
+  "desc": "a rating filter replaces the text filter instead of combining with it",
+  "scenario": 5,
+  "must_fail": [
+   "R5: the rating filter combines with the text filter"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B3-reader-rejects-zero",
+  "desc": "the strict reader refuses a present rating 0",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E1 -> clean: real UI restore finished"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "B4-reader-requires-rating",
+  "desc": "the strict reader refuses archives that carry no rating (old backups)",
+  "scenario": 9,
+  "must_fail": [
+   "R9 E0 (old-style, no rating) -> clean: real UI restore finished"
+  ],
+  "must_pass": []
+ }
+]

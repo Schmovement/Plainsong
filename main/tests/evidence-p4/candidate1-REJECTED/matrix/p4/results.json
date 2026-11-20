@@ -1,0 +1,2353 @@
+{
+ "complete": true,
+ "only": "",
+ "total": 469,
+ "failed": 0,
+ "results": [
+  {
+   "name": "R0: the seeded (legacy, pre-Phase-4) library has no rating field on any of its 5 songs",
+   "ok": true,
+   "detail": "5 songs"
+  },
+  {
+   "name": "R0: the sort menu offers \"Rating: high to low\" and \"Rating: low to high\" and the filter menu offers any/unrated/rated/5/4+/3+/2+",
+   "ok": true,
+   "detail": "{\"sort\":[\"Recently added\",\"Title\",\"Artist\",\"Album\",\"Most played\",\"Longest\",\"Rating: high to low\",\"Rating: low to high\"],\"rate\":[\"any=Any rating\",\"unrated=Unrated\",\"rated=Rated (1 star or more)\",\"5=5 stars\",\"4=4 stars and up\",\"3=3 stars and up\",\"2=2 stars and up\"],\"count\":\"5 songs\"}"
+  },
+  {
+   "name": "R0: the count line reads \"5 songs\" with no filter",
+   "ok": true,
+   "detail": "5 songs"
+  },
+  {
+   "name": "R0: sorting by rating both ways and trying every filter makes NO write to the tracks store (no eager rewrite of legacy records) and leaves every record identical",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R0: each of the 3 local and 2 saved web songs shows a labelled 5-star radio group with nothing checked, empty stars and exactly one tab stop",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}"
+  },
+  {
+   "name": "R0: a song that is only SHOWN (a search result that is not in the library) has no rating stars; a library song has them",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R0: clearing a song that was never rated is a no-op: no write, and the field stays ABSENT (missing is not turned into 0)",
+   "ok": true,
+   "detail": "{\"a\":{\"ok\":true,\"none\":true,\"value\":0},\"has\":false}[]"
+  },
+  {
+   "name": "R0: nothing playing, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"681d30a5-87bf-443a-883b-3cb27aa675a8\",\"audius:W1\",\"25a0bdbe-c0cb-4ee5-9ba2-5997c782cb80\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1: click star 1: raw DB rating is 1, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 1: UI shows exactly star 1 checked with 1 filled stars, one tab stop on it, and says \"Rated … 1 star\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[1],\"filled\":1,\"glyphs\":\"★☆☆☆☆\",\"tab0\":[1],\"unrated\":false}Rated “Song One” 1 star"
+  },
+  {
+   "name": "R1 local L1: star 1: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\"}]"
+  },
+  {
+   "name": "R1 local L1 1: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 1: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 2: raw DB rating is 2, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 2: UI shows exactly star 2 checked with 2 filled stars, one tab stop on it, and says \"Rated … 2 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[2],\"filled\":2,\"glyphs\":\"★★☆☆☆\",\"tab0\":[2],\"unrated\":false}Rated “Song One” 2 stars"
+  },
+  {
+   "name": "R1 local L1: star 2: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\"}]"
+  },
+  {
+   "name": "R1 local L1 2: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 2: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 3: raw DB rating is 3, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 3: UI shows exactly star 3 checked with 3 filled stars, one tab stop on it, and says \"Rated … 3 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}Rated “Song One” 3 stars"
+  },
+  {
+   "name": "R1 local L1: star 3: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\"}]"
+  },
+  {
+   "name": "R1 local L1 3: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 3: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 4: raw DB rating is 4, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 4: UI shows exactly star 4 checked with 4 filled stars, one tab stop on it, and says \"Rated … 4 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}Rated “Song One” 4 stars"
+  },
+  {
+   "name": "R1 local L1: star 4: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\"}]"
+  },
+  {
+   "name": "R1 local L1 4: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 4: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: click star 5: raw DB rating is 5, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":\"Unknown album\",\"track\":0,\"duration\":12,"
+  },
+  {
+   "name": "R1 local L1: star 5: UI shows exactly star 5 checked with 5 filled stars, one tab stop on it, and says \"Rated … 5 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}Rated “Song One” 5 stars"
+  },
+  {
+   "name": "R1 local L1: star 5: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\"}]"
+  },
+  {
+   "name": "R1 local L1 5: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 5: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and \"Cleared\"",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\":\"Song One\",\"artist\":\"Artist A\",\"album\":{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}"
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 local L1 clear: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 local L1: after a RELOAD the rating 4 is still in the raw DB, in memory and on screen; raw before reload == after",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song One\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R1 local L1: a cleared rating survives a reload as present 0 (not absent) and shows unrated",
+   "ok": true,
+   "detail": "{\"id\":\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R1 saved web W1: click star 1: raw DB rating is 1, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 1: UI shows exactly star 1 checked with 1 filled stars, one tab stop on it, and says \"Rated … 1 star\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[1],\"filled\":1,\"glyphs\":\"★☆☆☆☆\",\"tab0\":[1],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 1 star"
+  },
+  {
+   "name": "R1 saved web W1: star 1: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 1: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 2: raw DB rating is 2, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 2: UI shows exactly star 2 checked with 2 filled stars, one tab stop on it, and says \"Rated … 2 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[2],\"filled\":2,\"glyphs\":\"★★☆☆☆\",\"tab0\":[2],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 2 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 2: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 2: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 3: raw DB rating is 3, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 3: UI shows exactly star 3 checked with 3 filled stars, one tab stop on it, and says \"Rated … 3 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 3 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 3: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 3: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 4: raw DB rating is 4, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 4: UI shows exactly star 4 checked with 4 filled stars, one tab stop on it, and says \"Rated … 4 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 4 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 4: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 4: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: click star 5: raw DB rating is 5, memory equals the raw record, only the rating differs from the original record",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUg"
+  },
+  {
+   "name": "R1 saved web W1: star 5: UI shows exactly star 5 checked with 5 filled stars, one tab stop on it, and says \"Rated … 5 stars\"",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[5],\"filled\":5,\"glyphs\":\"★★★★★\",\"tab0\":[5],\"unrated\":false}Rated “Web ✓ <b>bold</b> & \"q\"” 5 stars"
+  },
+  {
+   "name": "R1 saved web W1: star 5: exactly one write to the tracks store, for this song only",
+   "ok": true,
+   "detail": "[{\"op\":\"put\",\"key\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 5: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and \"Cleared\"",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"album\":\"Rock\",\"duration\":200,\"cover\":\"data{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}"
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1 saved web W1 clear: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0] vs [[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R1 saved web W1: after a RELOAD the rating 4 is still in the raw DB, in memory and on screen; raw before reload == after",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Web ✓ <b>bold</b> & \\\"q\\\"\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R1 saved web W1: a cleared rating survives a reload as present 0 (not absent) and shows unrated",
+   "ok": true,
+   "detail": "{\"id\":\"audius:W1\",\"kind\":\"web\",\"src\":\"audius\",\"srcId\":\"W1\",\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"artist\":\"Ünï Artist\",\"al"
+  },
+  {
+   "name": "R1: the other three songs never gained a rating field",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R1: nothing playing, play() never called, song and playlist counts unchanged",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"0754fed1-2bbb-477d-96b2-e85c8068e74f\",\"audius:W1\",\"d83b406a-b860-484e-9cca-91bbe2bb7be0\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R2: setup: L1 is liked in the seed, L2 is not",
+   "ok": true,
+   "detail": "[true,false]"
+  },
+  {
+   "name": "R2: rating a liked song 3 stars leaves it liked (raw and memory) and stores 3",
+   "ok": true,
+   "detail": "{\"liked\":true,\"rating\":3,\"memLiked\":true,\"memRating\":3}"
+  },
+  {
+   "name": "R2: rating an unliked song 5 stars does not like it",
+   "ok": true,
+   "detail": "{\"liked\":false,\"rating\":5,\"memLiked\":false,\"memRating\":5}"
+  },
+  {
+   "name": "R2: unliking L1 with the heart keeps its 3 stars",
+   "ok": true,
+   "detail": "{\"liked\":false,\"rating\":3,\"memLiked\":false,\"memRating\":3}"
+  },
+  {
+   "name": "R2: liking L2 through the ⋯ menu keeps its 5 stars",
+   "ok": true,
+   "detail": "{\"liked\":true,\"rating\":5,\"memLiked\":true,\"memRating\":5}"
+  },
+  {
+   "name": "R2: clearing L1's rating (still unliked) does not like it",
+   "ok": true,
+   "detail": "{\"liked\":false,\"rating\":0,\"memLiked\":false,\"memRating\":0}"
+  },
+  {
+   "name": "R2: the L key likes the current song and keeps its 2 stars; rating it did not like it",
+   "ok": true,
+   "detail": "{\"liked\":true,\"rating\":2,\"memLiked\":true,\"memRating\":2}"
+  },
+  {
+   "name": "R2: L again unlikes it, still 2 stars",
+   "ok": true,
+   "detail": "{\"liked\":false,\"rating\":2,\"memLiked\":false,\"memRating\":2}"
+  },
+  {
+   "name": "R2: the heart state of every other song is unchanged (W1 liked, W2 and others not)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R2: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop (star 1): a single roving tab stop per group",
+   "ok": true,
+   "detail": "[[1],[1],[1],[1],[1]]"
+  },
+  {
+   "name": "R3: ArrowRight twice moves the focus to star 3 of the same song and changes NOTHING (no write, rating still absent)",
+   "ok": true,
+   "detail": "{\"star\":3,\"tid\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"act\":\"rateSong\"}[]"
+  },
+  {
+   "name": "R3: the arrow keys on a star do not leak to the global shortcuts (the volume and playback position are unchanged)",
+   "ok": true,
+   "detail": "[0.55,0.55,1.5]"
+  },
+  {
+   "name": "R3: ArrowUp moves focus on (star 4) and does not change the volume",
+   "ok": true,
+   "detail": "{\"star\":4,\"tid\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"act\":\"rateSong\"}0.55"
+  },
+  {
+   "name": "R3: Home focuses star 1 and End focuses star 5",
+   "ok": true,
+   "detail": "[{\"star\":1,\"tid\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"act\":\"rateSong\"},{\"star\":5,\"tid\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"act\":\"rateSong\"}]"
+  },
+  {
+   "name": "R3: Space on star 3 sets 3 stars (raw DB and UI), focus stays on star 3, ONE write, and Space did not start or pause playback",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}[{\"op\":\"put\",\"key\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\"}]"
+  },
+  {
+   "name": "R3: Enter on the current star 3 clears (rating 0 present)",
+   "ok": true,
+   "detail": "{\"id\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R3: the key 4 sets 4 stars directly and the roving tab stop follows (only star 4 has tabindex 0)",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R3: Delete clears (0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: 5 then Backspace ends at 0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: pressing 0 on a song whose rating is already 0 is a no-op (no write)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R3: Shift+Tab from the heart lands on the group's ONE tab stop (the checked star 3) of the same song: a single tab stop per group",
+   "ok": true,
+   "detail": "{\"star\":3,\"tid\":\"4ba1f4b0-17e1-4185-b4cd-7f4d0dfc14bf\",\"act\":\"rateSong\"}"
+  },
+  {
+   "name": "R3: the track menu of a library song offers \"Rate…\"",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Like | Rate… | Go to album | Go to artist | Edit info… | Edit cover… | Remove from library"
+  },
+  {
+   "name": "R3: the rating menu lists 5 stars … 1 star and Back, and no \"Clear rating\" for an unrated song",
+   "ok": true,
+   "detail": "★★★★★ 5 stars | ★★★★☆ 4 stars | ★★★☆☆ 3 stars | ★★☆☆☆ 2 stars | ★☆☆☆☆ 1 star | Back"
+  },
+  {
+   "name": "R3: choosing \"4 stars\" in the menu stores 4 (raw DB) and the row shows it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: the menu of a rated song shows its rating (\"Rating: ★★★★☆…\")",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Like | Rating: ★★★★☆… | Go to album | Go to artist | Edit info… | Edit cover… | Remove from library"
+  },
+  {
+   "name": "R3: the rating menu of a rated song marks the current value and offers \"Clear rating\"",
+   "ok": true,
+   "detail": "★★★★★ 5 stars | ★★★★☆ 4 stars (current) | ★★★☆☆ 3 stars | ★★☆☆☆ 2 stars | ★☆☆☆☆ 1 star | Clear rating | Back"
+  },
+  {
+   "name": "R3: Back returns to the track menu",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: \"Clear rating\" stores 0 and the row shows no stars",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: the keyboard-help dialog documents the rating keys",
+   "ok": true,
+   "detail": "Keyboard shortcuts | Space | Play or pause | ← → | Seek 5 seconds | Shift + ← → | Previous or next song | ↑ ↓ | Volume | M | Mute | L | Like current song | On a rating star: ← → | Move; Space or Enter sets, 1–5 sets, 0 or Delete clears | S | Shuffle | R | Repeat | A | A–B loop: set start, set end, c"
+  },
+  {
+   "name": "R3: through all of this nothing played, the queue and library are unchanged",
+   "ok": true,
+   "detail": "{\"paused\":true,\"src\":\"blob:http://localhost:8765/e8457d8e-0b42-41ac-9f5e-efe8a56f0523\",\"ct\":1.5,\"plays\":0,\"ls\":1,\"cur\":\"ef5de316-fadf-4a6f-9096-949346535aed\",\"qi\":0,\"queue\":[\"ef5de316-fadf-4a6f-9096-9"
+  },
+  {
+   "name": "R3: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: setup: 8 songs, ratings L1 5, W1 5, D1 4, D2 4, L2 3, L3 3, W2 cleared (present 0), E1 never rated (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: \"Rating: high to low\" shows the order the harness computes independently (rating, then title, artist, id); unrated last",
+   "ok": true,
+   "detail": "[\"2e5d4fff-947d-4d59-9b49-38f3fa83acb9\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"b11e6ec8-7c53-45df-ad9b-d784f6f1f784\",\"5f46392f-56b9-41d5-aeec-416d6eeec675\",\"audius:E1\",\"archive:W2\"] vs [\"2e5d4fff-947d-4d59-9b49-38f3fa83acb9\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"b11e6ec8-7c53-45df-ad9b-d784f6f1f784\",\"5f46392f-56b9-41d5-aeec-416d6eeec675\",\"audius:E1\",\"archive:W2\"]"
+  },
+  {
+   "name": "R4: the identical Dup Title / Dup Artist songs are ordered by id (D1 before D2), and the unrated W2 (0) and E1 (absent) are both at the end",
+   "ok": true,
+   "detail": "[\"2e5d4fff-947d-4d59-9b49-38f3fa83acb9\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"b11e6ec8-7c53-45df-ad9b-d784f6f1f784\",\"5f46392f-56b9-41d5-aeec-416d6eeec675\",\"audius:E1\",\"archive:W2\"]"
+  },
+  {
+   "name": "R4: \"Rating: low to high\" shows the independently computed order (unrated first) with the same tie rules",
+   "ok": true,
+   "detail": "[\"audius:E1\",\"archive:W2\",\"b11e6ec8-7c53-45df-ad9b-d784f6f1f784\",\"5f46392f-56b9-41d5-aeec-416d6eeec675\",\"audius:D1\",\"audius:D2\",\"2e5d4fff-947d-4d59-9b49-38f3fa83acb9\",\"audius:W1\"] vs [\"audius:E1\",\"archive:W2\",\"b11e6ec8-7c53-45df-ad9b-d784f6f1f784\",\"5f46392f-56b9-41d5-aeec-416d6eeec675\",\"audius:D1\",\"audius:D2\",\"2e5d4fff-947d-4d59-9b49-38f3fa83acb9\",\"audius:W1\"]"
+  },
+  {
+   "name": "R4: low-to-high is not simply the reverse of high-to-low (ties keep the same title order in both directions)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: switching the sort back and forth gives byte-identical orders (deterministic)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: after a reload the same order appears (it depends only on stored data)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: the existing \"Title\" sort is unchanged (A-Z by title)",
+   "ok": true,
+   "detail": "[\"Dup Title\",\"Dup Title\",\"Song One\",\"Song Three\",\"Song Two\",\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"Zeta Unrated\",\"歌曲 🎵 ü\"]"
+  },
+  {
+   "name": "R4: the default \"Recently added\" sort still orders by added time, newest first",
+   "ok": true,
+   "detail": "[1794159582781,1794159582772,1794159582763,1700000000300,1700000000200,1700000000100,1700000000000,1700000000000]"
+  },
+  {
+   "name": "R4: sorting wrote nothing (records identical to before the sorts)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R4: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: filter \"unrated\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:E1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"rated\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"5\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"audius:W1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"4\": shows exactly the 4 songs the harness expects (local AND saved web), count line \"4 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 4 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"3\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"2\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"any\": shows exactly the 8 songs the harness expects (local AND saved web), count line \"8 songs\"",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"archive:W2\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"audius:W1\"] | 8 songs"
+  },
+  {
+   "name": "R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"audius:W1\"]"
+  },
+  {
+   "name": "R5: \"Unrated\" counts both the cleared song (0) and the never-rated song (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: the rating filter combines with the text filter (3 stars and up AND \"song\"): the independently computed set and \"n of 8 songs\"",
+   "ok": true,
+   "detail": "[\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"53075a71-74aa-4841-bff1-e9bbd7c2861b\"]3 of 8 songs"
+  },
+  {
+   "name": "R5: an empty result says which filters match nothing (\"Unrated\" and \"zzzz\") and the count line says \"0 of 8 songs\"",
+   "ok": true,
+   "detail": "No songs match “Unrated” and “zzzz”. | Clear the filters | 0 of 8 songs"
+  },
+  {
+   "name": "R5: \"Clear the filters\" resets the rating filter and the text filter and shows all 8 songs again (\"8 songs\")",
+   "ok": true,
+   "detail": "{\"r\":\"any\",\"q\":\"\",\"n\":8,\"c\":\"8 songs\"}"
+  },
+  {
+   "name": "R5: with the rating filter on \"Any rating\" a text filter that matches nothing still says \"No songs match that filter.\"",
+   "ok": true,
+   "detail": "No songs match that filter."
+  },
+  {
+   "name": "R5: rating E1 while the \"Unrated\" filter is on removes it from the list at once and the count follows (\"1 of 8 songs\")",
+   "ok": true,
+   "detail": "[\"archive:W2\"]1 of 8 songs"
+  },
+  {
+   "name": "R5: with sort \"high to low\", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group",
+   "ok": true,
+   "detail": "{\"star\":5,\"tid\":\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"act\":\"rateSong\"}[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"8709671e-203a-41ee-b474-40211ac6722f\",\"archive:W2\"]"
+  },
+  {
+   "name": "R5: clearing D1 while \"Rated\" is on drops it from the list (\"rated\" = 1 star or more) and D2 stays",
+   "ok": true,
+   "detail": "[\"53075a71-74aa-4841-bff1-e9bbd7c2861b\",\"af3a626d-e9ec-444a-87c0-3a6377423b66\",\"audius:W1\",\"audius:D2\",\"audius:E1\",\"8709671e-203a-41ee-b474-40211ac6722f\"]"
+  },
+  {
+   "name": "R5: in a library where nothing is rated, \"Rated\" says no songs match “Rated (1 star or more)” and counts \"0 of 5 songs\"",
+   "ok": true,
+   "detail": "No songs match “Rated (1 star or more)”. | Clear the filters0 of 5 songs"
+  },
+  {
+   "name": "R5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5 unrated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R6: every invalid rating (6, -1, 2.5, \"3\", NaN, null, undefined, true, false, -0, Infinity, [3], {}, 1e21) is refused with ok:false, nothing thrown, no write, record unchanged",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R6: an unknown song id and a song that is only shown (not in the library) cannot be rated: ok:false, no write",
+   "ok": true,
+   "detail": "{\"a\":{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"},\"c\":{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"},\"hasC\":false}"
+  },
+  {
+   "name": "R6: setting the value a song already has (4 again) is a no-op: ok, none:true and NO write",
+   "ok": true,
+   "detail": "[{\"ok\":true,\"value\":4,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":4},[]]"
+  },
+  {
+   "name": "R6: clearing an already-cleared song is a no-op with no write and the stored 0 stays 0",
+   "ok": true,
+   "detail": "[{\"ok\":true,\"value\":0,\"before\":4,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":0}]"
+  },
+  {
+   "name": "R6: while a backup or restore is running (backupBusy / restoring / restoreBusy / DB.lock) a rating is refused with the backup/restore message and nothing is written",
+   "ok": true,
+   "detail": "[{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"},{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"},{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"},{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"}]"
+  },
+  {
+   "name": "R6: nothing playing, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"06be9802-fc32-4607-b6ad-d842007b7225\",\"audius:W1\",\"541eb2b9-0056-4f35-b375-cd4ee5ecad1e\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R7a: while the rating write is pending the shared record does NOT carry the rating yet (applied only after the write is durable) and the raw DB does not either",
+   "ok": true,
+   "detail": "{\"id\":\"cd820cfb-4a96-4b09-9abf-3ea5a753d9a8\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R7a: the like is queued behind the held rating write (only the held put has been issued so far)",
+   "ok": true,
+   "detail": "[{\"id\":\"cd820cfb-4a96-4b09-9abf-3ea5a753d9a8\",\"held\":true,\"liked\":true,\"rating\":4,\"hasRating\":true,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7a: after the release BOTH changes are in the raw DB (rating 4 and liked false): the like's snapshot, taken when it ran, carried the committed rating",
+   "ok": true,
+   "detail": "[{\"id\":\"cd820cfb-4a96-4b09-9abf-3ea5a753d9a8\",\"held\":true,\"liked\":true,\"rating\":4,\"hasRating\":true,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"cd820cfb-4a96-4b09-9abf-3ea5a753d9a8\",\"held\":false,\"liked\":false,\"rating\":4,\"hasRating\":true,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7a: memory matches the raw record after the release",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R7b: after the REJECTED rating write nothing of the rating exists anywhere: not in memory, not in the raw DB, the stars show nothing, and the user is told (\"Couldn’t save the rating\")",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}Couldn’t save the rating (quota). Nothing was changed."
+  },
+  {
+   "name": "R7b: the like queued behind it still ran and persisted (liked true) with NO rating in its snapshot: a failed write left no uncommitted field behind",
+   "ok": true,
+   "detail": "[{\"id\":\"ef987e3d-ef70-4898-b5b3-4ab84e8a99f5\",\"held\":true,\"liked\":false,\"rating\":5,\"hasRating\":true,\"title\":\"Song Two\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"ef987e3d-ef70-4898-b5b3-4ab84e8a99f5\",\"held\":false,\"liked\":true,\"hasRating\":false,\"title\":\"Song Two\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7c: a held rating write with the info editor's save queued behind it: both persist (rating 2 and the new title, origMeta captured), both reported ok",
+   "ok": true,
+   "detail": "{\"r\":{\"ok\":true,\"value\":2,\"before\":0,\"memoryOnly\":false},\"m\":{\"ok\":true,\"changed\":[\"title\"],\"before\":{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"},\"memoryOnly\":false}}[{\"id\":\"a03ea185-cafc-495e-804c-03fcf8dbe43c\",\"held\":true,\"liked\":false,\"rating\":2,\"hasRating\":true,\"title\":\"Song Three\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"a03ea185-cafc-495e-804c-03fcf8dbe43c\",\"held\":false,\"liked\":false,\"rating\":2,\"hasRating\":true,\"title\":\"Retitled L3\",\"hasCover\":false,\"hasOrigMeta\":true}]"
+  },
+  {
+   "name": "R7c: the reverse order (info editor write held, rating queued behind): both persist, and the rating write's snapshot already carried the committed new title (no lost write)",
+   "ok": true,
+   "detail": "{\"r\":{\"ok\":true,\"value\":3,\"before\":0,\"memoryOnly\":false},\"m\":{\"ok\":true,\"changed\":[\"title\",\"artist\",\"album\"],\"before\":{\"title\":\"歌曲 🎵 ü\",\"artist\":\"\",\"album\":\"\",\"genre\":\"\"},\"memoryOnly\":false}}[{\"id\":\"archive:W2\",\"held\":true,\"liked\":false,\"hasRating\":false,\"title\":\"Retitled W2\",\"hasCover\":false,\"hasOrigMeta\":true},{\"id\":\"archive:W2\",\"held\":false,\"liked\":false,\"rating\":3,\"hasRating\":true,\"title\":\"Retitled W2\",\"hasCover\":false,\"hasOrigMeta\":true}]"
+  },
+  {
+   "name": "R7d: a held rating write with the cover editor's save queued behind it (song without a cover): rating 1 and the new cover (with origCover) both persist, the cover save was a real change (not a no-op)",
+   "ok": true,
+   "detail": "{\"r\":{\"ok\":true,\"value\":1,\"before\":0,\"memoryOnly\":false},\"c\":{\"ok\":true,\"memoryOnly\":false}}{\"id\":\"ef987e3d-ef70-4898-b5b3-4ab84e8a99f5\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":"
+  },
+  {
+   "name": "R7d: memory equals the raw records of all four edited songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R7a-d: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R7e: removing the song while its rating write is held: after the release the song is gone from the raw DB and memory (the rating write did not bring the record back), the rating call reports \"no longer in your library\"",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}[{\"id\":\"audius:W1\",\"held\":true,\"liked\":true,\"rating\":3,\"hasRating\":true,\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"hasCover\":true,\"hasOrigMeta\":false},{\"del\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R7e: the only writes for that song were the held put and then the delete (nothing after the delete)",
+   "ok": true,
+   "detail": "[{\"id\":\"audius:W1\",\"held\":true,\"liked\":true,\"rating\":3,\"hasRating\":true,\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"hasCover\":true,\"hasOrigMeta\":false},{\"del\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R7e: rating a removed song is refused at once and writes nothing",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}"
+  },
+  {
+   "name": "R7f: if the library epoch changed while the write was pending (a restore), the call reports not-saved and the shared record is NOT changed",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}"
+  },
+  {
+   "name": "R7g: three quick writes of one song (2, 5, 0) run in order; the last one (0) is what is stored, in memory and raw",
+   "ok": true,
+   "detail": "{\"r\":[{\"ok\":true,\"value\":2,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"value\":5,\"before\":2,\"memoryOnly\":false},{\"ok\":true,\"value\":0,\"before\":5,\"memoryOnly\":false}],\"v\":0}"
+  },
+  {
+   "name": "R7e-g: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R8: click star 3 on the PLAYING song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: click star 3 on the PLAYING song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[2.515893,2.994331]}"
+  },
+  {
+   "name": "R8: click star 3 on the PLAYING song: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: click star 5 on another song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: click star 5 on another song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[2.994331,3.462945]}"
+  },
+  {
+   "name": "R8: click star 5 on another song: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: rate a saved web song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: rate a saved web song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[3.462945,3.946485]}"
+  },
+  {
+   "name": "R8: rate a saved web song: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: clear the playing song's rating: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: clear the playing song's rating: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[3.946485,4.447619]}"
+  },
+  {
+   "name": "R8: clear the playing song's rating: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: key 4 on the playing song's star: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: key 4 on the playing song's star: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[4.447619,4.898639]}"
+  },
+  {
+   "name": "R8: key 4 on the playing song's star: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: menu: Rate… 2 stars on the playing song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: menu: Rate… 2 stars on the playing song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[4.898639,5.487483]}"
+  },
+  {
+   "name": "R8: menu: Rate… 2 stars on the playing song: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: sort by rating and filter by rating: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)",
+   "ok": true,
+   "detail": "{\"paused\":false,\"ls\":[2,2],\"plays\":[1,1]}"
+  },
+  {
+   "name": "R8: sort by rating and filter by rating: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0",
+   "ok": true,
+   "detail": "{\"ct\":[5.487483,5.95102]}"
+  },
+  {
+   "name": "R8: sort by rating and filter by rating: current song, queue position, queue order, library order and playlists unchanged",
+   "ok": true,
+   "detail": "[\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",\"1f6e4732-161d-4b87-ad95-f1bd708a21be\",1,1]"
+  },
+  {
+   "name": "R8: ratings stored as expected (L2 2, L3 5, W1 1) and the playing song's play counter was not touched by rating (plays equal the seed)",
+   "ok": true,
+   "detail": "[0]"
+  },
+  {
+   "name": "R8: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E0-unrated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004051.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E0-unrated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E0-unrated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9 E0: the backup of a library in which nothing was ever rated carries NO rating field on any of its 8 songs (a missing rating is not written as 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E0: restored with no rating field invented on any song, and every song shows empty stars",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: still 8 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: 6 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: UI shows the restored library (6 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full: the old archive has no rating field and restores unchanged: no rating was written for any song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full: an old restored song can be rated; only its rating field is added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: playlists identical, 6 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0] vs [[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0]"
+  },
+  {
+   "name": "R9 p1 full: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: 1 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: localStorage is exactly {} (theme policy)",
+   "ok": true,
+   "detail": "{}"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: UI shows the restored library (1 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 minimal: the old archive has no rating field and restores unchanged: no rating was written for any song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal: an old restored song can be rated; only its rating field is added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: playlists identical, 1 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": " vs "
+  },
+  {
+   "name": "R9 p1 minimal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: setup: L1 5, W1 3, D1 1, L2 a present zero, and L3, W2, D2, E1 never rated (field absent)",
+   "ok": true,
+   "detail": "[[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",5],[\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"ABSENT\"],[\"archive:W2\",\"ABSENT\"],[\"audius:D1\",1],[\"audius:D2\",\"ABSENT\"],[\"audius:E1\",\"ABSENT\"],[\"audius:W1\",3],[\"c3843afd-3ab7-4477-868f-cae518f67b62\",0]]"
+  },
+  {
+   "name": "R9-E1-rated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004101.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E1-rated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E1-rated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9 E1: the backup carries the rating field exactly as stored: 5, 3, 1 and a PRESENT 0; the never-rated songs have NO field",
+   "ok": true,
+   "detail": "[[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",5],[\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"ABSENT\"],[\"archive:W2\",\"ABSENT\"],[\"audius:D1\",1],[\"audius:D2\",\"ABSENT\"],[\"audius:E1\",\"ABSENT\"],[\"audius:W1\",3],[\"c3843afd-3ab7-4477-868f-cae518f67b62\",0]]"
+  },
+  {
+   "name": "R9 E1 file vs live DB: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 file vs live DB: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 file vs live DB: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 file vs live DB: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E1 file vs live DB: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lastfm\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}}]"
+  },
+  {
+   "name": "R9 E1 file vs live DB: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E1 -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E1 -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 E1 -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E1 -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: still 8 songs, theme dark, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean: the restored library holds exactly the stored ratings (5, 3, 1, present 0, others absent) and the rows show them",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 -> clean: sorting by rating on the restored library gives the independently computed order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E2-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004106.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E2-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E2-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-08T17:41:01.550Z, B 2026-11-08T17:41:06.529Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lastfm'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "R9 E2: the re-export carries the same rating fields (5, 3, 1, present 0, absent) as E1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E2 -> populated: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E2 -> populated: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E2 -> populated: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R9 E2 -> populated: this browser's own secret: keys are untouched (1)",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}]"
+  },
+  {
+   "name": "R9 E2 -> populated: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E2 -> populated: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "R9 E2 -> populated: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E2 -> populated: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E2 -> populated: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E2 -> populated: the target now has exactly the backup's ratings and none of its old songs (the target song had no rating)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E3-reexport-populated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004111.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E3-reexport-populated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E3-reexport-populated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: oracle comparison has ZERO failures (25 exact, 2 allowed, 0 failed)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: kv keys identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: narrowly allowed differences, each with its stated reason (not ignored fields): 2",
+   "ok": true,
+   "detail": "manifest.createdAt (A 2026-11-08T17:41:06.529Z, B 2026-11-08T17:41:11.798Z) [wall-clock time of the export] | manifest.excluded.kv (A [], B ['secret:tgt']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "R9 E1 -> clean: a restored song can be rated afterwards (L3 -> 4 stars)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: playlists identical, 5 audio entries identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],0] vs [[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],[\"24e47d96-bc5c-4d15-aa3f-22de08a9bc25\",\"audius:W1\",\"2aaf0518-60ab-4c59-ac43-a279b5a6ea0f\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R9 source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 clean: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 populated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10-E1-rated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004119.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R10-E1-rated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10-E1-rated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R10: the source export carries the ratings the generator starts from (5, 3, 1 and a present 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10: 24 rating archives were generated by an independent Python helper (stdlib only): 6 accepted, 18 refused",
+   "ok": true,
+   "detail": "24"
+  },
+  {
+   "name": "R10 refused: bad-rating-6 (rating 6 (above the range)): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-6: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-neg1 (rating -1): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-neg1: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-2.5 (rating 2.5): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-2.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-0.5 (rating 0.5): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-0.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-5.000001 (rating 5.000001): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-5.000001: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-text-3 (rating \"3\" (text)): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-text-3: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-text-five (rating \"five\"): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-text-five: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-null (rating null): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-true (rating true): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-true: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-false (rating false): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-false: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-array (rating [3]): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-array: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-object (rating {\"stars\":3}): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-object: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-1e308 (rating 1e308 (a whole number far out of range)): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-1e308: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-bigint (rating 9007199254740993): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-bigint: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-neg-zero (rating -0 (the literal -0)): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-neg-zero: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-on-web-song (a saved web song with rating 7): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"invalid fields\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some songs have invalid fields. Nothing was changed.  tracks[7]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-on-web-song: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-in-history-snapshot (a history entry's saved web-song snapshot carries rating 9 (the same track rule applies to snapshots)): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"saved session or history is invalid\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  The saved session or history is invalid. Nothing was changed.  kv/hist[1].snap: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-in-history-snapshot: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 refused: bad-rating-in-session-web (the saved session's queued web song carries rating \"x\"): the strict reader refuses it before any preview (\"can’t be restored\") naming the problem (\"saved session or history is invalid\" and \"rating must be a whole number from 0 to 5\"), and the message can be dismissed with Escape",
+   "ok": true,
+   "detail": "This backup can’t be restored  The saved session or history is invalid. Nothing was changed.  kv/session.webs[0]: rating must be a whole number from 0 to 5 OK"
+  },
+  {
+   "name": "R10 refused: bad-rating-in-session-web: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10: through all 18 refused archives there was NO write to the tracks store and the in-memory library is unchanged",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10: the target browser never changed or started playing during the refusals",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":3,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed (the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps present, zero and absent exactly)) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-unchanged-resealed: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 ok-unchanged-resealed: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-all-values (ratings 0,1,2,3,4,5 on the first six songs (the source has 8), the others absent) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-all-values: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 ok-all-values: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere (an OLD-style archive: no song carries a rating (it must restore with no rating field invented)) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-no-rating-anywhere: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: the old-style archive restored without any rating field",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 ok-no-rating-anywhere: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present (rating 0 on a song that had none (present zero is kept as zero, not dropped)) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-zero-present: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 ok-rating-zero-present: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal (the JSON literal 3.0 for a rating: JSON.parse reads it as the whole number 3, so the browser accepts it and stores 3 (documented tolerance; the Python reference reads a float)) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-rating-3.0-literal: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: the JSON literal 3.0 was stored as the whole number 3 (documented tolerance)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 ok-rating-3.0-literal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: 5 audio entries identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: this browser's own secret: keys are untouched (0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: localStorage is exactly {\"ps-theme\":\"dark\"} (theme policy)",
+   "ok": true,
+   "detail": "{\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field (an unknown extra field next to rating is kept as for any record) -> clean: UI shows the restored library (8 songs) and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"b08181be-13c1-43e4-a3d0-4f7a95d7bacf\",\"audius:W1\",\"cf03588b-25a8-4da8-9456-dac15baebe1f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R10 accepted: ok-unknown-extra-field: every song holds exactly the expected rating after the restore (absent stays absent, a present 0 stays 0)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R10 accepted: the unknown extra field next to the rating was kept exactly",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 ok-unknown-extra-field: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R10 hostile: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11a: handleAct has no duplicated action label (a later duplicate silently never runs)",
+   "ok": true,
+   "detail": "{\"n\":33,\"dup\":[]}"
+  },
+  {
+   "name": "R11a: the seeded session starts at a speed other than 1.5x (so the first preset click is a real change)",
+   "ok": true,
+   "detail": "{\"rate\":1.25,\"label\":\"1.25×\",\"on\":[]}"
+  },
+  {
+   "name": "R11a: clicking the 1.5x speed preset sets the speed, the button label and the highlighted chip",
+   "ok": true,
+   "detail": "{\"rate\":1.5,\"label\":\"1.5×\",\"on\":[1.5]}"
+  },
+  {
+   "name": "R11a: giving a song 3 stars does not change the speed (still 1.5x) and the speed preset did not rate anything",
+   "ok": true,
+   "detail": "{\"rate\":1.5,\"label\":\"1.5×\",\"on\":[]}"
+  },
+  {
+   "name": "R11a: another preset (0.75x) changes the speed and leaves every rating exactly as it was",
+   "ok": true,
+   "detail": "{\"rate\":0.75,\"label\":\"0.75×\",\"on\":[0.75]}"
+  },
+  {
+   "name": "R11a: \"Reset to 1×\" still works",
+   "ok": true,
+   "detail": "{\"rate\":1,\"label\":\"1×\",\"on\":[1]}"
+  },
+  {
+   "name": "R11-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-004150.zip Backup downloaded  5 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R11-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R11b: the song is removed from memory at once while its delete waits behind the slow write; the stored copy is still there",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11b: a real restore of the earlier backup (which holds the SAME song id) completes while the delete is still queued",
+   "ok": true,
+   "detail": "Library restored\n\n5 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: bro"
+  },
+  {
+   "name": "R11b: the restored library holds the song (memory, track record, audio blob)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:W1\",\"cbb94c02-1a08-4763-8254-73551e06d0e0\",\"d3af291f-b22a-4d27-8814-fcc4068ed122\",\"f8d9f734-ca98-4a62-a1fe-bec1c0b9dde5\"]"
+  },
+  {
+   "name": "R11b: the old removal did not touch the restored library either: memory still has the song, playlists and queue are exactly as restored, stored playlists unchanged",
+   "ok": true,
+   "detail": "{\"memF\":{\"has\":true,\"pl\":\"[[\\\"pl-b\\\",[]],[\\\"pl-a\\\",[\\\"audius:W1\\\",\\\"f8d9f734-ca98-4a62-a1fe-bec1c0b9dde5\\\",\\\"cbb94c02-1a08-4763-8254-73551e06d0e0\\\",\\\"ghost-id\\\",\\\"d3af291f-b22a-4d27-8814-fcc4068ed122\\\"]]]\",\"q\":[\"cbb94c02-1a08-4763-8254-73551e06d0e0\",\"audius:W1\",\"d3af291f-b22a-4d27-8814-fcc4068ed122\""
+  },
+  {
+   "name": "R11b: after a reload the restored library still has every song of the backup (same ids and records)",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:W1\",\"cbb94c02-1a08-4763-8254-73551e06d0e0\",\"d3af291f-b22a-4d27-8814-fcc4068ed122\",\"f8d9f734-ca98-4a62-a1fe-bec1c0b9dde5\"]"
+  },
+  {
+   "name": "R11c: normal removal (no restore) behind a slow write: song, audio blob and playlist entries are gone after the write ends, and it is gone after a reload",
+   "ok": true,
+   "detail": "playlistsContaining=1"
+  },
+  {
+   "name": "R11: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 170 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, example.invalid, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

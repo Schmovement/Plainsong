@@ -1,0 +1,181 @@
+== runner controls (classifier negative/positive controls)
+RUNNER CONTROLS: 100 / 100 pass
+41 mutants written
+== controls on the UNMUTATED app (one per scenario used by a mutant)
+control R0: OK - unmutated app passed all 11 checks; every needle of the scenario resolves to exactly one passing check
+control R1: OK - unmutated app passed all 89 checks; every needle of the scenario resolves to exactly one passing check
+control R2: OK - unmutated app passed all 12 checks; every needle of the scenario resolves to exactly one passing check
+control R3: OK - unmutated app passed all 24 checks; every needle of the scenario resolves to exactly one passing check
+control R4: OK - unmutated app passed all 13 checks; every needle of the scenario resolves to exactly one passing check
+control R5: OK - unmutated app passed all 21 checks; every needle of the scenario resolves to exactly one passing check
+control R6: OK - unmutated app passed all 9 checks; every needle of the scenario resolves to exactly one passing check
+control R7: OK - unmutated app passed all 19 checks; every needle of the scenario resolves to exactly one passing check
+control R8: OK - unmutated app passed all 25 checks; every needle of the scenario resolves to exactly one passing check
+control R9: OK - unmutated app passed all 127 checks; every needle of the scenario resolves to exactly one passing check
+control R10: OK - unmutated app passed all 122 checks; every needle of the scenario resolves to exactly one passing check
+control R11: OK - unmutated app passed all 19 checks; every needle of the scenario resolves to exactly one passing check
+== mutants
+M1-zero-counts-as-absent-on-clear: scenario R0 exit=1 total=11 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | clearing a song that was never rated writes a 0 (missing turned into 0)
+      failed: R0: clearing a song that was never rated is a no-op: no write, and the field stays ABSENT (missing is not turned into 0)
+M2-no-noop-shortcut: scenario R6 exit=1 total=9 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | setting the value a song already has still writes
+      failed: R6: setting the value a song already has (4 again) is a no-op: ok, none:true and NO write
+      failed: R6: clearing an already-cleared song is a no-op with no write and the stored 0 stays 0
+M3-validation-removed: scenario R6 exit=1 total=9 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | setRating no longer validates the value (NaN, 6, "3", -0 ... are stored)
+      failed: R6: every invalid rating (6, -1, 2.5, "3", NaN, null, undefined, true, false, -0, Infinity, [3], {}, 1e21) is refused with ok:false, nothing thrown, no write, record unch…
+M4-rating-toggles-like: scenario R2 exit=1 total=12 failed=5 VERDICT=DETECTED (5 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | rating a song also likes it
+      failed: R2: rating an unliked song 5 stars does not like it
+      failed: R2: liking L2 through the ⋯ menu keeps its 5 stars
+      failed: R2: clearing L1's rating (still unliked) does not like it
+      failed: R2: the L key likes the current song and keeps its 2 stars; rating it did not like it
+      failed: R2: L again unlikes it, still 2 stars
+M5-backup-restore-guard-removed: scenario R6 exit=1 total=9 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | a rating can be written while a backup or restore runs (both guards removed)
+      failed: R6: while a backup or restore is running (backupBusy / restoring / restoreBusy / DB.lock) a rating is refused with the backup/restore message and nothing is written
+M6-clear-click-sets: scenario R1 exit=1 total=89 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (2) and with 0 isolation check(s) still passing) | clicking the star a song already has sets it again instead of clearing
+      failed: R1 local L1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and "Cleared"
+      failed: R1 local L1: a cleared rating survives a reload as present 0 (not absent) and shows unrated
+      failed: R1 saved web W1: clicking the current star clears: the raw record now holds rating 0 (present, zero), memory equals it, UI shows nothing checked and "Cleared"
+      failed: R1 saved web W1: a cleared rating survives a reload as present 0 (not absent) and shows unrated
+M7-eager-legacy-rewrite: scenario R0 exit=1 total=11 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | showing the library list rewrites legacy songs with an explicit rating 0
+      failed: R0: sorting by rating both ways and trying every filter makes NO write to the tracks store (no eager rewrite of legacy records) and leaves every record identical
+      failed: R0: clearing a song that was never rated is a no-op: no write, and the field stays ABSENT (missing is not turned into 0)
+W1-mutate-then-put: scenario R7 exit=1 total=19 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | setRating mutates the shared record first and then writes it (a failed write leaves the uncommitted rating in memory and in other writers' snapshots)
+      failed: R7a: while the rating write is pending the shared record does NOT carry the rating yet (applied only after the write is durable) and the raw DB does not either
+      failed: R7b: after the REJECTED rating write nothing of the rating exists anywhere: not in memory, not in the raw DB, the stars show nothing, and the user is told ("Couldn’t save…
+      failed: R7b: the like queued behind it still ran and persisted (liked true) with NO rating in its snapshot: a failed write left no uncommitted field behind
+      failed: R7f: if the library epoch changed while the write was pending (a restore), the call reports not-saved and the shared record is NOT changed
+W2-no-per-track-queue: scenario R7 exit=1 total=19 failed=8 VERDICT=DETECTED (8 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the per-track write queue is removed: every writer runs immediately
+      failed: R7a: the like is queued behind the held rating write (only the held put has been issued so far)
+      failed: R7a: after the release BOTH changes are in the raw DB (rating 4 and liked false): the like's snapshot, taken when it ran, carried the committed rating
+      failed: R7a: memory matches the raw record after the release
+      failed: R7c: a held rating write with the info editor's save queued behind it: both persist (rating 2 and the new title, origMeta captured), both reported ok
+      failed: R7c: the reverse order (info editor write held, rating queued behind): both persist, and the rating write's snapshot already carried the committed new title (no lost writ…
+W3-stale-clone-applied: scenario R7 exit=1 total=19 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | after a committed rating write the whole stale clone is copied over the shared record (a like made while the write was pending is overwritten)
+      failed: R7a: after the release BOTH changes are in the raw DB (rating 4 and liked false): the like's snapshot, taken when it ran, carried the committed rating
+W4-removed-song-resurrected: scenario R7 exit=1 total=19 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | a rating write that finishes after the song was removed still reports success and touches the detached record
+      failed: R7e: removing the song while its rating write is held: after the release the song is gone from the raw DB and memory (the rating write did not bring the record back), the…
+W5-epoch-ignored: scenario R7 exit=1 total=19 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | a library replaced by a restore while the write was pending is not noticed
+      failed: R7f: if the library epoch changed while the write was pending (a restore), the call reports not-saved and the shared record is NOT changed
+P1-rating-seeks-playing-song: scenario R8 exit=1 total=25 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | rating a song seeks the playing song back to 0
+      failed: R8: click star 3 on the PLAYING song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+      failed: R8: clear the playing song's rating: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+P2-rating-skips-queue: scenario R8 exit=1 total=25 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | rating the playing song advances the queue
+      failed: R8: click star 3 on the PLAYING song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: click star 5 on another song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: rate a saved web song: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: clear the playing song's rating: current song, queue position, queue order, library order and playlists unchanged
+      failed: R8: key 4 on the playing song's star: current song, queue position, queue order, library order and playlists unchanged
+F1-sort-no-ties: scenario R4 exit=1 total=13 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | rating sort has no tie-break (ties keep an arbitrary earlier order)
+      failed: R4: "Rating: high to low" shows the order the harness computes independently (rating, then title, artist, id); unrated last
+F2-low-reverses-ties: scenario R4 exit=1 total=13 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | low-to-high is the exact reverse of high-to-low (ties reversed too)
+      failed: R4: "Rating: low to high" shows the independently computed order (unrated first) with the same tie rules
+      failed: R4: low-to-high is not simply the reverse of high-to-low (ties keep the same title order in both directions)
+F3-high-direction-swapped: scenario R4 exit=1 total=13 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | high-to-low sorts ascending
+      failed: R4: "Rating: high to low" shows the order the harness computes independently (rating, then title, artist, id); unrated last
+      failed: R4: the identical Dup Title / Dup Artist songs are ordered by id (D1 before D2), and the unrated W2 (0) and E1 (absent) are both at the end
+F4-unrated-only-absent: scenario R5 exit=1 total=21 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the Unrated filter matches only songs with no rating field (a cleared 0 is not unrated)
+      failed: R5: filter "unrated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: "Unrated" counts both the cleared song (0) and the never-rated song (absent)
+      failed: R5: rating E1 while the "Unrated" filter is on removes it from the list at once and the count follows ("1 of 8 songs")
+F5-rated-includes-zero: scenario R5 exit=1 total=21 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the Rated filter includes unrated songs
+      failed: R5: filter "rated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: clearing D1 while "Rated" is on drops it from the list ("rated" = 1 star or more) and D2 stays
+      failed: R5: in a library where nothing is rated, "Rated" says no songs match “Rated (1 star or more)” and counts "0 of 5 songs"
+F6-four-plus-exact: scenario R5 exit=1 total=21 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the "4 stars and up" filter matches only exactly 4
+      failed: R5: filter "4": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+F7-count-wrong: scenario R5 exit=1 total=21 failed=10 VERDICT=DETECTED (10 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the count line shows the number shown out of the number shown
+      failed: R5: filter "unrated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: filter "rated": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: filter "5": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: filter "4": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+      failed: R5: filter "3": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+F8-empty-state-generic: scenario R5 exit=1 total=21 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the empty state no longer says which filters match nothing
+      failed: R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"
+      failed: R5: "Clear the filters" resets the rating filter and the text filter and shows all 8 songs again ("8 songs")
+      failed: R5: in a library where nothing is rated, "Rated" says no songs match “Rated (1 star or more)” and counts "0 of 5 songs"
+F9-text-filter-ignored-with-rating: scenario R5 exit=1 total=21 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | a rating filter replaces the text filter instead of combining with it
+      failed: R5: the rating filter combines with the text filter (3 stars and up AND "song"): the independently computed set and "n of 8 songs"
+      failed: R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"
+      failed: R5: "Clear the filters" resets the rating filter and the text filter and shows all 8 songs again ("8 songs")
+F10-list-not-refreshed: scenario R5 exit=1 total=21 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | rating a song while a rating filter is on leaves the list as it was
+      failed: R5: rating E1 while the "Unrated" filter is on removes it from the list at once and the count follows ("1 of 8 songs")
+      failed: R5: with sort "high to low", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group
+      failed: R5: clearing D1 while "Rated" is on drops it from the list ("rated" = 1 star or more) and D2 stays
+F11-focus-lost: scenario R5 exit=1 total=21 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | after the list is re-read the keyboard focus is dropped
+      failed: R5: with sort "high to low", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group
+U1-group-unlabelled: scenario R0 exit=1 total=11 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the star group has no accessible name
+      failed: R0: each of the 3 local and 2 saved web songs shows a labelled 5-star radio group with nothing checked, empty stars and exactly one tab stop
+U2-stars-on-unsaved-song: scenario R0 exit=1 total=11 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | a song that is only shown (not in the library) also gets stars
+      failed: R0: a song that is only SHOWN (a search result that is not in the library) has no rating stars; a library song has them
+U3-arrow-keys-leak: scenario R3 exit=1 total=24 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | arrow keys on a star also reach the global shortcuts (volume / seek)
+      failed: R3: ArrowRight twice moves the focus to star 3 of the same song and changes NOTHING (no write, rating still absent)
+      failed: R3: the arrow keys on a star do not leak to the global shortcuts (the volume and playback position are unchanged)
+      failed: R3: ArrowUp moves focus on (star 4) and does not change the volume
+      failed: R3: through all of this nothing played, the queue and library are unchanged
+U4-all-tab-stops: scenario R3 exit=1 total=24 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | every star is a tab stop (no roving tabindex)
+      failed: R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop (star 1): a single roving tab stop per group
+B1-export-writes-zero: scenario R9 exit=1 total=127 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the backup writes rating 0 for songs that never had one (missing turned into 0)
+      failed: R9 E0: the backup of a library in which nothing was ever rated carries NO rating field on any of its 8 songs (a missing rating is not written as 0)
+      failed: R9 E0: restored with no rating field invented on any song, and every song shows empty stars
+      failed: R9 E1: the backup carries the rating field exactly as stored: 5, 3, 1 and a PRESENT 0; the never-rated songs have NO field
+      failed: R9 E1 file vs live DB: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: the restored library holds exactly the stored ratings (5, 3, 1, present 0, others absent) and the rows show them
+B2-restore-normalises-zero: scenario R9 exit=1 total=127 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | restore drops a present rating 0 (zero turned into missing)
+      failed: R9 E1 -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: the restored library holds exactly the stored ratings (5, 3, 1, present 0, others absent) and the rows show them
+      failed: R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): oracle comparison has ZERO failures
+      failed: R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): tracks records identical (order and key order), playlists identical
+B3-reader-rejects-zero: scenario R9 exit=1 total=127 failed=50 VERDICT=DETECTED (50 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses a present rating 0
+      failed: R9 E1 -> clean: real UI restore finished with "Library restored"
+      failed: R9 E1 -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: playlists identical (ids order kept)
+      failed: R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E1 -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+B4-reader-requires-rating: scenario R9 exit=1 total=127 failed=87 VERDICT=DETECTED (87 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses archives that carry no rating (old backups)
+      failed: R9 E0 (old-style, no rating) -> clean: real UI restore finished with "Library restored"
+      failed: R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)
+      failed: R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E0 (old-style, no rating) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+B5-reader-unchecked: scenario R10 exit=1 total=122 failed=38 VERDICT=DETECTED (38 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader no longer validates rating
+      failed: R10 refused: bad-rating-6 (rating 6 (above the range)): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "ra…
+      failed: R10 refused: bad-rating-6: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-neg1 (rating -1): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating must be a…
+      failed: R10 refused: bad-rating-neg1: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-2.5 (rating 2.5): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating must be a…
+B6-reader-accepts-fraction: scenario R10 exit=1 total=122 failed=20 VERDICT=DETECTED (20 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader accepts any number (2.5, 0.5, 5.000001)
+      failed: R10 refused: bad-rating-2.5 (rating 2.5): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating must be a…
+      failed: R10 refused: bad-rating-2.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-0.5 (rating 0.5): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating must be a…
+      failed: R10 refused: bad-rating-0.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-5.000001: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+B7-reader-coerces-text: scenario R10 exit=1 total=122 failed=20 VERDICT=DETECTED (20 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader coerces text and booleans to numbers ("3", true, null)
+      failed: R10 refused: bad-rating-text-3 (rating "3" (text)): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating…
+      failed: R10 refused: bad-rating-text-3: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-text-five: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-null (rating null): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "rating must be…
+      failed: R10 refused: bad-rating-null: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+B8-reader-range-widened: scenario R10 exit=1 total=122 failed=23 VERDICT=DETECTED (23 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader accepts ratings above 5
+      failed: R10 refused: bad-rating-6 (rating 6 (above the range)): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" and "ra…
+      failed: R10 refused: bad-rating-6: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-neg1: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-2.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-0.5: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+B9-reader-negzero-accepted: scenario R10 exit=1 total=122 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader accepts the JSON literal -0
+      failed: R10 refused: bad-rating-neg-zero (rating -0 (the literal -0)): the strict reader refuses it before any preview ("can’t be restored") naming the problem ("invalid fields" …
+      failed: R10 refused: bad-rating-neg-zero: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-on-web-song: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-in-history-snapshot: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+      failed: R10 refused: bad-rating-in-session-web: ZERO change: every store, every audio blob (SHA-256) and localStorage identical to before
+X1-star-action-shadows-speed-preset: scenario R11 exit=1 total=19 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the star action reuses the name of the playback-speed preset action (the first matching case wins, so the speed presets stop working)
+      failed: R11a: handleAct has no duplicated action label (a later duplicate silently never runs)
+      failed: R11a: clicking the 1.5x speed preset sets the speed, the button label and the highlighted chip
+      failed: R11a: giving a song 3 stars does not change the speed (still 1.5x) and the speed preset did not rate anything
+      failed: R11a: another preset (0.75x) changes the speed and leaves every rating exactly as it was
+X2-stale-delete-after-restore: scenario R11 exit=1 total=19 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | a queued track delete still runs after a restore replaced the library (it erases the restored song with the same id)
+      failed: R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library
+      failed: R11b: after a reload the restored library still has every song of the backup (same ids and records)
+X3-old-removal-touches-restored-library: scenario R11 exit=1 total=19 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the removal continues after the library was replaced: it deletes the restored audio and edits the restored playlists and queue
+      failed: R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library
+      failed: R11b: the old removal did not touch the restored library either: memory still has the song, playlists and queue are exactly as restored, stored playlists unchanged
+TOTAL: 41 mutants | DETECTED (valid, complete, intended check failed): 41 | SURVIVED or intended check not failed: 0 | ERROR/INCOMPLETE: 0 | control runs invalid: 0

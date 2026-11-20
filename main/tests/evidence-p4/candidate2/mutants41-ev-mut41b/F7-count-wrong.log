@@ -1,0 +1,23 @@
+FAIL R5: filter "unrated": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 2 songs, count line "2 of 8 songs"; got ["archive:W2","audius:E1"] | 2 of 2 songs
+FAIL R5: filter "rated": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 6 songs, count line "6 of 8 songs"; got ["09c6b77d-b2e1-4f5d-8e97-8825ba8d8a1a","2da2ca24-7acc-40e9-a175-1bea9e11013c","audius:D1","audius:D2","audius:W1","df60468c-aee4-4430-abc8-c4d1dd031bcb"] | 6 of 6 songs
+FAIL R5: filter "5": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 2 songs, count line "2 of 8 songs"; got ["2da2ca24-7acc-40e9-a175-1bea9e11013c","audius:W1"] | 2 of 2 songs
+FAIL R5: filter "4": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 4 songs, count line "4 of 8 songs"; got ["2da2ca24-7acc-40e9-a175-1bea9e11013c","audius:D1","audius:D2","audius:W1"] | 4 of 4 songs
+FAIL R5: filter "3": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 6 songs, count line "6 of 8 songs"; got ["09c6b77d-b2e1-4f5d-8e97-8825ba8d8a1a","2da2ca24-7acc-40e9-a175-1bea9e11013c","audius:D1","audius:D2","audius:W1","df60468c-aee4-4430-abc8-c4d1dd031bcb"] | 6 of 6 songs
+FAIL R5: filter "2": shows exactly the songs the harness expects (local AND saved web), with the matching count line  :: expected 6 songs, count line "6 of 8 songs"; got ["09c6b77d-b2e1-4f5d-8e97-8825ba8d8a1a","2da2ca24-7acc-40e9-a175-1bea9e11013c","audius:D1","audius:D2","audius:W1","df60468c-aee4-4430-abc8-c4d1dd031bcb"] | 6 of 6 songs
+PASS R5: filter "any": shows exactly the songs the harness expects (local AND saved web), with the matching count line
+PASS R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)
+PASS R5: "Unrated" counts both the cleared song (0) and the never-rated song (absent)
+FAIL R5: the rating filter combines with the text filter (3 stars and up AND "song"): the independently computed set and "n of 8 songs"  :: ["df60468c-aee4-4430-abc8-c4d1dd031bcb","09c6b77d-b2e1-4f5d-8e97-8825ba8d8a1a","2da2ca24-7acc-40e9-a175-1bea9e11013c"]3 of 3 songs
+FAIL R5: an empty result says which filters match nothing ("Unrated" and "zzzz") and the count line says "0 of 8 songs"  :: No songs match “Unrated” and “zzzz”. | Clear the filters | 0 of 0 songs
+PASS R5: "Clear the filters" resets the rating filter and the text filter and shows all 8 songs again ("8 songs")
+PASS R5: with the rating filter on "Any rating" a text filter that matches nothing still says "No songs match that filter."
+FAIL R5: rating E1 while the "Unrated" filter is on removes it from the list at once and the count follows ("1 of 8 songs")  :: ["archive:W2"]1 of 1 song
+PASS R5: with sort "high to low", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group
+PASS R5: clearing D1 while "Rated" is on drops it from the list ("rated" = 1 star or more) and D2 stays
+FAIL R5: in a library where nothing is rated, "Rated" says no songs match “Rated (1 star or more)” and counts "0 of 5 songs"  :: No songs match “Rated (1 star or more)”. | Clear the filters0 of 0 songs
+PASS R5: no page errors
+PASS R5 unrated: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data
+
+PHASE 4: 11 / 21 pass

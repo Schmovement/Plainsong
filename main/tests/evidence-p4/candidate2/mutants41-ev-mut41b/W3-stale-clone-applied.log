@@ -1,0 +1,21 @@
+PASS R7a: while the rating write is pending the shared record does NOT carry the rating yet (applied only after the write is durable) and the raw DB does not either
+PASS R7a: the like is queued behind the held rating write (only the held put has been issued so far)
+FAIL R7a: after the release BOTH changes are in the raw DB (rating 4 and liked false): the like's snapshot, taken when it ran, carried the committed rating  :: [{"id":"c9582256-a087-4c0e-8063-600a1c14971e","held":true,"liked":true,"rating":4,"hasRating":true,"title":"Song One","hasCover":false,"hasOrigMeta":false},{"id":"c9582256-a087-4c0e-8063-600a1c14971e","held":false,"liked":true,"rating":4,"hasRating":true,"title":"Song One","hasCover":false,"hasOrigMeta":false}]
+PASS R7a: memory matches the raw record after the release
+PASS R7b: after the REJECTED rating write nothing of the rating exists anywhere: not in memory, not in the raw DB, the stars show nothing, and the user is told ("Couldn’t save the rating")
+PASS R7b: the like queued behind it still ran and persisted (liked true) with NO rating in its snapshot: a failed write left no uncommitted field behind
+PASS R7c: a held rating write with the info editor's save queued behind it: both persist (rating 2 and the new title, origMeta captured), both reported ok
+PASS R7c: the reverse order (info editor write held, rating queued behind): both persist, and the rating write's snapshot already carried the committed new title (no lost write)
+PASS R7d: a held rating write with the cover editor's save queued behind it (song without a cover): rating 1 and the new cover (with origCover) both persist, the cover save was a real change (not a no-op)
+PASS R7d: memory equals the raw records of all four edited songs
+PASS R7a-d: no page errors
+PASS R7e: removing the song while its rating write is held: after the release the song is gone from the raw DB and memory (the rating write did not bring the record back), the rating call reports "no longer in your library"
+PASS R7e: the only writes for that song were the held put and then the delete (nothing after the delete)
+PASS R7e: rating a removed song is refused at once and writes nothing
+PASS R7f: if the library epoch changed while the write was pending (a restore), the call reports not-saved and the shared record is NOT changed
+PASS R7g: three quick writes of one song (2, 5, 0) run in order; the last one (0) is what is stored, in memory and raw
+PASS R7e-g: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data
+
+PHASE 4: 18 / 19 pass

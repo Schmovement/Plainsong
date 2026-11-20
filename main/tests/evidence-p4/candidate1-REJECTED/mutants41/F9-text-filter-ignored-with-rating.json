@@ -1,0 +1,78 @@
+{
+ "complete": true,
+ "only": "5",
+ "total": 14,
+ "failed": 3,
+ "results": [
+  {
+   "name": "R5: filter \"unrated\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:E1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"rated\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"5f5e3c03-a6b4-4920-926b-b94bbe7f0136\",\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"9f929cd8-663e-4559-af25-f260f6e2d24a\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"5\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"audius:W1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"4\": shows exactly the 4 songs the harness expects (local AND saved web), count line \"4 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 4 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"3\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"5f5e3c03-a6b4-4920-926b-b94bbe7f0136\",\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"9f929cd8-663e-4559-af25-f260f6e2d24a\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"2\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"5f5e3c03-a6b4-4920-926b-b94bbe7f0136\",\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"9f929cd8-663e-4559-af25-f260f6e2d24a\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"any\": shows exactly the 8 songs the harness expects (local AND saved web), count line \"8 songs\"",
+   "ok": true,
+   "detail": "[\"5f5e3c03-a6b4-4920-926b-b94bbe7f0136\",\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"9f929cd8-663e-4559-af25-f260f6e2d24a\",\"archive:W2\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"audius:W1\"] | 8 songs"
+  },
+  {
+   "name": "R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)",
+   "ok": true,
+   "detail": "[\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"audius:W1\"]"
+  },
+  {
+   "name": "R5: \"Unrated\" counts both the cleared song (0) and the never-rated song (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: the rating filter combines with the text filter (3 stars and up AND \"song\"): the independently computed set and \"n of 8 songs\"",
+   "ok": false,
+   "detail": "[\"9f929cd8-663e-4559-af25-f260f6e2d24a\",\"5f5e3c03-a6b4-4920-926b-b94bbe7f0136\",\"8ed944cf-a41b-4b5e-aa10-eb5b102a2801\",\"audius:D2\",\"audius:D1\",\"audius:W1\"]6 of 8 songs"
+  },
+  {
+   "name": "R5: an empty result says which filters match nothing (\"Unrated\" and \"zzzz\") and the count line says \"0 of 8 songs\"",
+   "ok": false,
+   "detail": " | 2 of 8 songs"
+  },
+  {
+   "name": "R5: the scenario ABORTED with an exception before its last check (a test or app fault, not a pass)",
+   "ok": false,
+   "detail": "page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-act=\"libClear\"]')\u001b[22m\n\n    at /home/claude/p4/tests/phase4.test.js:547:16\n    at async scn (/home/claude/p4/tests/phase4.test.js:357:62)\n    at async /home/claude/p4/tests/phase4.test.js:527:3"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

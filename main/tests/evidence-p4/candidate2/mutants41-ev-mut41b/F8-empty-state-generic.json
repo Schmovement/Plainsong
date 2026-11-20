@@ -1,0 +1,120 @@
+{
+ "complete": true,
+ "only": "5",
+ "scenariosSelected": [
+  5
+ ],
+ "scenariosFinished": [
+  5
+ ],
+ "scenariosAborted": [],
+ "total": 21,
+ "failed": 3,
+ "results": [
+  {
+   "name": "R5: filter \"unrated\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 2 songs, count line \"2 of 8 songs\"; got [\"archive:W2\",\"audius:E1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"rated\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 6 songs, count line \"6 of 8 songs\"; got [\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"5\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 2 songs, count line \"2 of 8 songs\"; got [\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:W1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"4\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 4 songs, count line \"4 of 8 songs\"; got [\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 4 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"3\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 6 songs, count line \"6 of 8 songs\"; got [\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"2\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 6 songs, count line \"6 of 8 songs\"; got [\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:D1\",\"audius:D2\",\"audius:W1\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"any\": shows exactly the songs the harness expects (local AND saved web), with the matching count line",
+   "ok": true,
+   "detail": "expected 8 songs, count line \"8 songs\"; got [\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"archive:W2\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"audius:W1\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\"] | 8 songs"
+  },
+  {
+   "name": "R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)",
+   "ok": true,
+   "detail": "[\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"audius:W1\"]"
+  },
+  {
+   "name": "R5: \"Unrated\" counts both the cleared song (0) and the never-rated song (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: the rating filter combines with the text filter (3 stars and up AND \"song\"): the independently computed set and \"n of 8 songs\"",
+   "ok": true,
+   "detail": "[\"f0ce8e3d-3499-4f97-937d-be01f452e5db\",\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\"]3 of 8 songs"
+  },
+  {
+   "name": "R5: an empty result says which filters match nothing (\"Unrated\" and \"zzzz\") and the count line says \"0 of 8 songs\"",
+   "ok": false,
+   "detail": "Nothing here. | 0 of 8 songs"
+  },
+  {
+   "name": "R5: \"Clear the filters\" resets the rating filter and the text filter and shows all 8 songs again (\"8 songs\")",
+   "ok": false,
+   "detail": "the public \"Clear the filters\" control could not be clicked: page.click: Timeout 4000ms exceeded. | {\"r\":\"unrated\",\"q\":\"zzzz\",\"n\":0,\"c\":\"0 of 8 songs\"}"
+  },
+  {
+   "name": "R5: with the rating filter on \"Any rating\" a text filter that matches nothing still says \"No songs match that filter.\"",
+   "ok": true,
+   "detail": "No songs match that filter."
+  },
+  {
+   "name": "R5: rating E1 while the \"Unrated\" filter is on removes it from the list at once and the count follows (\"1 of 8 songs\")",
+   "ok": true,
+   "detail": "[\"archive:W2\"]1 of 8 songs"
+  },
+  {
+   "name": "R5: with sort \"high to low\", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group",
+   "ok": true,
+   "detail": "{\"star\":5,\"tid\":\"f0ce8e3d-3499-4f97-937d-be01f452e5db\",\"act\":\"rateSong\"}[\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\",\"audius:W1\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"41aecae9-d911-4f08-be0b-11cfd8430ac9\",\"archive:W2\"]"
+  },
+  {
+   "name": "R5: clearing D1 while \"Rated\" is on drops it from the list (\"rated\" = 1 star or more) and D2 stays",
+   "ok": true,
+   "detail": "[\"7bd81eb0-80bd-4c49-a124-876aeddb65c7\",\"f0ce8e3d-3499-4f97-937d-be01f452e5db\",\"audius:W1\",\"audius:D2\",\"audius:E1\",\"41aecae9-d911-4f08-be0b-11cfd8430ac9\"]"
+  },
+  {
+   "name": "R5: in a library where nothing is rated, \"Rated\" says no songs match “Rated (1 star or more)” and counts \"0 of 5 songs\"",
+   "ok": false,
+   "detail": "Nothing here.0 of 5 songs"
+  },
+  {
+   "name": "R5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5 unrated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "18 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; offending: []"
+  }
+ ]
+}

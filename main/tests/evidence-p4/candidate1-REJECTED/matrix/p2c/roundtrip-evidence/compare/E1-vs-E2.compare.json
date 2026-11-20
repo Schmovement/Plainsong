@@ -1,0 +1,153 @@
+{
+ "schema": "oracle_2c.compare.v1",
+ "A": "/home/claude/w4/wr-matrix/p2c/exports/01-E1-source.zip",
+ "B": "/home/claude/w4/wr-matrix/p2c/exports/03-E2-from-populated-target.zip",
+ "options": {
+  "bTheme": "dark",
+  "bSecretKeys": [
+   "secret:lb-token",
+   "secret:target-extra"
+  ],
+  "timeUnavailable": false
+ },
+ "results": [
+  {
+   "check": "A self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "A has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B self-check (layout, stored, CRC-32 vs ZIP header and manifest, sizes, STRICT manifest shape: key lists/order, files once each, blobs once each, counts, excluded names)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "B has no secret: key in kv.json (case-insensitive): []",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "entry names and order identical (10 entries)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/tracks.json byte-identical (sha256 3f73dc5af50a)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "data/playlists.json byte-identical (sha256 b1d31948e3e4)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000001.bin byte-identical (sha256 449f6d1d7d62)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000002.bin byte-identical (sha256 f102eb734257)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000003.bin byte-identical (sha256 e5313e216fd0)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000004.bin byte-identical (sha256 416b6d6783fb)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "blobs/000005.bin byte-identical (sha256 785b0751fc2c)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "audio list identical in order: key, MIME, size, SHA-256 for all 5 entries",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "tracks records identical, same order and same key order (5 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "playlists records identical, same order and same key order (2 records)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv key set and order identical: ['custom:plain', 'custom:zero', 'custom:ключ/日本', 'hist', 'session', 'x-future:setting']",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:plain] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:zero] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[custom:ключ/日本] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[hist] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[session] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "kv[x-future:setting] identical",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "localstorage.json identical {\"ps-theme\": \"dark\"}",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "manifest compared leaf by leaf (61 values in A): 2 differ (each listed below)",
+   "status": "exact",
+   "detail": ""
+  },
+  {
+   "check": "manifest.createdAt (A 2026-11-08T17:47:11.399Z, B 2026-11-08T17:47:21.448Z)",
+   "status": "allowed",
+   "detail": "wall-clock time of the export"
+  },
+  {
+   "check": "manifest.excluded.kv (A ['secret:lb-token', 'secret:other'], B ['secret:lb-token', 'secret:target-extra'])",
+   "status": "allowed",
+   "detail": "names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)"
+  },
+  {
+   "check": "manifest.excluded.kv equals the secret: key names the exporting browser holds ['secret:lb-token', 'secret:target-extra']",
+   "status": "exact",
+   "detail": ""
+  }
+ ],
+ "fail": 0,
+ "allowed": 2,
+ "exact": 25
+}

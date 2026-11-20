@@ -1,0 +1,650 @@
+{
+ "complete": true,
+ "only": "9",
+ "scenariosSelected": [
+  9
+ ],
+ "scenariosFinished": [
+  9
+ ],
+ "scenariosAborted": [],
+ "total": 127,
+ "failed": 0,
+ "results": [
+  {
+   "name": "R9-E0-unrated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-111222.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E0-unrated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E0-unrated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9 E0: the backup of a library in which nothing was ever rated carries NO rating field on any of its 8 songs (a missing rating is not written as 0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E0 (old-style, no rating) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E0: restored with no rating field invented on any song, and every song shows empty stars",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E0 -> clean after RELOAD: still all the backup's songs, the policy theme, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6 audio entries"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 p1 full (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 full: the old archive has no rating field and restores unchanged: no rating was written for any song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full: an old restored song can be rated; only its rating field is added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: playlists identical, every audio entry identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": "6 audio entries before, 6 after"
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 full rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0] vs [[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],0]"
+  },
+  {
+   "name": "R9 p1 full: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1 audio entries"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {}, found {}"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 p1 minimal (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 p1 minimal: the old archive has no rating field and restores unchanged: no rating was written for any song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal: an old restored song can be rated; only its rating field is added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: playlists identical, every audio entry identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": "1 audio entries before, 1 after"
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 p1 minimal rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": " vs "
+  },
+  {
+   "name": "R9 p1 minimal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: setup: L1 5, W1 3, D1 1, L2 a present zero, and L3, W2, D2, E1 never rated (field absent)",
+   "ok": true,
+   "detail": "[[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",5],[\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"ABSENT\"],[\"archive:W2\",\"ABSENT\"],[\"audius:D1\",1],[\"audius:D2\",\"ABSENT\"],[\"audius:E1\",\"ABSENT\"],[\"audius:W1\",3],[\"d8d52d33-90df-4503-96b5-9af2e4ec63f1\",0]]"
+  },
+  {
+   "name": "R9-E1-rated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-111232.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E1-rated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E1-rated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9 E1: the backup carries the rating field exactly as stored: 5, 3, 1 and a PRESENT 0; the never-rated songs have NO field",
+   "ok": true,
+   "detail": "[[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",5],[\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"ABSENT\"],[\"archive:W2\",\"ABSENT\"],[\"audius:D1\",1],[\"audius:D2\",\"ABSENT\"],[\"audius:E1\",\"ABSENT\"],[\"audius:W1\",3],[\"d8d52d33-90df-4503-96b5-9af2e4ec63f1\",0]]"
+  },
+  {
+   "name": "R9 E1 file vs live DB: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 file vs live DB: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 file vs live DB: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 file vs live DB: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E1 file vs live DB: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:lastfm\",\"value\":{\"token\":\"S-SRC-SECRET-7f3a91c0\"}}] expected 1"
+  },
+  {
+   "name": "R9 E1 file vs live DB: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E1 -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E1 -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 E1 -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E1 -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E1 -> clean after RELOAD: still all the backup's songs, the policy theme, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E1 -> clean: the restored library holds exactly the stored ratings (5, 3, 1, present 0, others absent) and the rows show them",
+   "ok": true,
+   "detail": "{\"L1\":[5],\"W1\":[3],\"L2\":[],\"L3\":[]} [[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",5],[\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"ABSENT\"],[\"archive:W2\",\"ABSENT\"],[\"audius:D1\",1],[\"audius:D2\",\"ABSENT\"],[\"audius:E1\",\"ABSENT\"],[\"audius:W1\",3],[\"d8"
+  },
+  {
+   "name": "R9 E1 -> clean: sorting by rating on the restored library gives the independently computed order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E2-reexport: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-111237.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E2-reexport: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E2-reexport: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): oracle comparison has ZERO failures",
+   "ok": true,
+   "detail": "25 exact, 2 allowed, 0 failed"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): kv keys identical (the session may differ only in its allowed time field, see the allowed differences)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E1 vs the re-export from the clean browser (ratings, present zero and absent carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields)",
+   "ok": true,
+   "detail": "2 allowed: manifest.createdAt (A 2026-11-09T04:12:32.578Z, B 2026-11-09T04:12:37.359Z) [wall-clock time of the export] | manifest.excluded.kv (A ['secret:lastfm'], B []) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "R9 E2: the re-export carries the same rating fields (5, 3, 1, present 0, absent) as E1",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n8 songs, 2 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "R9 E2 -> populated: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "8 vs 8"
+  },
+  {
+   "name": "R9 E2 -> populated: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"] vs [\"custom:plain\",\"custom:zero\",\"custom:ключ/日本\",\"hist\",\"session\",\"x-future:setting\"]"
+  },
+  {
+   "name": "R9 E2 -> populated: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "5 vs 5 audio entries"
+  },
+  {
+   "name": "R9 E2 -> populated: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}] expected 1"
+  },
+  {
+   "name": "R9 E2 -> populated: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "R9 E2 -> populated: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "R9 E2 -> populated: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E2 -> populated: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E2 -> populated: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "R9 E2 -> populated: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":8,\"queue\":[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R9 E2 -> populated: the target now has exactly the backup's ratings and none of its old songs (the target song had no rating)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E3-reexport-populated: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261109-111242.zip Backup downloaded  8 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this file"
+  },
+  {
+   "name": "R9-E3-reexport-populated: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9-E3-reexport-populated: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: oracle comparison has ZERO failures",
+   "ok": true,
+   "detail": "25 exact, 2 allowed, 0 failed"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: kv keys identical (the session may differ only in its allowed time field, see the allowed differences)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9: E2 vs the re-export from the populated browser: narrowly allowed differences, each with its stated reason (not ignored fields)",
+   "ok": true,
+   "detail": "2 allowed: manifest.createdAt (A 2026-11-09T04:12:37.359Z, B 2026-11-09T04:12:42.607Z) [wall-clock time of the export] | manifest.excluded.kv (A [], B ['secret:tgt']) [names only (never values) of the secret: keys the EXPORTING browser really holds (read from IndexedDB by the harness)]"
+  },
+  {
+   "name": "R9 E1 -> clean: a restored song can be rated afterwards (L3 -> 4 stars)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: every track record is identical (id, title, artist, album, likes, plays, timestamps, duration, lyrics, cover, unknown fields; key order; list order) except the rating of the rated song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: playlists identical, every audio entry identical (key, MIME, size, SHA-256)",
+   "ok": true,
+   "detail": "5 audio entries before, 5 after"
+  },
+  {
+   "name": "R9 restored rate: raw DB: every kv entry other than session/history identical (settings, secrets, unknown keys); localStorage identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 restored rate: raw DB: saved queue and queue position unchanged",
+   "ok": true,
+   "detail": "[[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],0] vs [[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],[\"0aec0aaa-88db-42d9-855f-5c303feffa4b\",\"audius:W1\",\"9aea2a25-688b-4c1f-8b68-1bfc115b782d\",\"audius:QW\"],0]"
+  },
+  {
+   "name": "R9 source: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 E0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 clean: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R9 populated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "34 blocked requests; hosts: api.audius.co, archive.org, example.invalid, fonts.googleapis.com; offending: []"
+  }
+ ]
+}

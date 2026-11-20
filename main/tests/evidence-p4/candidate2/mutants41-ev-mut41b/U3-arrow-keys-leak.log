@@ -1,0 +1,26 @@
+PASS R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop (star 1): a single roving tab stop per group
+FAIL R3: ArrowRight twice moves the focus to star 3 of the same song and changes NOTHING (no write, rating still absent)  :: {"star":3,"tid":"4c7a7d5c-9092-4e65-9da6-440934f16de0","act":"rateSong"}[{"op":"put","key":"dd945dcb-810a-4bfb-98ac-d0db494f4d0e"}]
+FAIL R3: the arrow keys on a star do not leak to the global shortcuts (the volume and playback position are unchanged)  :: [0.55,0.55,11.5]
+FAIL R3: ArrowUp moves focus on (star 4) and does not change the volume  :: {"star":4,"tid":"4c7a7d5c-9092-4e65-9da6-440934f16de0","act":"rateSong"}0.6000000000000001
+PASS R3: Home focuses star 1 and End focuses star 5
+PASS R3: Space on star 3 sets 3 stars (raw DB and UI), focus stays on star 3, ONE write, and Space did not start or pause playback
+PASS R3: Enter on the current star 3 clears (rating 0 present)
+PASS R3: the key 4 sets 4 stars directly and the roving tab stop follows (only star 4 has tabindex 0)
+PASS R3: Delete clears (0)
+PASS R3: 5 then Backspace ends at 0
+PASS R3: pressing 0 on a song whose rating is already 0 is a no-op (no write)
+PASS R3: Shift+Tab from the heart lands on the group's ONE tab stop (the checked star 3) of the same song: a single tab stop per group
+PASS R3: the track menu of a library song offers "Rate…"
+PASS R3: the rating menu lists 5 stars … 1 star and Back, and no "Clear rating" for an unrated song
+PASS R3: choosing "4 stars" in the menu stores 4 (raw DB) and the row shows it
+PASS R3: the menu of a rated song shows its rating ("Rating: ★★★★☆…")
+PASS R3: the rating menu of a rated song marks the current value and offers "Clear rating"
+PASS R3: Back returns to the track menu
+PASS R3: "Clear rating" stores 0 and the row shows no stars
+PASS R3: the keyboard-help dialog documents the rating keys
+FAIL R3: through all of this nothing played, the queue and library are unchanged  :: {"paused":true,"src":"blob:http://localhost:8792/8d40f4bf-5665-446c-ae77-a1ac317a2038","ct":12,"plays":0,"ls":1,"cur":"dd945dcb-810a-4bfb-98ac-d0db494f4d0e","qi":0,"queue":["dd945dcb-810a-4bfb-98ac-d0
+PASS R3: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data
+
+PHASE 4: 20 / 24 pass

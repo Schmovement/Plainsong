@@ -1,0 +1,128 @@
+{
+ "complete": true,
+ "only": "3",
+ "total": 24,
+ "failed": 4,
+ "results": [
+  {
+   "name": "R3: before any key press the unrated star group of each of the 5 songs has exactly ONE tab stop (star 1): a single roving tab stop per group",
+   "ok": true,
+   "detail": "[[1],[1],[1],[1],[1]]"
+  },
+  {
+   "name": "R3: ArrowRight twice moves the focus to star 3 of the same song and changes NOTHING (no write, rating still absent)",
+   "ok": true,
+   "detail": "{\"star\":3,\"tid\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"act\":\"rateSong\"}[]"
+  },
+  {
+   "name": "R3: the arrow keys on a star do not leak to the global shortcuts (the volume and playback position are unchanged)",
+   "ok": false,
+   "detail": "[0.55,0.55,11.5]"
+  },
+  {
+   "name": "R3: ArrowUp moves focus on (star 4) and does not change the volume",
+   "ok": false,
+   "detail": "{\"star\":4,\"tid\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"act\":\"rateSong\"}0.6000000000000001"
+  },
+  {
+   "name": "R3: Home focuses star 1 and End focuses star 5",
+   "ok": true,
+   "detail": "[{\"star\":1,\"tid\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"act\":\"rateSong\"},{\"star\":5,\"tid\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"act\":\"rateSong\"}]"
+  },
+  {
+   "name": "R3: Space on star 3 sets 3 stars (raw DB and UI), focus stays on star 3, ONE write, and Space did not start or pause playback",
+   "ok": false,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[3],\"filled\":3,\"glyphs\":\"★★★☆☆\",\"tab0\":[3],\"unrated\":false}[{\"op\":\"put\",\"key\":\"b4e9e0f4-7e1a-4cd4-9de6-79a1c5e7076f\"},{\"op\":\"put\",\"key\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\"}]"
+  },
+  {
+   "name": "R3: Enter on the current star 3 clears (rating 0 present)",
+   "ok": true,
+   "detail": "{\"id\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R3: the key 4 sets 4 stars directly and the roving tab stop follows (only star 4 has tabindex 0)",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[4],\"filled\":4,\"glyphs\":\"★★★★☆\",\"tab0\":[4],\"unrated\":false}"
+  },
+  {
+   "name": "R3: Delete clears (0)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: 5 then Backspace ends at 0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: pressing 0 on a song whose rating is already 0 is a no-op (no write)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "R3: Shift+Tab from the heart lands on the group's ONE tab stop (the checked star 3) of the same song: a single tab stop per group",
+   "ok": true,
+   "detail": "{\"star\":3,\"tid\":\"1fe8cd25-f5d8-4539-a02a-fce8c18cd897\",\"act\":\"rateSong\"}"
+  },
+  {
+   "name": "R3: the track menu of a library song offers \"Rate…\"",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Like | Rate… | Go to album | Go to artist | Edit info… | Edit cover… | Remove from library"
+  },
+  {
+   "name": "R3: the rating menu lists 5 stars … 1 star and Back, and no \"Clear rating\" for an unrated song",
+   "ok": true,
+   "detail": "★★★★★ 5 stars | ★★★★☆ 4 stars | ★★★☆☆ 3 stars | ★★☆☆☆ 2 stars | ★☆☆☆☆ 1 star | Back"
+  },
+  {
+   "name": "R3: choosing \"4 stars\" in the menu stores 4 (raw DB) and the row shows it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: the menu of a rated song shows its rating (\"Rating: ★★★★☆…\")",
+   "ok": true,
+   "detail": "Play next | Add to queue | Add to playlist… | Like | Rating: ★★★★☆… | Go to album | Go to artist | Edit info… | Edit cover… | Remove from library"
+  },
+  {
+   "name": "R3: the rating menu of a rated song marks the current value and offers \"Clear rating\"",
+   "ok": true,
+   "detail": "★★★★★ 5 stars | ★★★★☆ 4 stars (current) | ★★★☆☆ 3 stars | ★★☆☆☆ 2 stars | ★☆☆☆☆ 1 star | Clear rating | Back"
+  },
+  {
+   "name": "R3: Back returns to the track menu",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: \"Clear rating\" stores 0 and the row shows no stars",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R3: the keyboard-help dialog documents the rating keys",
+   "ok": true,
+   "detail": "Keyboard shortcuts | Space | Play or pause | ← → | Seek 5 seconds | Shift + ← → | Previous or next song | ↑ ↓ | Volume | M | Mute | L | Like current song | On a rating star: ← → | Move; Space or Enter sets, 1–5 sets, 0 or Delete clears | S | Shuffle | R | Repeat | A | A–B loop: set start, set end, c"
+  },
+  {
+   "name": "R3: through all of this nothing played, the queue and library are unchanged",
+   "ok": false,
+   "detail": "{\"paused\":true,\"src\":\"blob:http://localhost:8792/1a07d703-e032-459c-ae86-b4162152904a\",\"ct\":12,\"plays\":0,\"ls\":1,\"cur\":\"b4e9e0f4-7e1a-4cd4-9de6-79a1c5e7076f\",\"qi\":0,\"queue\":[\"b4e9e0f4-7e1a-4cd4-9de6-79"
+  },
+  {
+   "name": "R3: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

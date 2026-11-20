@@ -1,0 +1,27 @@
+PASS R8: click star 3 on the PLAYING song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+FAIL R8: click star 3 on the PLAYING song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0  :: {"ct":[2.518277,0.409233]}
+PASS R8: click star 3 on the PLAYING song: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: click star 5 on another song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+PASS R8: click star 5 on another song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+PASS R8: click star 5 on another song: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: rate a saved web song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+PASS R8: rate a saved web song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+PASS R8: rate a saved web song: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: clear the playing song's rating: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+FAIL R8: clear the playing song's rating: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0  :: {"ct":[1.378186,0.40052]}
+PASS R8: clear the playing song's rating: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: key 4 on the playing song's star: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+PASS R8: key 4 on the playing song's star: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+PASS R8: key 4 on the playing song's star: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: menu: Rate… 2 stars on the playing song: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+PASS R8: menu: Rate… 2 stars on the playing song: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+PASS R8: menu: Rate… 2 stars on the playing song: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: sort by rating and filter by rating: the same audio source keeps playing (not paused, no reload of the element, no new play() call, no new loadstart)
+PASS R8: sort by rating and filter by rating: the playback position (currentTime) was not reset or moved back: it is at least its value before the click and above 0
+PASS R8: sort by rating and filter by rating: current song, queue position, queue order, library order and playlists unchanged
+PASS R8: ratings stored as expected (L2 2, L3 5, W1 1) and the playing song's play counter was not touched by rating (plays equal the seed)
+PASS R8: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 23 / 25 pass

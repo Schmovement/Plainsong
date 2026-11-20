@@ -1,0 +1,15 @@
+PASS R4: setup: 8 songs, ratings L1 5, W1 5, D1 4, D2 4, L2 3, L3 3, W2 cleared (present 0), E1 never rated (absent)
+FAIL R4: "Rating: high to low" shows the order the harness computes independently (rating, then title, artist, id); unrated last  :: ["audius:E1","archive:W2","bd20ee24-684e-4a8d-a076-91fadf602eee","82604448-220a-4a97-9140-03e457066f03","audius:D1","audius:D2","c33e9a17-e703-457e-98b8-f24700aa76b4","audius:W1"] vs ["c33e9a17-e703-457e-98b8-f24700aa76b4","audius:W1","audius:D1","audius:D2","bd20ee24-684e-4a8d-a076-91fadf602eee","82604448-220a-4a97-9140-03e457066f03","audius:E1","archive:W2"]
+FAIL R4: the identical Dup Title / Dup Artist songs are ordered by id (D1 before D2), and the unrated W2 (0) and E1 (absent) are both at the end  :: ["audius:E1","archive:W2","bd20ee24-684e-4a8d-a076-91fadf602eee","82604448-220a-4a97-9140-03e457066f03","audius:D1","audius:D2","c33e9a17-e703-457e-98b8-f24700aa76b4","audius:W1"]
+PASS R4: "Rating: low to high" shows the independently computed order (unrated first) with the same tie rules
+PASS R4: low-to-high is not simply the reverse of high-to-low (ties keep the same title order in both directions)
+PASS R4: switching the sort back and forth gives byte-identical orders (deterministic)
+PASS R4: after a reload the same order appears (it depends only on stored data)
+PASS R4: the existing "Title" sort is unchanged (A-Z by title)
+PASS R4: the default "Recently added" sort still orders by added time, newest first
+PASS R4: sorting wrote nothing (records identical to before the sorts)
+PASS R4: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 15 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 11 / 13 pass

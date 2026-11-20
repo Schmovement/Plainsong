@@ -1,0 +1,191 @@
+PASS test library is quiescent (two snapshots 1.8 s apart identical)
+PASS library has 3 songs, 3 audio blobs, secret key, custom key, theme light
+PASS restore buttons exist: sidebar and top bar, with accessible names
+PASS sidebar "Restore from backup…" opens exactly one file chooser (zip only)
+PASS preview says nothing has changed and lists file, songs (5 with audio + 1 web), 2 playlists, 6 audio files, orphan, queue, history, theme
+PASS preview shows the current library (3 songs, 1 playlist) and the web hosts the backup refers to
+PASS preview: Cancel is focused first; there is no destructive button yet
+PASS preview stage: zero writes so far
+PASS preview stage: database and localStorage byte-identical
+PASS confirmation is a separate step naming what is deleted (3 songs, 1 playlist, 3 audio files, queue/history/settings), what replaces it, what is kept, and warns about other tabs
+PASS confirmation: Cancel focused; "Replace library" disabled until the checkbox is ticked
+PASS clicking the disabled Replace button does nothing
+PASS ticking the checkbox enables Replace
+PASS result dialog: restored counts, "Nothing is playing", theme set to dark and described as a separate step
+PASS restore into populated library: songs identical to the backup (every field, key order)
+PASS restore into populated library: playlists identical (ids order kept)
+PASS restore into populated library: saved settings identical (session, history, custom keys)
+PASS restore into populated library: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS restore into populated library: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS old songs, old playlist, old custom setting and old audio are gone
+PASS ps-theme: backup value dark applied to localStorage AFTER the database commit
+FAIL rebuilt app state: 6 songs, playlists [pl-1,pl-2], queue and index from the session, volume from the session, home view  :: {"tr":6,"pl":["pl-1","pl-2"],"q":4,"cur":"fb922971-a227-4d99-a9b1-11d2a0760f21","qi":0,"vol":0.8,"view":"library","stack":0,"paused":true,"plays":0,"lock":false,"busy":[false,false,false,false],"lib":"6 songs · 4 min\n5.8 MB on this device","bar":"Song One","src":"set","tracksInView":6}
+PASS NO AUTOPLAY: both audio elements paused and zero media play events since the restore started (autoplay was allowed in this browser)
+PASS restored current track is loaded (not playing) and shown in the bar
+PASS locks released: DB.lock false, no busy flags, library counter shows 6 songs
+PASS exactly one read-write transaction touched the database during the restore besides the pre-commit session flush
+PASS nothing wrote over the restored data afterwards (snapshot 1.5 s later identical)
+PASS restored local song plays from the restored audio bytes (currentTime advances)
+PASS normal writes work again after the restore (lock lifted)
+PASS page errors during the whole happy path
+PASS validation stage shows a progress dialog with a Cancel button, focused
+PASS cancel during validation: toast says nothing changed
+PASS cancel during validation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS cancel during validation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS after cancelled validation the next restore starts normally (no stuck busy flag)
+PASS cancel on preview (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS dismiss preview (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS cancel on confirmation (button): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS dismiss confirmation (Escape): nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS confirmation with the box unticked cannot be confirmed (still open, still Replace disabled)
+PASS unticked confirmation then Escape: nothing written (no write tx/put/delete/localStorage) and all stores byte-identical
+PASS after all cancellations: busy flags clear, lock off, app state untouched
+PASS "Back up current library first" downloads a backup and returns to the confirmation
+PASS after backup-first then cancel: songs, playlists, audio, secret/custom settings and localStorage unchanged (the backup itself re-saves the session)
+PASS writing stage: dialog says it cannot be cancelled and Escape does not close it
+PASS ...and the restore then completes normally
+PASS cancellation scenarios: no page errors
+PASS UI refuses c-flip-audio: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses c-truncated-tail: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses m-version-2: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses k-secret: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses k-secret-case: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses c-deflate: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses c-duplicate-name: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses c-name-traversal: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses d-web-url-js: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses ls-unknown-key: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses i-complete-but-empty-audio: "can’t be restored", reason shown, "Nothing was changed", no Continue/Replace button
+PASS UI refuses a plain text file
+PASS UI refuses a empty file
+PASS INCOMPLETE backup: refused with an explanation (file intact, partial copy would replace the library), problem song listed, no way to continue
+PASS after 14 refused files: zero writes of any kind and all stores + localStorage byte-identical
+PASS refusal naming an HTML-payload credential key shows it as text, creating no element
+PASS refusal scenarios: no page errors
+PASS ROLLBACK [put-throw] a put throws QuotaExceededError synchronously (3rd record): failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [put-throw]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [put-throw]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [put-throw] is non-vacuous: the restore really had queued writes (3 put calls) before failing
+PASS ROLLBACK [put-throw-blob] the first audio put throws QuotaExceededError (all songs/playlists already queued, clears applied): failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [put-throw-blob]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [put-throw-blob]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [abort-after] transaction aborted from outside right after the 10th put (mid-restore): failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [abort-after]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [abort-after]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [abort-after] is non-vacuous: the restore really had queued writes (10 put calls) before failing
+PASS ROLLBACK [async-error] an asynchronous request error (ConstraintError) after the 4th put: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [async-error]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [async-error]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [async-error] is non-vacuous: the restore really had queued writes (17 put calls) before failing
+PASS ROLLBACK [tx-throws] opening the read-write transaction throws: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [tx-throws]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [tx-throws]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [verify-drop] one song silently not written: in-transaction verification must catch it: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [verify-drop]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [verify-drop]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [verify-drop] is non-vacuous: the restore really had queued writes (17 put calls) before failing
+PASS ROLLBACK [verify-truncate-blob] every audio blob written 1 byte short: verification must catch it: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [verify-truncate-blob]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [verify-truncate-blob]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [verify-mutate-record] songs written with a changed title: verification must catch it: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [verify-mutate-record]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [verify-mutate-record]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [verify-mutate-kv] saved session written altered: verification must catch it: failure reported as rolled back, says the library was verified unchanged
+PASS ROLLBACK [verify-mutate-kv]: all four stores, secret/custom keys, theme and localStorage BYTE-IDENTICAL to before
+PASS ROLLBACK [verify-mutate-kv]: app state untouched (3 songs, 1 playlist, theme light), lock released
+PASS ROLLBACK [verify-mutate-kv] is non-vacuous: the restore really had queued writes (17 put calls) before failing
+PASS control: the same injection proxy in pass-through mode lets the restore succeed (the failures above come from the injected faults)
+PASS control restore after the failed attempts: songs identical to the backup (every field, key order)
+PASS control restore after the failed attempts: playlists identical (ids order kept)
+PASS control restore after the failed attempts: saved settings identical (session, history, custom keys)
+PASS control restore after the failed attempts: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS control restore after the failed attempts: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS rollback scenarios: no page errors
+PASS flush failure: "Restore stopped before changing anything", library unchanged, lock released
+PASS unreadable current library: restore stops before the commit; nothing changed
+PASS re-check failure after a rollback: message does not claim the library is unchanged and tells the user to reload and look
+PASS ...(and the database really is unchanged, by independent snapshot)
+PASS commit succeeded, rebuild failed: songs identical to the backup (every field, key order)
+PASS commit succeeded, rebuild failed: playlists identical (ids order kept)
+PASS commit succeeded, rebuild failed: saved settings identical (session, history, custom keys)
+PASS commit succeeded, rebuild failed: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS commit succeeded, rebuild failed: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS rebuild failure: message says the backup WAS written completely and the page needs a reload; locks released
+PASS after reloading, the restored library is what the app shows (6 songs, dark theme)
+PASS theme storage failure: library fully restored, result says the theme could not be saved and applies for this visit only
+PASS backup with no theme: current theme (light) left alone and the result says so
+PASS minimal backup (no kv at all) replaces a 6-song library: songs identical to the backup (every field, key order)
+PASS minimal backup (no kv at all) replaces a 6-song library: playlists identical (ids order kept)
+PASS minimal backup (no kv at all) replaces a 6-song library: saved settings identical (session, history, custom keys)
+PASS minimal backup (no kv at all) replaces a 6-song library: 1 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS minimal backup (no kv at all) replaces a 6-song library: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS minimal backup: the old session and history are gone with no kv entries left; app shows 1 song, nothing queued, defaults restored
+PASS failure-point scenarios: no page errors
+PASS IndexedDB unavailable: restore says it isn’t available in this browser mode and nothing was changed; no file is even read
+PASS IndexedDB unavailable: busy flags clear afterwards, app still usable
+PASS no-storage page errors
+PASS import attempted during a restore is refused with a message
+PASS restore chosen while a backup is running is refused with a toast and opens nothing
+PASS restore chosen while an import is running is refused with a toast and opens nothing
+PASS during the locked commit phase: restoring/lock/busy flags are all set
+PASS during the lock: direct kv write, stale-song write and delete are all REJECTED (stale-write protection); reads still work
+PASS during the lock: a backup is refused ("A restore is writing") and an import is refused
+PASS during the lock, before the commit: songs, playlists, audio, other settings and localStorage are still exactly the old library (only the pre-lock session flush may differ)
+PASS restore with writes attempted during the lock: songs identical to the backup (every field, key order)
+PASS restore with writes attempted during the lock: playlists identical (ids order kept)
+PASS restore with writes attempted during the lock: saved settings identical (session, history, custom keys)
+PASS restore with writes attempted during the lock: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS restore with writes attempted during the lock: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS stale writes did not survive: no late-key, old song not resurrected, queued debounced saves did not overwrite the restored session
+PASS after unlock, writes work again
+PASS restore while a song is playing: playback stopped (both elements paused), no play event after the restore started, restored session/history NOT overwritten by pending saves or by the old playhead
+PASS restore while playing: songs identical to the backup (every field, key order)
+PASS restore while playing: playlists identical (ids order kept)
+PASS restore while playing: saved settings identical (session, history, custom keys)
+PASS restore while playing: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS restore while playing: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS restoring the same backup twice gives an identical database (deterministic replace)
+PASS concurrency scenarios: no page errors
+PASS hostile file name and manifest text are shown as literal text in the preview (no element created, nothing executed)
+PASS hostile-text backup restored
+PASS across home/library/album/artist/playlist/search/now-playing/lyrics views: window.__pwned never set, no injected <img>/<svg onload>/[onerror], and the payload is visible as plain text
+PASS hostile-text scenario: no page errors
+PASS keyboard: ONE Enter on the focused "Restore from backup…" button opens exactly one file chooser
+PASS keyboard: preview opens with focus on Cancel; Tab reaches Continue; Escape cancels
+PASS keyboard: Tab moves to Continue…
+PASS keyboard: Enter on Continue… reaches the confirmation, focus on Cancel (safe default)
+PASS keyboard: confirmation focus order reaches the checkbox, Cancel and Back-up-first, and skips the disabled Replace button
+PASS keyboard: Replace is skipped by Tab order while disabled, and Space on the checkbox enables it
+PASS keyboard-only restore completes
+PASS keyboard scenarios: no page errors
+PASS mobile: top-bar restore button is visible and at least 32x32
+PASS mobile: the top-bar Restore button opens exactly one file chooser
+PASS mobile preview: dialog inside the viewport, no horizontal page scroll, no sideways overflow in the dialog
+PASS mobile preview: Continue/Cancel buttons reachable on screen (dialog scrolls if taller than the viewport)
+PASS mobile confirmation: inside the viewport, no horizontal scroll
+PASS mobile: full restore completes and the library shows 6 songs
+PASS mobile: no horizontal scroll after the restore
+PASS mobile scenarios: no page errors
+PASS 64 MiB audio entry restored through preview, confirmation and verified commit in 658 ms
+PASS 64 MiB archive: songs identical to the backup (every field, key order)
+PASS 64 MiB archive: playlists identical (ids order kept)
+PASS 64 MiB archive: saved settings identical (session, history, custom keys)
+PASS 64 MiB archive: 6 audio blobs identical (key, MIME, size, SHA-256) and no old audio left
+PASS 64 MiB archive: this browser's secret: key survived untouched (value kept, never in a backup)
+PASS large-entry scenario: no page errors
+PASS (a) backup requested during VALIDATION: refused with "A restore is in progress", no download, no backup state left set
+PASS (a) backup requested during the PREVIEW: refused, no download, no backup state left set
+PASS (a) backup requested during the CONFIRMATION: refused, no download, no backup state left set
+PASS (a) the dialog's own "Back up current library first" is the one intended exception: it downloads and returns to the confirmation
+PASS (a) after cancelling: restoreBusy is cleared and the library is byte-identical
+PASS (a) after cancelling, a normal backup works again (one download) and clears its busy flag
+PASS (a) backup requested inside the locked write window: refused with "A restore is writing", no download
+PASS (b) restore clears the old timed sleep timer (S.sleep null) and starts no playback
+PASS (b) restored playback started after the restore is still playing, at its normal volume, long after the old deadline (not stopped, not faded)
+PASS (b) restore clears an "after this song" sleep timer
+PASS (b) the restored session, when a song ends, advances normally instead of "Sleep timer: playback stopped"
+PASS (b) in-flight fade-out was running (volume below normal) when the rebuild happened
+PASS (b) after the rebuild the abandoned fade does not pause the player or leave the volume lowered, and says no "good night"
+PASS (a)(b) scenarios: no page errors
+
+PHASE 2B: 188 / 189 pass

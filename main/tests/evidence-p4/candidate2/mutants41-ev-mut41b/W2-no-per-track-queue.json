@@ -1,0 +1,110 @@
+{
+ "complete": true,
+ "only": "7",
+ "scenariosSelected": [
+  7
+ ],
+ "scenariosFinished": [
+  7
+ ],
+ "scenariosAborted": [],
+ "total": 19,
+ "failed": 8,
+ "results": [
+  {
+   "name": "R7a: while the rating write is pending the shared record does NOT carry the rating yet (applied only after the write is durable) and the raw DB does not either",
+   "ok": true,
+   "detail": "{\"id\":\"72c66c2f-807d-4bd7-befb-863e41d85c71\",\"kind\":\"local\",\"key\":\"Artist A - Song One.wav|529244|1793908062000\",\"title\""
+  },
+  {
+   "name": "R7a: the like is queued behind the held rating write (only the held put has been issued so far)",
+   "ok": false,
+   "detail": "[{\"id\":\"72c66c2f-807d-4bd7-befb-863e41d85c71\",\"held\":true,\"liked\":true,\"rating\":4,\"hasRating\":true,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"72c66c2f-807d-4bd7-befb-863e41d85c71\",\"held\":false,\"liked\":false,\"hasRating\":false,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7a: after the release BOTH changes are in the raw DB (rating 4 and liked false): the like's snapshot, taken when it ran, carried the committed rating",
+   "ok": false,
+   "detail": "[{\"id\":\"72c66c2f-807d-4bd7-befb-863e41d85c71\",\"held\":true,\"liked\":true,\"rating\":4,\"hasRating\":true,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"72c66c2f-807d-4bd7-befb-863e41d85c71\",\"held\":false,\"liked\":false,\"hasRating\":false,\"title\":\"Song One\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7a: memory matches the raw record after the release",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "R7b: after the REJECTED rating write nothing of the rating exists anywhere: not in memory, not in the raw DB, the stars show nothing, and the user is told (\"Couldn’t save the rating\")",
+   "ok": true,
+   "detail": "{\"widget\":true,\"role\":\"radiogroup\",\"label\":\"Rating for Song Two\",\"n\":5,\"roles\":true,\"checked\":[],\"filled\":0,\"glyphs\":\"☆☆☆☆☆\",\"tab0\":[1],\"unrated\":true}Couldn’t save the rating (quota). Nothing was changed."
+  },
+  {
+   "name": "R7b: the like queued behind it still ran and persisted (liked true) with NO rating in its snapshot: a failed write left no uncommitted field behind",
+   "ok": true,
+   "detail": "[{\"id\":\"3adca269-c259-4634-94ba-b3062bb601d0\",\"held\":true,\"liked\":false,\"rating\":5,\"hasRating\":true,\"title\":\"Song Two\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"3adca269-c259-4634-94ba-b3062bb601d0\",\"held\":false,\"liked\":true,\"hasRating\":false,\"title\":\"Song Two\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7c: a held rating write with the info editor's save queued behind it: both persist (rating 2 and the new title, origMeta captured), both reported ok",
+   "ok": false,
+   "detail": "{\"r\":{\"ok\":true,\"value\":2,\"before\":0,\"memoryOnly\":false},\"m\":{\"ok\":true,\"changed\":[\"title\"],\"before\":{\"title\":\"Song Three\",\"artist\":\"Artist C\",\"album\":\"Unknown album\",\"genre\":\"\"},\"memoryOnly\":false}}[{\"id\":\"4bf53c25-8bc1-43a8-be4c-986636e8fc63\",\"held\":true,\"liked\":false,\"rating\":2,\"hasRating\":true,\"title\":\"Song Three\",\"hasCover\":false,\"hasOrigMeta\":false},{\"id\":\"4bf53c25-8bc1-43a8-be4c-986636e8fc63\",\"held\":false,\"liked\":false,\"hasRating\":false,\"title\":\"Retitled L3\",\"hasCover\":false,\"hasOrigMeta\":true}]"
+  },
+  {
+   "name": "R7c: the reverse order (info editor write held, rating queued behind): both persist, and the rating write's snapshot already carried the committed new title (no lost write)",
+   "ok": false,
+   "detail": "{\"r\":{\"ok\":true,\"value\":3,\"before\":0,\"memoryOnly\":false},\"m\":{\"ok\":true,\"changed\":[\"title\",\"artist\",\"album\"],\"before\":{\"title\":\"歌曲 🎵 ü\",\"artist\":\"\",\"album\":\"\",\"genre\":\"\"},\"memoryOnly\":false}}[{\"id\":\"archive:W2\",\"held\":true,\"liked\":false,\"hasRating\":false,\"title\":\"Retitled W2\",\"hasCover\":false,\"hasOrigMeta\":true},{\"id\":\"archive:W2\",\"held\":false,\"liked\":false,\"rating\":3,\"hasRating\":true,\"title\":\"歌曲 🎵 ü\",\"hasCover\":false,\"hasOrigMeta\":false}]"
+  },
+  {
+   "name": "R7d: a held rating write with the cover editor's save queued behind it (song without a cover): rating 1 and the new cover (with origCover) both persist, the cover save was a real change (not a no-op)",
+   "ok": false,
+   "detail": "{\"r\":{\"ok\":true,\"value\":1,\"before\":0,\"memoryOnly\":false},\"c\":{\"ok\":true,\"memoryOnly\":false}}{\"id\":\"3adca269-c259-4634-94ba-b3062bb601d0\",\"kind\":\"local\",\"key\":\"Artist B - Song Two.wav|529244|1793908062000\",\"title\":\"Song Two\",\"artist\":\"Artist B\",\"album\":"
+  },
+  {
+   "name": "R7d: memory equals the raw records of all four edited songs",
+   "ok": false,
+   "detail": ""
+  },
+  {
+   "name": "R7a-d: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R7e: removing the song while its rating write is held: after the release the song is gone from the raw DB and memory (the rating write did not bring the record back), the rating call reports \"no longer in your library\"",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}[{\"id\":\"audius:W1\",\"held\":true,\"liked\":true,\"rating\":3,\"hasRating\":true,\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"hasCover\":true,\"hasOrigMeta\":false},{\"del\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R7e: the only writes for that song were the held put and then the delete (nothing after the delete)",
+   "ok": true,
+   "detail": "[{\"id\":\"audius:W1\",\"held\":true,\"liked\":true,\"rating\":3,\"hasRating\":true,\"title\":\"Web ✓ <b>bold</b> & \\\"q\\\"\",\"hasCover\":true,\"hasOrigMeta\":false},{\"del\":\"audius:W1\"}]"
+  },
+  {
+   "name": "R7e: rating a removed song is refused at once and writes nothing",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}"
+  },
+  {
+   "name": "R7f: if the library epoch changed while the write was pending (a restore), the call reports not-saved and the shared record is NOT changed",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"}"
+  },
+  {
+   "name": "R7g: three quick writes of one song (2, 5, 0) run in order; the last one (0) is what is stored, in memory and raw",
+   "ok": false,
+   "detail": "{\"r\":[{\"ok\":true,\"value\":2,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"value\":5,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":0}],\"v\":5}"
+  },
+  {
+   "name": "R7e-g: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "12 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; offending: []"
+  }
+ ]
+}

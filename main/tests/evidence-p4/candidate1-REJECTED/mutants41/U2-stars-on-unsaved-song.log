@@ -1,0 +1,13 @@
+PASS R0: the seeded (legacy, pre-Phase-4) library has no rating field on any of its 5 songs
+PASS R0: the sort menu offers "Rating: high to low" and "Rating: low to high" and the filter menu offers any/unrated/rated/5/4+/3+/2+
+PASS R0: the count line reads "5 songs" with no filter
+PASS R0: sorting by rating both ways and trying every filter makes NO write to the tracks store (no eager rewrite of legacy records) and leaves every record identical
+PASS R0: each of the 3 local and 2 saved web songs shows a labelled 5-star radio group with nothing checked, empty stars and exactly one tab stop
+FAIL R0: a song that is only SHOWN (a search result that is not in the library) has no rating stars; a library song has them
+PASS R0: clearing a song that was never rated is a no-op: no write, and the field stays ABSENT (missing is not turned into 0)
+PASS R0: nothing playing, play() never called
+PASS R0: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 6 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 10 / 11 pass

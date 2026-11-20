@@ -1,0 +1,21 @@
+PASS R11a: handleAct has no duplicated action label (a later duplicate silently never runs)
+PASS R11a: the seeded session starts at a speed other than 1.5x (so the first preset click is a real change)
+PASS R11a: clicking the 1.5x speed preset sets the speed, the button label and the highlighted chip
+PASS R11a: giving a song 3 stars does not change the speed (still 1.5x) and the speed preset did not rate anything
+PASS R11a: another preset (0.75x) changes the speed and leaves every rating exactly as it was
+PASS R11a: "Reset to 1×" still works
+PASS R11-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS R11-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS R11-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS R11b: the song is removed from memory at once while its delete waits behind the slow write; the stored copy is still there
+PASS R11b: a real restore of the earlier backup (which holds the SAME song id) completes while the delete is still queued
+PASS R11b: the restored library holds the song (memory, track record, audio blob)
+PASS R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library
+PASS R11b: the old removal did not touch the restored library either: memory still has the song, playlists and queue are exactly as restored, stored playlists unchanged
+PASS R11b: after a reload the restored library still has every song of the backup (same ids and records)
+PASS R11c: normal removal (no restore) behind a slow write: song, audio blob and playlist entries are gone after the write ends, and it is gone after a reload
+PASS R11: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song
+PASS network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data
+
+PHASE 4: 19 / 19 pass

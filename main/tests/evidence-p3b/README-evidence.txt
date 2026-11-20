@@ -10,3 +10,5 @@ repro-and-fixes/    S9-S11 on the UNFIXED bytes (corrected harness: 113/125 with
                     s10-escape-flakiness/ = the repeated S10 runs that exposed the Escape-guard bug (1 pass + 2 fails before, then 6 + 3 passes after).
 The WIP snapshots plainsong-p3b-WIP*.zip that preceded this checkpoint hold the earlier raw runs and are not repeated here.
 repro-and-fixes/*/roundtrip-evidence* (exports, truth/compare JSON of the S9-S11 runs) are likewise omitted with a hash list.
+
+NOTE added at p4: the superseded `candidate-matrix/` directory (the EARLIER 10-suite candidate run on the previous test bytes, 36 MB uncompressed) is NOT inside plainsong-checkpoint-p4.zip, to keep the archive under 30 MiB. It is still inside plainsong-checkpoint-p3b-final3.zip (= plainsong-checkpoint-p3b.zip), and every one of its files is listed by SHA-256 in OMITTED-candidate-matrix-SHA256.txt.

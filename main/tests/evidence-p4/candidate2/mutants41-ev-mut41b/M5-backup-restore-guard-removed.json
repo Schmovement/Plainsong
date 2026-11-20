@@ -1,0 +1,60 @@
+{
+ "complete": true,
+ "only": "6",
+ "scenariosSelected": [
+  6
+ ],
+ "scenariosFinished": [
+  6
+ ],
+ "scenariosAborted": [],
+ "total": 9,
+ "failed": 1,
+ "results": [
+  {
+   "name": "R6: every invalid rating (6, -1, 2.5, \"3\", NaN, null, undefined, true, false, -0, Infinity, [3], {}, 1e21) is refused with ok:false, nothing thrown, no write, record unchanged",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "R6: an unknown song id and a song that is only shown (not in the library) cannot be rated: ok:false, no write",
+   "ok": true,
+   "detail": "{\"a\":{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"},\"c\":{\"ok\":false,\"msg\":\"This song is no longer in your library. Nothing was saved.\"},\"hasC\":false}"
+  },
+  {
+   "name": "R6: setting the value a song already has (4 again) is a no-op: ok, none:true and NO write",
+   "ok": true,
+   "detail": "[{\"ok\":true,\"value\":4,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":4},[]]"
+  },
+  {
+   "name": "R6: clearing an already-cleared song is a no-op with no write and the stored 0 stays 0",
+   "ok": true,
+   "detail": "[{\"ok\":true,\"value\":0,\"before\":4,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":0}]"
+  },
+  {
+   "name": "R6: while a backup or restore is running (backupBusy / restoring / restoreBusy / DB.lock) a rating is refused with the backup/restore message and nothing is written",
+   "ok": false,
+   "detail": "[{\"ok\":true,\"value\":2,\"before\":0,\"memoryOnly\":false},{\"ok\":true,\"none\":true,\"value\":2},{\"ok\":true,\"none\":true,\"value\":2},{\"ok\":true,\"none\":true,\"value\":2}]"
+  },
+  {
+   "name": "R6: nothing playing, play() never called",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":5,\"queue\":[\"8d8b0963-b0d4-4c29-b939-abf0cd1c93aa\",\"audius:W1\",\"510c8f81-9fad-432f-8725-b5381831087f\",\"audius:QW\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "R6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "6 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; offending: []"
+  }
+ ]
+}

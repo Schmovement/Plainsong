@@ -1,0 +1,78 @@
+{
+ "complete": true,
+ "only": "5",
+ "total": 14,
+ "failed": 2,
+ "results": [
+  {
+   "name": "R5: filter \"unrated\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"archive:W2\",\"audius:E1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"rated\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"03a9a270-4988-42a6-9f1b-cfe0c91949f2\",\"64bbc022-5f08-47c2-b8b0-f66e27273fc1\",\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"5\": shows exactly the 2 songs the harness expects (local AND saved web), count line \"2 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:W1\"] | 2 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"4\": shows exactly the 4 songs the harness expects (local AND saved web), count line \"4 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 4 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"3\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"03a9a270-4988-42a6-9f1b-cfe0c91949f2\",\"64bbc022-5f08-47c2-b8b0-f66e27273fc1\",\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"2\": shows exactly the 6 songs the harness expects (local AND saved web), count line \"6 of 8 songs\"",
+   "ok": true,
+   "detail": "[\"03a9a270-4988-42a6-9f1b-cfe0c91949f2\",\"64bbc022-5f08-47c2-b8b0-f66e27273fc1\",\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:D1\",\"audius:D2\",\"audius:W1\"] | 6 of 8 songs"
+  },
+  {
+   "name": "R5: filter \"any\": shows exactly the 8 songs the harness expects (local AND saved web), count line \"8 songs\"",
+   "ok": true,
+   "detail": "[\"03a9a270-4988-42a6-9f1b-cfe0c91949f2\",\"64bbc022-5f08-47c2-b8b0-f66e27273fc1\",\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"archive:W2\",\"audius:D1\",\"audius:D2\",\"audius:E1\",\"audius:W1\"] | 8 songs"
+  },
+  {
+   "name": "R5: scope: the 5-star filter includes a LOCAL song (L1) and a SAVED WEB song (W1)",
+   "ok": true,
+   "detail": "[\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\",\"audius:W1\"]"
+  },
+  {
+   "name": "R5: \"Unrated\" counts both the cleared song (0) and the never-rated song (absent)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "R5: the rating filter combines with the text filter (3 stars and up AND \"song\"): the independently computed set and \"n of 8 songs\"",
+   "ok": true,
+   "detail": "[\"64bbc022-5f08-47c2-b8b0-f66e27273fc1\",\"03a9a270-4988-42a6-9f1b-cfe0c91949f2\",\"6d0ff1e9-c0b9-4d14-b489-dd6791e3257e\"]3 of 8 songs"
+  },
+  {
+   "name": "R5: an empty result says which filters match nothing (\"Unrated\" and \"zzzz\") and the count line says \"0 of 8 songs\"",
+   "ok": false,
+   "detail": "Nothing here. | 0 of 8 songs"
+  },
+  {
+   "name": "R5: the scenario ABORTED with an exception before its last check (a test or app fault, not a pass)",
+   "ok": false,
+   "detail": "page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-act=\"libClear\"]')\u001b[22m\n\n    at /home/claude/p4/tests/phase4.test.js:547:16\n    at async scn (/home/claude/p4/tests/phase4.test.js:357:62)\n    at async /home/claude/p4/tests/phase4.test.js:527:3"
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except the displayed web-cover address of a p1 fixture song",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: all 12 non-local requests made by any page were ABORTED by the block and went only to the app's own startup/search hosts or to a fixture web-cover address that was merely displayed (api.audius.co, archive.org, fonts.googleapis.com); none carried a credential or library data",
+   "ok": true,
+   "detail": "[]"
+  }
+ ]
+}

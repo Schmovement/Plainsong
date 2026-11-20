@@ -1,0 +1,7 @@
+p4 | exit=1 | PHASE 4: 463 / 469 pass
+    FAIL R3: ArrowRight twice moves the focus to star 3 of the same song and changes NOTHING (no write, rating still absent)  :: {"star":null,"tid":"0a84343d-d61d-490c-ad7d-3ca56d3c0ed7","act":"rateSong"}[]
+    FAIL R3: ArrowUp moves focus on (star 4) and does not change the volume  :: {"star":null,"tid":"0a84343d-d61d-490c-ad7d-3ca56d3c0ed7","act":"rateSong"}0.55
+    FAIL R3: Home focuses star 1 and End focuses star 5  :: [{"star":null,"tid":"0a84343d-d61d-490c-ad7d-3ca56d3c0ed7","act":"rateSong"},{"star":null,"tid":"0a84343d-d61d-490c-ad7d-3ca56d3c0ed7","act":"rateSong"}]
+    FAIL R3: Space on star 3 sets 3 stars (raw DB and UI), focus stays on star 3, ONE write, and Space did not start or pause playback  :: {"widget":true,"role":"radiogroup","label":"Rating for Song Two","n":5,"roles":true,"checked":[3],"filled":3,"glyphs":"★★
+    FAIL R3: Shift+Tab from the heart lands on the group's ONE tab stop (the checked star 3) of the same song: a single tab stop per group  :: {"star":null,"tid":"0a84343d-d61d-490c-ad7d-3ca56d3c0ed7","act":"rateSong"}
+    FAIL R5: with sort "high to low", giving L3 five stars from the keyboard moves it up to match the stored order, and the keyboard focus stays on that song's star group  :: {"star":null,"tid":"c305a22c-f6e3-462e-90a4-dbc709603d55","act":"rateSong"}["be7e0c6c-1e8

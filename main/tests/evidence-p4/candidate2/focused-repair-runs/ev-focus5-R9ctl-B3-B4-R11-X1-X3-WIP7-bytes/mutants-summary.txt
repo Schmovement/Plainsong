@@ -1,0 +1,30 @@
+== runner controls (classifier negative/positive controls)
+RUNNER CONTROLS: 100 / 100 pass
+== controls on the UNMUTATED app (one per scenario used by a mutant)
+control R9: OK - unmutated app passed all 127 checks; every needle of the scenario resolves to exactly one passing check
+control R11: OK - unmutated app passed all 19 checks; every needle of the scenario resolves to exactly one passing check
+== mutants
+B3-reader-rejects-zero: scenario R9 exit=1 total=127 failed=50 VERDICT=DETECTED (50 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses a present rating 0
+      failed: R9 E1 -> clean: real UI restore finished with "Library restored"
+      failed: R9 E1 -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E1 -> clean: playlists identical (ids order kept)
+      failed: R9 E1 -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E1 -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+B4-reader-requires-rating: scenario R9 exit=1 total=127 failed=87 VERDICT=DETECTED (87 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the strict reader refuses archives that carry no rating (old backups)
+      failed: R9 E0 (old-style, no rating) -> clean: real UI restore finished with "Library restored"
+      failed: R9 E0 (old-style, no rating) -> clean: tracks identical to the backup (every field, key order, order)
+      failed: R9 E0 (old-style, no rating) -> clean: playlists identical (ids order kept)
+      failed: R9 E0 (old-style, no rating) -> clean: kv (everything but secret: keys) identical, including session and history
+      failed: R9 E0 (old-style, no rating) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+X1-star-action-shadows-speed-preset: scenario R11 exit=1 total=19 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the star action reuses the name of the playback-speed preset action (the first matching case wins, so the speed presets stop working)
+      failed: R11a: handleAct has no duplicated action label (a later duplicate silently never runs)
+      failed: R11a: clicking the 1.5x speed preset sets the speed, the button label and the highlighted chip
+      failed: R11a: giving a song 3 stars does not change the speed (still 1.5x) and the speed preset did not rate anything
+      failed: R11a: another preset (0.75x) changes the speed and leaves every rating exactly as it was
+X2-stale-delete-after-restore: scenario R11 exit=1 total=19 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | a queued track delete still runs after a restore replaced the library (it erases the restored song with the same id)
+      failed: R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library
+      failed: R11b: after a reload the restored library still has every song of the backup (same ids and records)
+X3-old-removal-touches-restored-library: scenario R11 exit=1 total=19 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the removal continues after the library was replaced: it deletes the restored audio and edits the restored playlists and queue
+      failed: R11b: after the slow write ends, the stale delete did NOT erase the restored song: its track record and audio blob are still in the stored library
+      failed: R11b: the old removal did not touch the restored library either: memory still has the song, playlists and queue are exactly as restored, stored playlists unchanged
+TOTAL: 5 mutants | DETECTED (valid, complete, intended check failed): 5 | SURVIVED or intended check not failed: 0 | ERROR/INCOMPLETE: 0 | control runs invalid: 0

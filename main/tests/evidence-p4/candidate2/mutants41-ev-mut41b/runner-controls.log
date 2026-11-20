@@ -1,0 +1,101 @@
+PASS valid, exit 1, the intended assertion (resolved from a name longer than 125 chars) failed, isolation check passed -> DETECTED
+PASS valid, exit 1, only OTHER checks failed -> SURVIVED-OTHER (not a detection)
+PASS valid, exit 0, nothing failed -> SURVIVED
+PASS NEGATIVE (P1-like): a different failure in the same scenario (not the intended seek/position assertion) -> SURVIVED-OTHER
+PASS NEGATIVE: the intended check never ran (scenario aborted early) while another check failed -> never a detection (stricter since candidate 2: ERROR, incomplete coverage; formerly SURVIVED-OTHER)
+PASS NEGATIVE: a DIFFERENT failing check whose name merely contains the needle (a variant) is not the resolved assertion -> never a detection (stricter since candidate 2: ERROR, the set of checks differs from the control; formerly SURVIVED-OTHER)
+PASS NEGATIVE: an isolation check (must_pass) also fails -> SURVIVED-OTHER (the defect is not shown to be the intended one)
+PASS NEGATIVE: an isolation check (must_pass) never ran -> never a detection (stricter since candidate 2: ERROR, incomplete coverage; formerly SURVIVED-OTHER)
+PASS two intended assertions, BOTH failed -> DETECTED
+PASS NEGATIVE: two intended assertions, only ONE failed -> SURVIVED-OTHER
+PASS NEGATIVE: the needle matches TWO checks in the unmutated run (ambiguous identity) -> ERROR
+PASS NEGATIVE: the needle matches no check in the unmutated run (typo) -> ERROR
+PASS NEGATIVE: the unmutated control results contain a failure -> ERROR
+PASS NEGATIVE: the unmutated control results are for another scenario -> ERROR
+PASS NEGATIVE: the unmutated control results are unreadable -> ERROR
+PASS NEGATIVE: partial log shows the intended FAIL, no JSON, exit 2 (uncaught crash) -> ERROR
+PASS NEGATIVE: partial log shows the intended FAIL, no JSON, exit 124 (timeout) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 124 (timeout) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 137 (killed) -> ERROR
+PASS NEGATIVE: complete-looking JSON but exit 2 -> ERROR
+PASS NEGATIVE: exit code not a number -> ERROR
+PASS NEGATIVE: JSON truncated mid-way -> ERROR
+PASS NEGATIVE: JSON is a list -> ERROR
+PASS NEGATIVE: no completion marker -> ERROR
+PASS NEGATIVE: completion marker is not boolean true -> ERROR
+PASS NEGATIVE: JSON is for another scenario -> ERROR
+PASS NEGATIVE: scenario identity as a number (10) instead of the string "10" -> ERROR (no str() coercion)
+PASS NEGATIVE: scenario identity with whitespace " 10" -> ERROR
+PASS NEGATIVE: scenario identity "010" -> ERROR
+PASS NEGATIVE: total does not equal the number of results -> ERROR
+PASS NEGATIVE: failed does not equal the number of failed results -> ERROR
+PASS NEGATIVE: total is a boolean -> ERROR
+PASS NEGATIVE: a result has a non-boolean ok -> ERROR
+PASS NEGATIVE: a result has no name -> ERROR
+PASS NEGATIVE: two results with the same name (ambiguous identity) -> ERROR
+PASS NEGATIVE: zero checks -> ERROR
+PASS NEGATIVE: exit 0 although checks failed -> ERROR
+PASS NEGATIVE: exit 1 although nothing failed -> ERROR
+PASS NEGATIVE: log has no PHASE summary line -> ERROR
+PASS NEGATIVE: log PHASE line disagrees with the JSON -> ERROR
+PASS NEGATIVE: an EARLIER passing summary and a later contradictory one (two summaries) -> ERROR, never the first
+PASS NEGATIVE: two identical consistent summaries -> ERROR (exactly one is required)
+PASS NEGATIVE: the consistent summary is not the LAST line (output after it) -> ERROR
+PASS NEGATIVE: summary text with extra words ("pass, then crashed") -> ERROR
+PASS summary preceded by ordinary lines and followed by a blank line -> accepted
+PASS schema: a well-formed mutants.json loads
+PASS NEGATIVE schema: scenario as text "10" -> rejected
+PASS NEGATIVE schema: scenario as a boolean -> rejected
+PASS NEGATIVE schema: scenario as a float 10.0 -> rejected
+PASS NEGATIVE schema: negative scenario -> rejected
+PASS NEGATIVE schema: legacy single "needle" key instead of must_fail -> rejected
+PASS NEGATIVE schema: empty must_fail -> rejected
+PASS NEGATIVE schema: must_fail is a string, not a list -> rejected
+PASS NEGATIVE schema: an extra key -> rejected
+PASS NEGATIVE schema: duplicate ids -> rejected
+PASS NEGATIVE schema: empty list -> rejected
+PASS CONTROL run: unmutated app passed everything; every needle resolves to exactly one check -> OK
+PASS NEGATIVE control run: the unmutated app fails a check -> not OK
+PASS NEGATIVE control run: a needle that matches no check (typo) -> not OK
+PASS NEGATIVE control run: a needle that matches two checks -> not OK
+PASS NEGATIVE control run: duplicate check names -> not OK
+PASS NEGATIVE control run: scenario given as text -> not OK
+PASS NEGATIVE control run: crash exit 2 even with a complete-looking JSON -> not OK
+PASS REAL candidate-1 shape F8: the run has complete:true, the intended check FAILED, counts and log agree (old classifier: DETECTED) -> now ERROR (explicit scenario ABORT row)
+PASS REAL candidate-1 shape F8: as recorded (no lifecycle fields) -> ERROR
+PASS REAL candidate-1 shape F8: forge the lifecycle record to claim finished and aborted=[] and complete:true, ABORT row kept -> still ERROR
+PASS REAL candidate-1 shape F8: the ABORT row removed and every count made self-consistent, but the missing non-target cases remain -> ERROR (incomplete coverage, no ABORT row needed)
+PASS REAL candidate-1 shape F8: even with exit code 3 (the new harness exit for an aborted scenario) -> ERROR
+PASS REAL candidate-1 shape F9: the run has complete:true, the intended check FAILED, counts and log agree (old classifier: DETECTED) -> now ERROR (explicit scenario ABORT row)
+PASS REAL candidate-1 shape F9: as recorded (no lifecycle fields) -> ERROR
+PASS REAL candidate-1 shape F9: forge the lifecycle record to claim finished and aborted=[] and complete:true, ABORT row kept -> still ERROR
+PASS REAL candidate-1 shape F9: the ABORT row removed and every count made self-consistent, but the missing non-target cases remain -> ERROR (incomplete coverage, no ABORT row needed)
+PASS REAL candidate-1 shape F9: even with exit code 3 (the new harness exit for an aborted scenario) -> ERROR
+PASS REAL candidate-1 shape B3: the run has complete:true, the intended check FAILED, counts and log agree (old classifier: DETECTED) -> now ERROR (explicit scenario ABORT row)
+PASS REAL candidate-1 shape B3: as recorded (no lifecycle fields) -> ERROR
+PASS REAL candidate-1 shape B3: forge the lifecycle record to claim finished and aborted=[] and complete:true, ABORT row kept -> still ERROR
+PASS REAL candidate-1 shape B3: the ABORT row removed and every count made self-consistent, but the missing non-target cases remain -> ERROR (incomplete coverage, no ABORT row needed)
+PASS REAL candidate-1 shape B3: even with exit code 3 (the new harness exit for an aborted scenario) -> ERROR
+PASS REAL candidate-1 shape B4: the run has complete:true, the intended check FAILED, counts and log agree (old classifier: DETECTED) -> now ERROR (explicit scenario ABORT row)
+PASS REAL candidate-1 shape B4: as recorded (no lifecycle fields) -> ERROR
+PASS REAL candidate-1 shape B4: forge the lifecycle record to claim finished and aborted=[] and complete:true, ABORT row kept -> still ERROR
+PASS REAL candidate-1 shape B4: the ABORT row removed and every count made self-consistent, but the missing non-target cases remain -> ERROR (incomplete coverage, no ABORT row needed)
+PASS REAL candidate-1 shape B4: even with exit code 3 (the new harness exit for an aborted scenario) -> ERROR
+PASS NEGATIVE: forged complete:true + intended FAIL + ABORT row + isolation PASS, every count and the log consistent, lifecycle forged clean -> ERROR
+PASS NEGATIVE: the same forged shape with the ABORT row present and ALL control cases present (it is the abort row alone that rejects it) -> ERROR
+PASS NEGATIVE: self-consistent run, intended FAIL present, isolation PASS present, ONE non-target case of the control never ran, NO abort row -> ERROR (missing coverage)
+PASS NEGATIVE: self-consistent run that has every control case plus ONE unexpected extra case -> ERROR (the identities must be equal)
+PASS POSITIVE: the same shape with exactly the control's set of cases, intended FAIL + isolation PASS -> DETECTED
+PASS NEGATIVE: lifecycle says a scenario ABORTED although no abort row exists and complete is true -> ERROR
+PASS NEGATIVE: lifecycle record missing entirely -> ERROR
+PASS NEGATIVE: lifecycle says the scenario was selected but NOT finished -> ERROR
+PASS NEGATIVE: lifecycle names a different scenario -> ERROR
+PASS NEGATIVE: exit code 3 (the harness reports an aborted scenario) with an otherwise perfect-looking run -> ERROR
+PASS NEGATIVE: the UNMUTATED control itself contains an ABORT row (even with every other check passing) -> the control is not valid, the verdict is ERROR
+PASS NEGATIVE control run: the unmutated app's run contains the ABORT row -> not OK
+PASS NEGATIVE control run: lifecycle record missing -> not OK
+PASS REAL candidate-1 controls R5 and R9 (the unmutated runs) are themselves valid, abort-free and have every needle resolve -> OK (the controls were fine, the MUTANT runs were partial)
+PASS RUNNER end to end (stub project): valid control + mutant that fails the intended check -> DETECTED, exit 0
+PASS NEGATIVE RUNNER (stub project): the unmutated control FAILS a check -> the runner ABORTS with exit 3 and classifies NO mutant (no VERDICT line, no "== mutants" section)
+PASS NEGATIVE RUNNER (stub project): the unmutated control run CRASHES (exit 2) -> the runner ABORTS with exit 3 and classifies NO mutant
+RUNNER CONTROLS: 100 / 100 pass
