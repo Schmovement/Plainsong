@@ -1,5 +1,5 @@
 # Plainsong — Patch Notes
-## Phase 5 — Dynamic smart playlists (candidate; not released)
+## Phase 5 — Dynamic smart playlists (promoted 2026-11-11)
 - Create and edit rule-based smart playlists from presets or custom all/any conditions, with configurable sorting and limits.
 - Membership recalculates as the library changes; backups preserve the rules rather than a stored member list.
 ## Phase 4 — Ratings that fit your library
