@@ -1,0 +1,135 @@
+{
+ "complete": true,
+ "only": "3",
+ "scenariosSelected": [
+  3
+ ],
+ "scenariosFinished": [
+  3
+ ],
+ "scenariosAborted": [],
+ "total": 24,
+ "failed": 2,
+ "results": [
+  {
+   "name": "Q3: preset \"Most played\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Most played preview=\"9 songs match right now.\" shape=true rec={\"id\":\"ca743e17-fd9b-4b28-a216-896f74521d77\",\"name\":\"Most played\",\"ids\":[],\"created\":1794341426789,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":25}} shown=A5,A1,A2,L1,A3,A6,A7,L3,A8 expected=A5,A1,A2,L1,A3,A6,A7,L3,A8 sub=9 songs · 1 h 39 min All of: Play count is at least 1 · Sorted by play count, highest first · First 25 songs"
+  },
+  {
+   "name": "Q3: preset \"Recently added\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Recently added preview=\"8 songs match right now.\" shape=true rec={\"id\":\"2a97dd1f-8deb-422a-87ed-e996025ad0d6\",\"name\":\"Recently added\",\"ids\":[],\"created\":1794341427421,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"added\",\"op\":\"within\",\"v\":30}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}} shown=A8,A1,L1,A9,A6,A2,A7,L3 expected=A8,A1,L1,A9,A6,A2,A7,L3 sub=8 songs · 35 min All of: Date added within the last 30 days · Sorted by date added, newest first"
+  },
+  {
+   "name": "Q3: preset \"Long songs\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": false,
+   "detail": "closed=true name=Long songs preview=\"7 songs match right now.\" shape=false rec={\"id\":\"42abb0eb-343a-4893-89d0-8e739dc9ae4e\",\"name\":\"Long songs\",\"ids\":[],\"created\":1794341428074,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gte\",\"v\":300}],\"sort\":{\"by\":\"duration\",\"dir\":\"desc\"},\"limit\":0}} shown=A5,A1,A7,A6,L1,A3,L3 expected=A5,A1,A7,A6,L1,A3 sub=7 songs · 1 h 34 min All of: Duration is at least 5:00 · Sorted by duration, longest first"
+  },
+  {
+   "name": "Q3: preset \"Top rated\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Top rated preview=\"3 songs match right now.\" shape=true rec={\"id\":\"dde74848-0261-4204-ae52-ec184e499430\",\"name\":\"Top rated\",\"ids\":[],\"created\":1794341428706,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"rating\",\"op\":\"gte\",\"v\":4}],\"sort\":{\"by\":\"rating\",\"dir\":\"desc\"},\"limit\":0}} shown=L1,A1,A2 expected=L1,A1,A2 sub=3 songs · 17 min All of: Rating is at least 4 · Sorted by rating, highest first"
+  },
+  {
+   "name": "Q3: preset \"Never played\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Never played preview=\"3 songs match right now.\" shape=true rec={\"id\":\"0a8bc846-153d-4ad6-bba2-4190b17c4d9c\",\"name\":\"Never played\",\"ids\":[],\"created\":1794341429338,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"eq\",\"v\":0}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}} shown=A9,L2,A4 expected=A9,L2,A4 sub=3 songs · 4 min All of: Play count equals 0 · Sorted by date added, newest first"
+  },
+  {
+   "name": "Q3: preset \"Heard recently\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Heard recently preview=\"4 songs match right now.\" shape=true rec={\"id\":\"b8fd7fea-712f-41e9-b9d4-928ce9c79e2d\",\"name\":\"Heard recently\",\"ids\":[],\"created\":1794341429988,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"last\",\"op\":\"within\",\"v\":7}],\"sort\":{\"by\":\"last\",\"dir\":\"desc\"},\"limit\":0}} shown=A8,A1,L1,A2 expected=A8,A1,L1,A2 sub=4 songs · 17 min All of: Last played within the last 7 days · Sorted by last played, newest first"
+  },
+  {
+   "name": "Q3: every preset is non-vacuous on this library (each matches at least one song, and the presets differ in membership)",
+   "ok": true,
+   "detail": "[9,8,6,3,3,4]"
+  },
+  {
+   "name": "Q3: \"Duration > 5:00\" AND \"plays ≥ 1\" typed in the editor is stored as seconds (300) and shows exactly the 6 played songs longer than 5:00, longest first",
+   "ok": true,
+   "detail": "closed=true rec={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gt\",\"v\":300},{\"f\":\"plays\",\"op\":\"gte\",\"v\":1}],\"sort\":{\"by\":\"duration\",\"dir\":\"desc\"},\"limit\":0} shown=A5,A1,A7,A6,L1,A3 expected=A5,A1,A7,A6,L1,A3"
+  },
+  {
+   "name": "Q3: \"Duration > 5:00\" OR \"liked\" (match any) stores match any and shows the union in title order",
+   "ok": true,
+   "detail": "shown=A1,A3,A5,A6,L1,A7 expected=A1,A3,A5,A6,L1,A7"
+  },
+  {
+   "name": "Q3: h:mm:ss input (1:00:00 = 3600 s), trimmed text, a time condition and a limit are stored and applied (only \"Delta Long\" matches)",
+   "ok": true,
+   "detail": "rec={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gte\",\"v\":3600},{\"f\":\"title\",\"op\":\"contains\",\"v\":\"long\"},{\"f\":\"added\",\"op\":\"before\",\"v\":100}],\"sort\":{\"by\":\"added\",\"dir\":\"asc\"},\"limit\":5} shown=A5"
+  },
+  {
+   "name": "Q3: the sidebar lists all nine smart playlists, each with a \"Smart playlist\" badge",
+   "ok": true,
+   "detail": "[{\"t\":\"Most played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Recently added\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long songs\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Top rated\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Never played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Heard recently\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long and played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long or liked\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Hour and text and age\",\"smart\":true,\"lab\":\"Smart playlist\"}]"
+  },
+  {
+   "name": "Q3: the Playlists tab shows each smart playlist as \"Smart · N songs\" with N equal to the independent expectation, plus the New playlist and New smart playlist cards",
+   "ok": false,
+   "detail": "[[\"Most played\",\"Smart · 9 songs\"],[\"Recently added\",\"Smart · 8 songs\"],[\"Long songs\",\"Smart · 7 songs\"],[\"Top rated\",\"Smart · 3 songs\"],[\"Never played\",\"Smart · 3 songs\"],[\"Heard recently\",\"Smart · 4 songs\"],[\"Long and played\",\"Smart · 6 songs\"],[\"Long or liked\",\"Smart · 6 songs\"],[\"Hour and text and age\",\"Smart · 1 song\"],[\"New playlist\",\"Name it, then add songs\"],[\"New smart playlist\",\"Fills itself from rules\"]]"
+  },
+  {
+   "name": "Q3: the edit dialog opens with the saved rule in its fields (name, match, condition, sort, direction, limit)",
+   "ok": true,
+   "detail": "{\"title\":\"Edit smart playlist\",\"name\":\"Most played\",\"match\":\"all\",\"limit\":\"25\",\"by\":\"plays\",\"dir\":\"desc\",\"conds\":[[\"plays\",\"gte\",\"1\"]]}"
+  },
+  {
+   "name": "Q3: editing \"Most played\" (add Duration > 5:00, limit 2) stores the new rule on the SAME record (id, name, created, ids unchanged), and the view shows the 2 most played songs longer than 5:00",
+   "ok": true,
+   "detail": "rule={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1},{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":2} shown=A5,A1 expected=A5,A1"
+  },
+  {
+   "name": "Q3: renaming a smart playlist changes only its name (rule, id, created, ids untouched), updates the title and the sidebar, and keeps the badge",
+   "ok": true,
+   "detail": "{\"id\":\"ca743e17-fd9b-4b28-a216-896f74521d77\",\"name\":\"Renamed smart\",\"ids\":[],\"created\":1794341426789,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1},{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":2}}"
+  },
+  {
+   "name": "Q3: creating 6 presets and 3 hand-typed rules, one edit and one rename wrote exactly 11 puts, all to the playlists store (no song, audio or settings write)",
+   "ok": true,
+   "detail": "[\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\"]"
+  },
+  {
+   "name": "Q3: after a reload the smart playlists are exactly as saved (raw records identical) and nothing else changed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q3: after a reload the smart view shows the same songs in the same order (members are recomputed, not stored)",
+   "ok": true,
+   "detail": "A5,A1"
+  },
+  {
+   "name": "Q3: cancelling the delete confirmation deletes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q3: deleting a smart playlist (after confirming; the songs stay) removes its record only: other playlists byte-identical, no song changed, the view returns to the Playlists tab, the sidebar drops it",
+   "ok": true,
+   "detail": "{\"view\":\"library\",\"tab\":\"playlists\",\"side\":[\"Recently added\",\"Long songs\",\"Top rated\",\"Never played\",\"Heard recently\",\"Long and played\",\"Long or liked\",\"Hour and text and age\"],\"mem\":8} Delete the smart playlist “Renamed smart”? Your songs stay in your library. Cancel Delete"
+  },
+  {
+   "name": "Q3: after the reload, cancelling then confirming the delete wrote exactly one playlists delete of that record",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"delete\",\"key\":\"ca743e17-fd9b-4b28-a216-896f74521d77\"}]"
+  },
+  {
+   "name": "Q3: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "9 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

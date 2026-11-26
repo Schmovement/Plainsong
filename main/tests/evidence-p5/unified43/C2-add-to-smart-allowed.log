@@ -1,0 +1,18 @@
+PASS Q10: a manual playlist still shows its songs in its own saved order, is not labelled smart, and has Play, Shuffle, Rename and Delete but no "Edit rule"
+PASS Q10: in a manual playlist the song menu offers "Remove from this playlist"
+PASS Q10: in a smart playlist the song menu has NO "Remove from this playlist" (members are not hand-picked) but still offers Add to playlist, Like, Rate, Edit info, Remove from library
+PASS Q10: the "Add to playlist" menu lists only the manual playlists (and New playlist…), never a smart playlist
+PASS Q10: adding a song to a manual playlist from a smart list changes that manual record only (ids + the song), writes only playlists, and leaves the smart record byte-identical
+FAIL Q10: addToPlaylist and plRemove on a smart playlist do nothing (no write, record unchanged: ids stay [])  :: {"id":"e2e7fec1-c7d7-4df8-96c6-7ef8b590409c","name":"Q10 liked","ids":["933622d3-746b-406c-81d0-e231d6095ae8"],"created":1794342090647,"rule":{"v":1,"match":"all","conds":[{"f":"liked","op":"is","v":true}],"sort":{"by":"title","dir":"asc"},"limit":0}}
+PASS Q10: renaming a manual playlist changes only its name (ids, created and the unknown field kept) and no rule key appears
+FAIL Q10: "Remove from this playlist" removes just that id from the manual record and nothing else changes (smart record byte-identical)
+PASS Q10: a new manual playlist is exactly {id, name, ids: [], created} with no rule key
+FAIL Q10: deleting a manual playlist removes only it
+FAIL Q10: removing a song from the library prunes it from every manual playlist and leaves the smart record byte-identical
+FAIL Q10: and the smart list no longer contains that song
+PASS Q10: Play on a manual playlist queues exactly its listed songs in order (unchanged behaviour)
+PASS Q10: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 11 / 16 pass

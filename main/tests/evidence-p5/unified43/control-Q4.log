@@ -1,0 +1,20 @@
+PASS Q4: the name that is invalid (empty, only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: a Duration value that is invalid (5:7, 99:99, abc, empty, 100:00:00, -5, 5.5) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: a plays / rating value that is invalid (plays x, plays -1, plays 1.5, plays 1e3, plays 11 digits, plays empty, rating 6) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: a number of days that is invalid (days 0, days 3651, days 1.5, days x, days empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: a text value that is invalid (text empty, text only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: the limit that is invalid (limit 501, limit x, limit -1, limit 1.5, limit empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+PASS Q4: the name field holds at most 80 characters, a text value at most 100, the limit at most 3 digits (typing more is cut by the field itself; longer values are refused by the validator, see Q1 and Q9)
+PASS Q4: the editor stops at 8 conditions: "Add condition" becomes disabled at the eighth
+PASS Q4: removing a condition re-enables "Add condition"
+PASS Q4: several problems are all listed together (name, condition 1, condition 2, limit) and each field is marked
+PASS Q4: nothing at all was written by any refused attempt and no playlist exists yet
+PASS Q4: after the problems are fixed the same dialog saves exactly one playlist (one put) with the corrected rule, and no error text or aria-invalid remains
+PASS Q4: the library functions refuse an invalid rule, an empty or 81-character name, nine conditions, a stale editor basis and an unknown playlist, each with a message and ok:false
+PASS Q4: those refused calls wrote nothing (no put or delete) and changed no record
+PASS Q4: an invalid edit is refused, and cancelling afterwards leaves the stored rule and name exactly as they were (no write)
+PASS Q4: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 18 / 18 pass

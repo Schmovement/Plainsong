@@ -1,0 +1,11 @@
+PASS Q7: Play queues the smart list as it is at the click (a title changed after the last draw is already in the order), starts the first song, and nothing else is queued
+PASS Q7: liking and rating songs while the list is playing changes nothing in the queue, the current song or the playback (still playing, time moving on)
+PASS Q7: editing the rule so that the list becomes empty does not touch the queue or the playback
+PASS Q7: deleting the smart playlist while it is playing leaves the queue and the playback exactly as they were
+PASS Q7: Shuffle queues a permutation of exactly the list's songs (3, no duplicates), the unshuffled order is the list's order, and shuffle is on
+PASS Q7: a smart list is NOT a playlist of ids: its stored record keeps ids [] while its view lists the live members (the liked songs now are Alpha and Delta Long: Song One was un-liked by the heart click earlier in this scenario)
+PASS Q7: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 9 / 9 pass

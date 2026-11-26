@@ -32,8 +32,9 @@
       <button data-nav="library"><span data-ico="library"></span>Library</button>
     </nav>
     <div class="side-sec">
-      <div class="side-h"><span>Playlists</span><button class="icon-btn" data-act="newPlaylist"
-          aria-label="New playlist"><span data-ico="plus" data-s="16"></span></button></div>
+      <div class="side-h"><span>Playlists</span><span class="side-btns"><button class="icon-btn" data-act="newSmart"
+          aria-label="New smart playlist"><span data-ico="spark" data-s="16"></span></button><button class="icon-btn" data-act="newPlaylist"
+          aria-label="New playlist"><span data-ico="plus" data-s="16"></span></button></span></div>
       <div id="sidePl"></div>
     </div>
     <div class="side-foot">
@@ -170,6 +171,7 @@
       queue: '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
       more: '<circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/>',
       plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+      spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
       search: '<circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
       home: '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
       compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
@@ -639,7 +641,7 @@
         S.hist.unshift({ id: t.id, t: Date.now(), snap: (t.kind === 'web' && !S.tracks.has(t.id)) ? strip(t) : undefined });
         if (S.hist.length > 300) S.hist.length = 300;
         if (S.tracks.has(t.id)) dbPutTrack(t);
-        saveHist();
+        saveHist(); smartTouch();
       }
       syncLyrics();
       const now = Date.now();
@@ -980,10 +982,10 @@
     function archCards(docs, grid) {
       return `<div class="cards${grid ? ' grid' : ''}">${docs.map(d => `<div class="card" tabindex="0" data-act="openArch" data-id="${esc(d.identifier)}"><div class="card-art">${archCover(d.identifier)}<span class="card-play">${ico('play', 18)}</span></div><div class="card-t">${esc(first(d.title) || d.identifier)}</div><div class="card-s">${esc(first(d.creator) || 'Internet Archive')}</div></div>`).join('')}</div>`;
     }
-    function dhead({ kind, title, sub, cover, tracks, actions = '' }) {
+    function dhead({ kind, title, sub, cover, tracks, actions = '', play = '' }) {
       const li = S.lists.push(tracks.map(t => t.id)) - 1;
       return `<div class="dhead">${cover}<div class="dinfo"><div class="mono dim">${esc(kind)}</div><h1>${esc(title)}</h1><p class="sub">${sub}</p>
-    <div class="btn-row"><button class="btn primary" data-act="playList" data-list="${li}">${ico('play', 16)} Play</button><button class="btn" data-act="playList" data-list="${li}" data-shuffle="1">${ico('shuffle', 16)} Shuffle</button>${actions}</div></div></div>`;
+    <div class="btn-row">${play || `<button class="btn primary" data-act="playList" data-list="${li}">${ico('play', 16)} Play</button><button class="btn" data-act="playList" data-list="${li}" data-shuffle="1">${ico('shuffle', 16)} Shuffle</button>`}${actions}</div></div></div>`;
     }
     const skelRows = n => `<div>${'<div class="row" style="cursor:default"><div class="skel" style="width:44px;height:44px"></div><div><div class="skel line" style="margin:0;width:50%"></div><div class="skel line" style="width:30%"></div></div></div>'.repeat(n)}</div>`;
     const skelCards = () => `<div class="cards skel-row">${'<div class="card"><div class="cover"></div><div class="skel line"></div></div>'.repeat(6)}</div>`;
@@ -1011,13 +1013,147 @@
       const r = ratingOf(t), f = r || 1;
       return `<span class="rate${r ? '' : ' unrated'}" role="radiogroup" aria-label="Rating for ${esc(t.title)}">${[1, 2, 3, 4, 5].map(n => `<button type="button" class="${n <= r ? 'f' : ''}" role="radio" data-act="rateSong" data-v="${n}" aria-checked="${n === r}" aria-label="${n} star${n === 1 ? '' : 's'}" title="${n === r ? 'Click again to clear the rating' : `${n} star${n === 1 ? '' : 's'}`}" tabindex="${n === f ? 0 : -1}">${n <= r ? '★' : '☆'}</button>`).join('')}</span>`;
     }
+    /* ---- Phase 5: smart playlists (the rule engine) ----
+       A smart playlist is an ordinary playlist record plus ONE additive optional field, rule (its ids stay []). Nothing is stored about its members: they are computed from the
+       songs that are in the library right now, every time they are shown, so likes, ratings, play counts, edits, imports, removals and restores change them by themselves.
+       The rule is DATA ONLY: {v:1, match:'all'|'any', conds:[0..8 x {f, op, v}], sort:{by, dir}, limit:0|1..500}. It is checked by ONE function (ruleProblems) that the editor,
+       the backup reader and the loader all use, and it is run by a fixed set of comparisons below: no eval, no regular expressions, no code, no network. Contract: BACKUP_FORMAT.md. */
+    const smOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+    const SM = {
+      maxConds: 8, maxLimit: 500, maxDays: 3650, maxDur: 359999, maxCount: 1e9, maxText: 100, maxName: 80, DAY: 86400000,
+      kinds: new Map([['plays', 'num'], ['rating', 'num'], ['duration', 'dur'], ['added', 'time'], ['last', 'time'], ['title', 'text'], ['artist', 'text'], ['album', 'text'], ['genre', 'text'], ['liked', 'bool'], ['kind', 'kind']]),
+      label: { plays: 'Play count', rating: 'Rating', duration: 'Duration', added: 'Date added', last: 'Last played', title: 'Title', artist: 'Artist', album: 'Album', genre: 'Genre', liked: 'Liked', kind: 'Song type' },
+      ops: { num: ['eq', 'ne', 'gt', 'gte', 'lt', 'lte'], dur: ['eq', 'ne', 'gt', 'gte', 'lt', 'lte'], time: ['within', 'before'], text: ['contains', 'notContains', 'is'], bool: ['is'], kind: ['is'] },
+      opLabel: { eq: 'equals', ne: 'does not equal', gt: 'is greater than', gte: 'is at least', lt: 'is less than', lte: 'is at most', within: 'is within the last', before: 'is more than', contains: 'contains', notContains: 'does not contain', is: 'is' },
+      sorts: [['plays', 'Play count'], ['added', 'Date added'], ['last', 'Last played'], ['duration', 'Duration'], ['rating', 'Rating'], ['title', 'Title'], ['artist', 'Artist'], ['album', 'Album']],
+      numMax: { plays: 1e9, rating: 5, duration: 359999 }
+    };
+    const smKind = f => (typeof f === 'string' && SM.kinds.get(f)) || null;
+    const smPlain = o => o !== null && typeof o === 'object' && !Array.isArray(o) && [Object.prototype, null].includes(Object.getPrototypeOf(o));
+    const smInt = (v, lo, hi) => typeof v === 'number' && Number.isInteger(v) && !Object.is(v, -0) && v >= lo && v <= hi;
+    const smShort = s => String(s).slice(0, 40);
+    const pad2 = n => String(n).padStart(2, '0');
+    const fmtDur = s => s >= 3600 ? `${Math.floor(s / 3600)}:${pad2(Math.floor(s % 3600 / 60))}:${pad2(s % 60)}` : `${Math.floor(s / 60)}:${pad2(s % 60)}`;
+    // "5:00" (minutes:seconds), "1:02:03" (hours:minutes:seconds) or plain seconds -> whole seconds, or null when it is none of those or beyond 99:59:59
+    function parseDur(str) {
+      const s = String(str == null ? '' : str).trim(); let n = null, m;
+      if ((m = /^([0-9]{1,6})$/.exec(s))) n = +m[1];
+      else if ((m = /^([0-9]{1,4}):([0-5][0-9])$/.exec(s))) n = +m[1] * 60 + +m[2];
+      else if ((m = /^([0-9]{1,2}):([0-5][0-9]):([0-5][0-9])$/.exec(s))) n = +m[1] * 3600 + +m[2] * 60 + +m[3];
+      return n !== null && n <= SM.maxDur ? n : null;
+    }
+    // the one validator: [] means the rule is valid; every message names the part that is wrong
+    function ruleProblems(r) {
+      const bad = [], top = ['v', 'match', 'conds', 'sort', 'limit'];
+      if (!smPlain(r)) return ['The rule must be an object.'];
+      Object.keys(r).forEach(k => { if (!top.includes(k)) bad.push(`The rule has an unknown part “${smShort(k)}”.`); });
+      top.forEach(k => { if (!smOwn(r, k)) bad.push(`The rule is missing “${k}”.`); });
+      if (smOwn(r, 'v') && r.v !== 1) bad.push('The rule version is not supported.');
+      if (smOwn(r, 'match') && r.match !== 'all' && r.match !== 'any') bad.push('“Match” must be all or any.');
+      if (smOwn(r, 'conds')) {
+        if (!Array.isArray(r.conds)) bad.push('The conditions must be a list.');
+        else {
+          if (r.conds.length > SM.maxConds) bad.push(`A rule can have at most ${SM.maxConds} conditions.`);
+          for (let i = 0; i < Math.min(r.conds.length, SM.maxConds); i++) {
+            const c = r.conds[i], at = `Condition ${i + 1}`;
+            if (!smPlain(c)) { bad.push(`${at} is not an object.`); continue; }
+            Object.keys(c).forEach(k => { if (!['f', 'op', 'v'].includes(k)) bad.push(`${at} has an unknown part “${smShort(k)}”.`); });
+            ['f', 'op', 'v'].forEach(k => { if (!smOwn(c, k)) bad.push(`${at} is missing “${k}”.`); });
+            if (!smOwn(c, 'f') || !smOwn(c, 'op') || !smOwn(c, 'v')) continue;
+            const kind = smKind(c.f);
+            if (!kind) { bad.push(`${at} uses an unknown field.`); continue; }
+            if (!SM.ops[kind].includes(c.op)) { bad.push(`${at} uses an operator that does not fit ${SM.label[c.f]}.`); continue; }
+            const v = c.v;
+            if (kind === 'num' || kind === 'dur') { const hi = SM.numMax[c.f]; if (!smInt(v, 0, hi)) bad.push(`${at}: ${SM.label[c.f]} needs a whole number from 0 to ${hi}.`); }
+            else if (kind === 'time') { if (!smInt(v, 1, SM.maxDays)) bad.push(`${at}: ${SM.label[c.f]} needs a whole number of days from 1 to ${SM.maxDays}.`); }
+            else if (kind === 'text') { if (typeof v !== 'string' || v !== v.trim() || v.length < 1 || v.length > SM.maxText || /[\u0000-\u001F\u007F-\u009F]/.test(v) || metaWell(v) !== v) bad.push(`${at}: ${SM.label[c.f]} needs 1 to ${SM.maxText} characters of text with no line breaks.`); }
+            else if (kind === 'bool') { if (typeof v !== 'boolean') bad.push(`${at}: Liked must be yes or no.`); }
+            else if (v !== 'local' && v !== 'web') bad.push(`${at}: Song type must be a local file or a saved web song.`);
+          }
+        }
+      }
+      if (smOwn(r, 'sort')) {
+        const s = r.sort;
+        if (!smPlain(s)) bad.push('The sort must be an object.');
+        else {
+          Object.keys(s).forEach(k => { if (k !== 'by' && k !== 'dir') bad.push(`The sort has an unknown part “${smShort(k)}”.`); });
+          if (!smOwn(s, 'by') || !SM.sorts.some(x => x[0] === s.by)) bad.push('The sort field is not one of the allowed fields.');
+          if (!smOwn(s, 'dir') || (s.dir !== 'asc' && s.dir !== 'desc')) bad.push('The sort direction must be ascending or descending.');
+        }
+      }
+      if (smOwn(r, 'limit') && !smInt(r.limit, 0, SM.maxLimit)) bad.push(`The limit must be a whole number from 0 (no limit) to ${SM.maxLimit}.`);
+      return bad;
+    }
+    const isSmart = p => !!p && typeof p === 'object' && smOwn(p, 'rule');
+    const smNum = (t, f) => { const x = t[f]; return f === 'rating' ? ratingOf(t) : f === 'duration' ? Math.floor(Math.max(0, Number.isFinite(x) ? x : 0)) : (Number.isFinite(x) && x > 0 ? x : 0); };
+    const smTime = (t, f) => (Number.isFinite(t[f]) && t[f] > 0 ? t[f] : 0);
+    const smText = (t, f) => (typeof t[f] === 'string' ? t[f] : '');
+    function smTest(c, now) {
+      const f = c.f, v = c.v, kind = smKind(f);
+      if (kind === 'num' || kind === 'dur') {
+        return { eq: t => smNum(t, f) === v, ne: t => smNum(t, f) !== v, gt: t => smNum(t, f) > v, gte: t => smNum(t, f) >= v, lt: t => smNum(t, f) < v, lte: t => smNum(t, f) <= v }[c.op];
+      }
+      if (kind === 'time') { const edge = now - v * SM.DAY; return c.op === 'within' ? t => { const x = smTime(t, f); return x > 0 && x >= edge; } : t => { const x = smTime(t, f); return x > 0 && x < edge; }; }
+      if (kind === 'text') {
+        const q = v.toLowerCase();
+        return { contains: t => smText(t, f).toLowerCase().includes(q), notContains: t => !smText(t, f).toLowerCase().includes(q), is: t => smText(t, f).toLowerCase() === q }[c.op];
+      }
+      return kind === 'bool' ? t => !!t.liked === v : t => t.kind === v;
+    }
+    function smSorter(sort) {
+      const k = sort.by, sg = sort.dir === 'desc' ? -1 : 1;
+      if (['title', 'artist', 'album'].includes(k)) return (a, b) => sg * smText(a, k).localeCompare(smText(b, k)) || byRateTie(a, b);   // every tie, in BOTH directions, ends title, artist, id ascending
+      const val = k === 'added' || k === 'last' ? t => smTime(t, k) : t => smNum(t, k);
+      return (a, b) => sg * (val(a) - val(b)) || byRateTie(a, b);
+    }
+    // the songs of a VALID rule, in order (now is only passed by tests that need a fixed clock)
+    function ruleRun(rule, now = Date.now()) {
+      const tests = rule.conds.map(c => smTest(c, now));
+      const keep = [...S.tracks.values()].filter(t => !tests.length || (rule.match === 'all' ? tests.every(f => f(t)) : tests.some(f => f(t))));
+      keep.sort(smSorter(rule.sort));
+      return rule.limit ? keep.slice(0, rule.limit) : keep;
+    }
+    function smCondWords(c) {
+      const kind = smKind(c.f), L = SM.label[c.f];
+      if (kind === 'dur') return `${L} ${SM.opLabel[c.op]} ${fmtDur(c.v)}`;
+      if (kind === 'time') return c.op === 'within' ? `${L} within the last ${c.v} day${c.v === 1 ? '' : 's'}` : `${L} more than ${c.v} day${c.v === 1 ? '' : 's'} ago`;
+      if (kind === 'text') return `${L} ${SM.opLabel[c.op]} “${c.v}”`;
+      if (kind === 'bool') return c.v ? 'Liked' : 'Not liked';
+      if (kind === 'kind') return `Song type is ${c.v === 'local' ? 'a local file' : 'a saved web song'}`;
+      return `${L} ${SM.opLabel[c.op]} ${c.v}`;
+    }
+    function ruleWords(rule) {
+      const who = rule.conds.length ? `${rule.match === 'all' ? 'All' : 'Any'} of: ${rule.conds.map(smCondWords).join('; ')}` : 'Every song in your library';
+      const k = rule.sort.by, kind = ['title', 'artist', 'album'].includes(k) ? 'text' : k === 'added' || k === 'last' ? 'time' : k === 'duration' ? 'dur' : 'num';
+      const dir = { text: ['A to Z', 'Z to A'], time: ['oldest first', 'newest first'], dur: ['shortest first', 'longest first'], num: ['lowest first', 'highest first'] }[kind][rule.sort.dir === 'desc' ? 1 : 0];
+      return `${who} · Sorted by ${SM.label[k].toLowerCase()}, ${dir}${rule.limit ? ` · First ${rule.limit} song${rule.limit === 1 ? '' : 's'}` : ''}`;
+    }
+    const SM_PRESETS = [
+      { key: 'most', name: 'Most played', rule: { v: 1, match: 'all', conds: [{ f: 'plays', op: 'gte', v: 1 }], sort: { by: 'plays', dir: 'desc' }, limit: 25 } },
+      { key: 'recent', name: 'Recently added', rule: { v: 1, match: 'all', conds: [{ f: 'added', op: 'within', v: 30 }], sort: { by: 'added', dir: 'desc' }, limit: 0 } },
+      { key: 'long', name: 'Long songs', rule: { v: 1, match: 'all', conds: [{ f: 'duration', op: 'gt', v: 300 }], sort: { by: 'duration', dir: 'desc' }, limit: 0 } },
+      { key: 'top', name: 'Top rated', rule: { v: 1, match: 'all', conds: [{ f: 'rating', op: 'gte', v: 4 }], sort: { by: 'rating', dir: 'desc' }, limit: 0 } },
+      { key: 'never', name: 'Never played', rule: { v: 1, match: 'all', conds: [{ f: 'plays', op: 'eq', v: 0 }], sort: { by: 'added', dir: 'desc' }, limit: 0 } },
+      { key: 'heard', name: 'Heard recently', rule: { v: 1, match: 'all', conds: [{ f: 'last', op: 'within', v: 7 }], sort: { by: 'last', dir: 'desc' }, limit: 0 } }
+    ];
+    const SM_BLANK = () => ({ v: 1, match: 'all', conds: [], sort: { by: 'added', dir: 'desc' }, limit: 0 });
+    // members + state of one smart playlist. A rule that fails the validator (or a record that also carries manual songs) is never run.
+    function smartInfo(pl) {
+      const problems = ruleProblems(pl.rule);
+      if (!Array.isArray(pl.ids) || pl.ids.length) problems.push('A smart playlist can’t also hold hand-picked songs.');
+      return problems.length ? { damaged: true, problems, tracks: [] } : { damaged: false, problems, tracks: ruleRun(pl.rule) };
+    }
+    // what a smart list shows, as one string: when it changes the visible list is drawn again
+    const smartSig = (pl, info) => JSON.stringify([pl.name, pl.rule, info.problems, info.tracks.map(t => [t.id, t.title, t.artist, t.album, t.duration, t.liked ? 1 : 0, ratingOf(t), t.plays || 0, t.cover ? t.cover.length : 0])]);
+    const smartTabSig = () => S.playlists.filter(isSmart).map(p => { const i = smartInfo(p); return [p.id, p.name, i.damaged, i.tracks.length, (i.tracks.find(t => t.cover) || {}).id]; }).join('|');
     function groupBy(keyFn) { const m = new Map(); for (const t of S.tracks.values()) { const k = keyFn(t); if (!m.has(k)) m.set(k, []); m.get(k).push(t); } return m; }
     function libStat() {
+      setTimeout(smartTouch, 0);
       const ts = [...S.tracks.values()], size = ts.reduce((s, t) => s + (t.size || 0), 0), dur = ts.reduce((s, t) => s + (t.duration || 0), 0);
       $('#libStat').innerHTML = ts.length ? `${ts.length} song${ts.length === 1 ? '' : 's'} · ${fmtLong(dur)}<br>${bytes(size)} on this device` : '0 songs<br>Nothing imported yet';
     }
     function renderSide() {
-      $('#sidePl').innerHTML = S.playlists.length ? S.playlists.map(p => `<button class="pl-item${S.view.name === 'playlist' && S.view.id === p.id ? ' on' : ''}" data-act="openPlaylist" data-id="${esc(p.id)}"><span>${esc(p.name)}</span></button>`).join('') : '<div class="side-h" style="text-transform:none;letter-spacing:0;font-family:var(--f-body)">No playlists yet</div>';
+      $('#sidePl').innerHTML = S.playlists.length ? S.playlists.map(p => `<button class="pl-item${S.view.name === 'playlist' && S.view.id === p.id ? ' on' : ''}" data-act="openPlaylist" data-id="${esc(p.id)}"><span>${esc(p.name)}</span>${isSmart(p) ? `<span class="pl-smart" title="Smart playlist" aria-label="Smart playlist">${ico('spark', 13)}</span>` : ''}</button>`).join('') : '<div class="side-h" style="text-transform:none;letter-spacing:0;font-family:var(--f-body)">No playlists yet</div>';
     }
 
     const VIEWS = {};
@@ -1105,8 +1241,10 @@
           return `<div class="card" tabindex="0" data-act="${isA ? 'openAlbum' : 'openArtist'}" data-key="${esc(k)}"><div class="card-art">${cov({ ...t0, title: label }, isA ? '' : 'round')}<span class="card-play">${ico('play', 18)}</span></div><div class="card-t">${esc(label)}</div><div class="card-s">${esc(sub)}</div></div>`;
         }).join('')}</div>` : emptyLib();
       } else if (tab === 'playlists') {
-        body = `<div class="cards grid">${S.playlists.map(p => { const ts = p.ids.map(T).filter(Boolean); return `<div class="card" tabindex="0" data-act="openPlaylist" data-id="${esc(p.id)}"><div class="card-art">${cov(ts.find(t => t.cover) || { title: p.name, album: p.name })}<span class="card-play">${ico('play', 18)}</span></div><div class="card-t">${esc(p.name)}</div><div class="card-s">${ts.length} song${ts.length === 1 ? '' : 's'}</div></div>`; }).join('')}
-      <div class="card" tabindex="0" data-act="newPlaylist"><div class="card-art"><div class="cover" style="--h:40;background:var(--hover);color:var(--dim)">${ico('plus', 34)}</div></div><div class="card-t">New playlist</div><div class="card-s">Name it, then add songs</div></div></div>`;
+        v.psig = smartTabSig();
+        body = `<div class="cards grid">${S.playlists.map(p => { const sm = isSmart(p), inf = sm ? smartInfo(p) : null, ts = sm ? inf.tracks : p.ids.map(T).filter(Boolean); return `<div class="card" tabindex="0" data-act="openPlaylist" data-id="${esc(p.id)}"><div class="card-art">${cov(ts.find(t => t.cover) || { title: p.name, album: p.name })}<span class="card-play">${ico('play', 18)}</span></div><div class="card-t">${esc(p.name)}</div><div class="card-s">${sm ? (inf.damaged ? 'Smart · damaged rule' : `Smart · ${ts.length} song${ts.length === 1 ? '' : 's'}`) : `${ts.length} song${ts.length === 1 ? '' : 's'}`}</div></div>`; }).join('')}
+      <div class="card" tabindex="0" data-act="newPlaylist"><div class="card-art"><div class="cover" style="--h:40;background:var(--hover);color:var(--dim)">${ico('plus', 34)}</div></div><div class="card-t">New playlist</div><div class="card-s">Name it, then add songs</div></div>
+      <div class="card" tabindex="0" data-act="newSmart"><div class="card-art"><div class="cover" style="--h:40;background:var(--hover);color:var(--dim)">${ico('spark', 34)}</div></div><div class="card-t">New smart playlist</div><div class="card-s">Fills itself from rules</div></div></div>`;
       } else if (tab === 'liked') {
         const ts = [...S.tracks.values()].filter(t => t.liked).sort(SORTS.added);
         body = ts.length ? trackList(ts, { play: true, head: true }) : '<div class="empty">Songs you like show up here. Tap the heart on any song.</div>';
@@ -1144,6 +1282,7 @@
     VIEWS.playlist = (el, v) => {
       const pl = S.playlists.find(p => p.id === v.id);
       if (!pl) { el.innerHTML = '<div class="empty">That playlist no longer exists.</div>'; return; }
+      if (isSmart(pl)) return smartView(el, pl);
       const ts = pl.ids.map(T).filter(Boolean), dur = ts.reduce((s, t) => s + (t.duration || 0), 0);
       el.innerHTML = dhead({
         kind: 'Playlist', title: pl.name, sub: `${ts.length} songs${dur ? ' · ' + fmtLong(dur) : ''}`, cover: cov(ts.find(t => t.cover) || { title: pl.name, album: pl.name }), tracks: ts,
@@ -1195,7 +1334,7 @@
       openMenu(items, x, y);
     }
     function openPlaylistMenu(tid, x, y, ctx) {
-      const items = S.playlists.map(p => ({ label: p.name, icon: 'library', fn: () => addToPlaylist(p.id, tid) }));
+      const items = S.playlists.filter(p => !isSmart(p)).map(p => ({ label: p.name, icon: 'library', fn: () => addToPlaylist(p.id, tid) }));
       items.push({ sep: true }, { label: 'New playlist…', icon: 'plus', fn: async () => { const pl = await newPlaylist([tid]); if (pl) toast(`Added to ${pl.name}`); } }, { label: 'Back', icon: 'back', fn: () => { openTrackMenu(tid, x, y, ctx); return 'keep'; } });
       openMenu(items, x, y);
     }
@@ -1228,6 +1367,7 @@
       if (t.kind === 'web' && !S.tracks.has(id) && t.liked) saveWeb(t); else if (S.tracks.has(id)) dbPutTrack(t);
       refreshLikeUI(id);
       if (!t.liked && S.view.name === 'library' && S.view.tab === 'liked') refresh();
+      smartTouch();
     }
     async function newPlaylist(ids = []) {
       const name = await askText('New playlist', '', 'Create'); if (!name) return null;
@@ -1238,14 +1378,229 @@
       return pl;
     }
     function addToPlaylist(pid, tid) {
-      const pl = S.playlists.find(p => p.id === pid), t = T(tid); if (!pl || !t) return;
+      const pl = S.playlists.find(p => p.id === pid), t = T(tid); if (!pl || !t || isSmart(pl)) return;
       saveWeb(t);
       if (pl.ids.includes(tid)) { toast(`Already in ${pl.name}`); return; }
       pl.ids.push(tid); dbPut('playlists', pl); toast(`Added to ${pl.name}`);
     }
     function plRemove(pid, tid) {
-      const pl = S.playlists.find(p => p.id === pid); if (!pl) return;
+      const pl = S.playlists.find(p => p.id === pid); if (!pl || isSmart(pl)) return;
       pl.ids = pl.ids.filter(x => x !== tid); dbPut('playlists', pl); refresh();
+    }
+
+    /* ---- Phase 5: smart playlists (view, editor, saving) ---- */
+    const SM_BUSY = 'A backup or restore is running. Try again when it finishes. Nothing was saved.';
+    const SM_GONE = 'This playlist no longer exists. Nothing was saved.';
+    const SM_NEWLIB = 'Your library was replaced while this was open. Nothing was saved.';
+    const smBusy = () => S.restoreBusy || S.restoring || S.backupBusy || DB.lock;
+    const smName = s => { const v = typeof s === 'string' ? s.trim() : ''; return !v ? { err: 'Give the playlist a name.' } : v.length > SM.maxName ? { err: `The name is too long (at most ${SM.maxName} characters).` } : { v }; };
+    const smErr = e => `Couldn’t save the playlist (${(e && e.message) || 'storage error'}). Nothing was changed.`;
+    // every smart-playlist write is queued per playlist (the same queue discipline as a song's writes), re-checks its basis when it RUNS, writes a CLONE, and changes the shared record only once that write is durable
+    async function smartCreate(epoch, name, rule) {
+      if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+      if (smBusy()) return { ok: false, msg: SM_BUSY };
+      const nm = smName(name); if (nm.err) return { ok: false, field: 'name', msg: nm.err };
+      const pr = ruleProblems(rule); if (pr.length) return { ok: false, msg: `${pr[0]} Nothing was saved.` };
+      const pl = { id: uid(), name: nm.v, ids: [], created: Date.now(), rule: structuredClone(rule) };
+      return trackWrite('pl:' + pl.id, async () => {
+        if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        if (smBusy()) return { ok: false, msg: SM_BUSY };
+        if (DB.ok) {
+          try { await DB.put('playlists', structuredClone(pl)); } catch (e) { return { ok: false, msg: smErr(e) }; }
+          if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        }
+        S.playlists.push(pl);
+        return { ok: true, pl, memoryOnly: !DB.ok };
+      });
+    }
+    // patch = { name?, rule? }; base = what the caller saw of those same fields ({ name?, rule: JSON text })
+    async function smartUpdate(pid, epoch, base, patch) {
+      const pl = S.playlists.find(p => p.id === pid);
+      if (!pl || !isSmart(pl)) return { ok: false, msg: SM_GONE };
+      if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+      if (smBusy()) return { ok: false, msg: SM_BUSY };
+      const next = {};
+      if ('name' in patch) { const nm = smName(patch.name); if (nm.err) return { ok: false, field: 'name', msg: nm.err }; next.name = nm.v; }
+      if ('rule' in patch) { const pr = ruleProblems(patch.rule); if (pr.length) return { ok: false, msg: `${pr[0]} Nothing was saved.` }; next.rule = structuredClone(patch.rule); }
+      const apply = o => { if ('name' in next) o.name = next.name; if ('rule' in next) o.rule = structuredClone(next.rule); };
+      return trackWrite('pl:' + pid, async () => {
+        if (S.playlists.find(p => p.id === pid) !== pl) return { ok: false, msg: SM_GONE };
+        if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        if (smBusy()) return { ok: false, msg: SM_BUSY };
+        if (('name' in next && pl.name !== base.name) || ('rule' in next && JSON.stringify(pl.rule) !== base.rule)) return { ok: false, msg: 'This playlist changed while the editor was open. Close it and open it again. Nothing was saved.' };
+        if (('name' in next ? next.name === pl.name : true) && ('rule' in next ? JSON.stringify(next.rule) === JSON.stringify(pl.rule) : true)) return { ok: true, none: true, pl };
+        if (DB.ok) {
+          const clone = structuredClone(pl); apply(clone);
+          try { await DB.put('playlists', clone); } catch (e) { return { ok: false, msg: smErr(e) }; }   // nothing was applied to the shared record: nothing to undo
+          if (S.playlists.find(p => p.id === pid) !== pl || epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        }
+        apply(pl);
+        return { ok: true, pl, memoryOnly: !DB.ok };
+      });
+    }
+    async function smartDelete(pid, epoch) {
+      const pl = S.playlists.find(p => p.id === pid);
+      if (!pl || !isSmart(pl)) return { ok: false, msg: 'This playlist no longer exists.' };
+      if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+      if (smBusy()) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was deleted.' };
+      return trackWrite('pl:' + pid, async () => {
+        if (S.playlists.find(p => p.id === pid) !== pl) return { ok: false, msg: 'This playlist no longer exists.' };
+        if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        if (smBusy()) return { ok: false, msg: 'A backup or restore is running. Try again when it finishes. Nothing was deleted.' };
+        if (DB.ok) {
+          try { await DB.del('playlists', pid); } catch (e) { return { ok: false, msg: `Couldn’t delete the playlist (${(e && e.message) || 'storage error'}). Nothing was changed.` }; }
+          if (epoch !== S.epoch) return { ok: false, msg: SM_NEWLIB };
+        }
+        S.playlists = S.playlists.filter(p => p !== pl);
+        return { ok: true, memoryOnly: !DB.ok };
+      });
+    }
+    // the view and the Playlists tab re-draw themselves (keeping their scroll) when a change to the library changes what a smart playlist shows; nothing is written
+    function smartTouch() {
+      const v = S.view; if (!v || !S.playlists.some(isSmart)) return;
+      if (v.name === 'playlist') { const pl = S.playlists.find(p => p.id === v.id); if (pl && isSmart(pl) && smartSig(pl, smartInfo(pl)) !== v.sig) render(true); }
+      else if (v.name === 'library' && v.tab === 'playlists' && smartTabSig() !== v.psig) render(true);
+    }
+    function smartView(el, pl) {
+      const info = smartInfo(pl), ts = info.tracks, dur = ts.reduce((s, t) => s + (t.duration || 0), 0);
+      S.view.sig = smartSig(pl, info);
+      const words = info.damaged ? `<span class="sp-words sp-bad" id="spWords">This rule is damaged, so it was not run. Edit it to fix it, or rename or delete it.</span>` : `<span class="sp-words" id="spWords">${esc(ruleWords(pl.rule))}</span>`;
+      const act = `<button class="btn" data-act="smartEdit" data-id="${esc(pl.id)}">${ico('edit', 16)} Edit rule</button><button class="btn" data-act="plRename" data-id="${esc(pl.id)}">${ico('edit', 16)} Rename</button><button class="btn" data-act="plDelete" data-id="${esc(pl.id)}">${ico('trash', 16)} Delete</button>`;
+      const play = `<button class="btn primary" data-act="smartPlay" data-id="${esc(pl.id)}">${ico('play', 16)} Play</button><button class="btn" data-act="smartPlay" data-id="${esc(pl.id)}" data-shuffle="1">${ico('shuffle', 16)} Shuffle</button>`;
+      el.innerHTML = dhead({
+        kind: 'Smart playlist', title: pl.name, sub: `${info.damaged ? 'Damaged rule' : `${ts.length} song${ts.length === 1 ? '' : 's'}${dur ? ' · ' + fmtLong(dur) : ''}`}<br>${words}`,
+        cover: cov(ts.find(t => t.cover) || { title: pl.name, album: pl.name }), tracks: ts, actions: act, play
+      }) + (ts.length ? trackList(ts, { head: true, ctx: 'sm:' + pl.id })
+        : info.damaged ? '<div class="empty" id="spEmpty">Nothing to show: the saved rule isn’t valid.</div>'
+          : !S.tracks.size ? '<div class="empty" id="spEmpty">Your library is empty, so there is nothing to match yet. Import some music and this list fills itself.</div>'
+            : '<div class="empty" id="spEmpty">No songs match this rule right now. This list updates by itself as your library changes.</div>');
+    }
+    // ---- the rule editor ----
+    function openSmartEditor(pid, presetKey) {
+      if (smBusy()) { toast('A backup or restore is running. Try again when it finishes.', 3200); return; }
+      const pl = pid ? S.playlists.find(p => p.id === pid) : null; if (pid && (!pl || !isSmart(pl))) return;
+      const epoch = S.epoch, opener = document.activeElement, startPreset = SM_PRESETS.find(x => x.key === presetKey);
+      const baseName = pl ? pl.name : '', baseRule = pl ? JSON.stringify(pl.rule) : '';
+      const damaged = !!pl && ruleProblems(pl.rule).length > 0;
+      const first = structuredClone(pl ? (damaged ? SM_BLANK() : pl.rule) : startPreset ? startPreset.rule : SM_BLANK());
+      const toRow = c => ({ f: c.f, op: c.op, v: smKind(c.f) === 'dur' ? fmtDur(c.v) : String(c.v) });
+      const st = { match: first.match, conds: first.conds.map(toRow), by: first.sort.by, dir: first.sort.dir, limit: String(first.limit) };
+      const optsOf = (list, cur) => list.map(([k, l]) => `<option value="${esc(k)}"${k === cur ? ' selected' : ''}>${esc(l)}</option>`).join('');
+      const d = dialog(`<h3 id="spTitle">${pl ? 'Edit smart playlist' : 'New smart playlist'}</h3><form id="spForm" class="sp-form" autocomplete="off" novalidate aria-labelledby="spTitle">
+        <label class="meta-l" for="sp_name">Name</label><input id="sp_name" type="text" maxlength="${SM.maxName}" spellcheck="false" autocomplete="off">
+        <label class="meta-l" for="sp_preset">Start from a preset</label><select id="sp_preset"><option value="">Custom (your own rule)</option>${SM_PRESETS.map(x => `<option value="${x.key}"${startPreset && startPreset.key === x.key ? ' selected' : ''}>${esc(x.name)}</option>`).join('')}</select>
+        <fieldset class="sp-match"><legend>Songs must match</legend><label><input type="radio" name="sp_match" value="all"> all of the conditions</label><label><input type="radio" name="sp_match" value="any"> any of the conditions</label></fieldset>
+        <div id="spConds" class="sp-conds" role="group" aria-label="Conditions"></div>
+        <div class="btn-row sp-addrow"><button type="button" class="btn" id="spAdd">${ico('plus', 16)} Add condition</button><span class="dim" id="spCount"></span></div>
+        <div class="sp-sort"><div><label class="meta-l" for="sp_by">Sort by</label><select id="sp_by">${optsOf(SM.sorts, st.by)}</select></div><div><label class="meta-l" for="sp_dir">Order</label><select id="sp_dir"></select></div><div><label class="meta-l" for="sp_limit">Limit (0 = no limit)</label><input id="sp_limit" type="text" inputmode="numeric" maxlength="3" autocomplete="off"></div></div>
+        <p class="sp-live" id="spStatus" role="status" aria-live="polite"></p>
+        <div id="spErr" class="meta-err" role="alert" aria-live="assertive" tabindex="-1"></div>
+        <div class="btn-row meta-btns"><span class="meta-gap"></span><button type="button" class="btn" id="dlgNo">Cancel</button><button type="submit" class="btn primary" id="spSave">${pl ? 'Save rule' : 'Create'}</button></div></form>`);
+      d.onclose = null;
+      d.addEventListener('close', () => { const ae = document.activeElement; if (ae && ae !== document.body && ae.isConnected && !d.contains(ae)) return; if (opener && opener.isConnected && opener.focus) opener.focus(); }, { once: true });
+      const nameIn = $('#sp_name', d), errEl = $('#spErr', d), condsEl = $('#spConds', d), preset = $('#sp_preset', d), by = $('#sp_by', d), dirSel = $('#sp_dir', d), limitIn = $('#sp_limit', d), statusEl = $('#spStatus', d);
+      nameIn.value = baseName || (startPreset ? startPreset.name : ''); limitIn.value = st.limit;
+      const fieldList = [...SM.kinds.keys()].map(k => [k, SM.label[k]]);
+      const dirList = () => { const k = ['title', 'artist', 'album'].includes(by.value) ? 'text' : by.value === 'added' || by.value === 'last' ? 'time' : by.value === 'duration' ? 'dur' : 'num'; return { text: ['A to Z', 'Z to A'], time: ['Oldest first', 'Newest first'], dur: ['Shortest first', 'Longest first'], num: ['Lowest first', 'Highest first'] }[k]; };
+      const drawDir = () => { const [a, z] = dirList(); dirSel.innerHTML = `<option value="asc">${a}</option><option value="desc">${z}</option>`; dirSel.value = st.dir; };
+      $$('input[name="sp_match"]', d).forEach(r => { r.checked = r.value === st.match; r.onchange = () => { st.match = r.value; update(); }; });
+      const valueCtl = (c, i) => {
+        const kind = smKind(c.f), id = `sp_c${i}_v`, lab = `aria-label="Condition ${i + 1} value"`;
+        if (kind === 'bool') return `<select id="${id}" class="sp-v" data-i="${i}" ${lab}><option value="true"${c.v === 'true' ? ' selected' : ''}>Yes</option><option value="false"${c.v === 'false' ? ' selected' : ''}>No</option></select>`;
+        if (kind === 'kind') return `<select id="${id}" class="sp-v" data-i="${i}" ${lab}><option value="local"${c.v === 'local' ? ' selected' : ''}>Local file</option><option value="web"${c.v === 'web' ? ' selected' : ''}>Saved web song</option></select>`;
+        const ph = kind === 'dur' ? 'm:ss, h:mm:ss or seconds' : kind === 'time' ? 'days' : kind === 'text' ? 'text' : 'number';
+        return `<input id="${id}" class="sp-v" data-i="${i}" type="text" ${kind === 'text' ? `maxlength="${SM.maxText}"` : 'inputmode="' + (kind === 'dur' ? 'text' : 'numeric') + '"'} placeholder="${ph}" ${lab} spellcheck="false" autocomplete="off" value="${esc(c.v)}">${kind === 'time' ? `<span class="sp-suf">${c.op === 'before' ? 'days ago' : 'days'}</span>` : ''}`;
+      };
+      const draw = () => {
+        condsEl.innerHTML = st.conds.length ? st.conds.map((c, i) => `<div class="sp-cond" role="group" aria-label="Condition ${i + 1}"><select id="sp_c${i}_f" class="sp-f" data-i="${i}" aria-label="Condition ${i + 1} field">${optsOf(fieldList, c.f)}</select><select id="sp_c${i}_o" class="sp-o" data-i="${i}" aria-label="Condition ${i + 1} operator">${optsOf(SM.ops[smKind(c.f)].map(o => [o, SM.opLabel[o]]), c.op)}</select>${valueCtl(c, i)}<button type="button" class="icon-btn sp-rm" data-i="${i}" aria-label="Remove condition ${i + 1}">${ico('x', 16)}</button></div>`).join('') : '<p class="dim sp-none">No conditions: every song in your library matches.</p>';
+        $('#spAdd', d).disabled = st.conds.length >= SM.maxConds;
+      };
+      const defaultV = f => { const k = smKind(f); return k === 'bool' ? 'true' : k === 'kind' ? 'local' : k === 'time' ? '30' : k === 'dur' ? '5:00' : k === 'text' ? '' : '1'; };
+      // the form -> { name, rule, errs:[{msg, id}] }; text is judged exactly as the validator judges it
+      const collect = () => {
+        const errs = [], conds = [];
+        st.conds.forEach((c, i) => {
+          const kind = smKind(c.f), at = `Condition ${i + 1}`, id = `sp_c${i}_v`, raw = String(c.v).trim(); let v;
+          if (kind === 'num') { if (!/^[0-9]{1,10}$/.test(raw) || +raw > SM.numMax[c.f]) { errs.push({ id, msg: `${at}: ${SM.label[c.f]} needs a whole number from 0 to ${SM.numMax[c.f]}.` }); return; } v = +raw; }
+          else if (kind === 'dur') { v = parseDur(raw); if (v === null) { errs.push({ id, msg: `${at}: Duration needs m:ss (like 5:00), h:mm:ss or whole seconds, up to 99:59:59.` }); return; } }
+          else if (kind === 'time') { if (!/^[0-9]{1,5}$/.test(raw) || +raw < 1 || +raw > SM.maxDays) { errs.push({ id, msg: `${at}: ${SM.label[c.f]} needs a whole number of days from 1 to ${SM.maxDays}.` }); return; } v = +raw; }
+          else if (kind === 'text') { v = raw; if (!v || v.length > SM.maxText || /[\u0000-\u001F\u007F-\u009F]/.test(v) || metaWell(v) !== v) { errs.push({ id, msg: `${at}: ${SM.label[c.f]} needs 1 to ${SM.maxText} characters of text with no line breaks.` }); return; } }
+          else if (kind === 'bool') v = c.v === 'true'; else v = c.v;
+          conds.push({ f: c.f, op: c.op, v });
+        });
+        const lim = String(limitIn.value).trim();
+        if (!/^[0-9]{1,3}$/.test(lim) || +lim > SM.maxLimit) errs.push({ id: 'sp_limit', msg: `The limit must be a whole number from 0 (no limit) to ${SM.maxLimit}.` });
+        const nm = smName(nameIn.value); if (nm.err) errs.unshift({ id: 'sp_name', msg: nm.err });
+        if (st.conds.length > SM.maxConds) errs.push({ id: 'spAdd', msg: `A rule can have at most ${SM.maxConds} conditions.` });
+        const rule = { v: 1, match: st.match, conds, sort: { by: by.value, dir: dirSel.value }, limit: /^[0-9]{1,3}$/.test(lim) ? +lim : 0 };
+        return { name: nm.v, rawName: nameIn.value, rule, errs };
+      };
+      const update = () => {
+        const r = collect();
+        if (r.errs.length) statusEl.textContent = 'Fix the problems in the form to see how many songs match.';
+        else { const n = ruleRun(r.rule).length; statusEl.textContent = `${n} song${n === 1 ? '' : 's'} match right now.`; }
+        $('#spCount', d).textContent = '';
+      };
+      const syncModel = () => { st.by = by.value; st.dir = dirSel.value; st.limit = limitIn.value; };
+      condsEl.addEventListener('input', e => { const i = +e.target.dataset.i; if (!(i >= 0) || !st.conds[i]) return; if (e.target.classList.contains('sp-v')) { st.conds[i].v = e.target.value; update(); } });
+      condsEl.addEventListener('change', e => {
+        const t = e.target, i = +t.dataset.i; if (!(i >= 0) || !st.conds[i]) return; const c = st.conds[i];
+        if (t.classList.contains('sp-f')) { c.f = t.value; c.op = SM.ops[smKind(c.f)][0]; c.v = defaultV(c.f); draw(); const n = $(`#sp_c${i}_f`, d); if (n) n.focus(); }
+        else if (t.classList.contains('sp-o')) { c.op = t.value; draw(); const n = $(`#sp_c${i}_o`, d); if (n) n.focus(); }
+        else if (t.classList.contains('sp-v')) c.v = t.value;
+        update();
+      });
+      condsEl.addEventListener('click', e => {
+        const b = e.target.closest('.sp-rm'); if (!b) return; const i = +b.dataset.i; st.conds.splice(i, 1); draw();
+        const nx = $$('.sp-rm', d)[Math.min(i, st.conds.length - 1)]; (nx || $('#spAdd', d)).focus(); update();
+      });
+      $('#spAdd', d).onclick = () => { if (st.conds.length >= SM.maxConds) return; st.conds.push({ f: 'plays', op: 'gte', v: '1' }); draw(); $(`#sp_c${st.conds.length - 1}_f`, d).focus(); update(); };
+      preset.onchange = () => {
+        const p = SM_PRESETS.find(x => x.key === preset.value); if (!p) return;
+        const prev = SM_PRESETS.find(x => x.name === nameIn.value.trim());
+        st.match = p.rule.match; st.conds = p.rule.conds.map(toRow); by.value = st.by = p.rule.sort.by; st.dir = p.rule.sort.dir; limitIn.value = st.limit = String(p.rule.limit);
+        $$('input[name="sp_match"]', d).forEach(r => { r.checked = r.value === st.match; }); drawDir(); draw();
+        if (!pl && (!nameIn.value.trim() || prev)) nameIn.value = p.name;
+        errEl.textContent = ''; update();
+      };
+      by.onchange = () => { st.by = by.value; drawDir(); update(); }; dirSel.onchange = () => { st.dir = dirSel.value; update(); }; limitIn.oninput = () => { st.limit = limitIn.value; update(); }; nameIn.oninput = () => { errEl.textContent = ''; };
+      drawDir(); draw(); update();
+      $('#dlgNo', d).onclick = () => d.close('no');
+      let busy = false;
+      $('#spForm', d).onsubmit = async e => {
+        e.preventDefault(); if (busy) return; syncModel();
+        const r = collect(); $$('[aria-invalid]', d).forEach(n => n.removeAttribute('aria-invalid'));
+        if (r.errs.length) {
+          errEl.innerHTML = `<b>This can’t be saved yet:</b><ul>${r.errs.map(x => `<li>${esc(x.msg)}</li>`).join('')}</ul>`;
+          r.errs.forEach(x => { const n = document.getElementById(x.id); if (n && d.contains(n)) n.setAttribute('aria-invalid', 'true'); });
+          const n = document.getElementById(r.errs[0].id); (n && d.contains(n) ? n : errEl).focus(); return;
+        }
+        busy = true; $('#spSave', d).disabled = true; errEl.textContent = '';
+        let res; try { res = pl ? await smartUpdate(pl.id, epoch, { name: baseName, rule: baseRule }, { name: r.name, rule: r.rule }) : await smartCreate(epoch, r.name, r.rule); } catch (x) { res = { ok: false, msg: 'Couldn’t save the playlist. Nothing was changed.' }; }
+        busy = false; $('#spSave', d).disabled = false;
+        if (!res.ok) { errEl.textContent = res.msg; const n = res.field === 'name' ? nameIn : null; (n || errEl).focus(); return; }
+        d.close('ok');
+        if (res.none) { toast('No changes'); return; }
+        renderSide();
+        if (!pl) { go('playlist', { id: res.pl.id }); const h = $('#view h1'); if (h) { h.tabIndex = -1; h.focus(); } toast(res.memoryOnly ? `Created “${res.pl.name}” for this session only: browser storage isn’t available` : `Created “${res.pl.name}”`, 2600); }
+        else { render(true); toast(res.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Rule saved', 2400); }
+      };
+      nameIn.focus(); nameIn.select();
+    }
+    async function smartRename(pl) {
+      const base = { name: pl.name }, epoch = S.epoch, n = await askText('Rename playlist', pl.name, 'Rename'); if (!n) return;
+      const r = await smartUpdate(pl.id, epoch, base, { name: n });
+      if (!r.ok) { toast(r.msg, 3600); return; }
+      renderSide(); render(true);
+    }
+    async function smartRemove(pl) {
+      const epoch = S.epoch;
+      if (!(await confirmBox(`Delete the smart playlist “${pl.name}”? Your songs stay in your library.`, 'Delete'))) return;
+      const r = await smartDelete(pl.id, epoch);
+      if (!r.ok) { toast(r.msg, 3600); return; }
+      renderSide();
+      if (S.view.name === 'playlist' && S.view.id === pl.id) { S.stack = []; S.view = { name: 'library', tab: 'playlists' }; }
+      render();
     }
 
     /* ---- Phase 3A: song info editor (title, artist, album, genre) ----
@@ -1335,7 +1690,7 @@
       const r = await setRating(tid, value);
       if (!r.ok) { toast(r.msg, 3600); return r; }
       if (r.none) return r;
-      refreshRatingUI(tid);
+      refreshRatingUI(tid); smartTouch();
       const v = S.view, t = S.tracks.get(tid);
       if (v.name === 'library' && (v.tab || 'songs') === 'songs' && $('#songList') && (v.sort === 'ratingHigh' || v.sort === 'ratingLow' || (v.rate && v.rate !== 'any'))) {
         fillSongs();   // the song may move or drop out of the list: re-read it, and keep the keyboard where it was
@@ -1398,6 +1753,7 @@
         const t = S.tracks.get(tid);
         if (r.none) { toast('No changes'); return; }
         if (t) metaRefresh(t, r.before);
+        smartTouch();
         toast(r.memoryOnly ? 'Changed for this session only: browser storage isn’t available' : 'Song info saved', 3000);
       };
       inp('title').focus(); inp('title').select();
@@ -2057,6 +2413,10 @@
         if (typeof p.name !== 'string') add('name must be text');
         if (!Array.isArray(p.ids) || !p.ids.every(x => typeof x === 'string')) add('ids must be a list of song ids');
         if (p.created !== undefined && !(isNum(p.created) && p.created >= 0)) add('created must be a non-negative number');
+        if (smOwn(p, 'rule')) {   // Phase 5 (additive, optional): a smart playlist carries a rule and no hand-picked songs
+          if (Array.isArray(p.ids) && p.ids.length) add('a smart playlist (it has a rule) must have an empty ids list');
+          const rp = ruleProblems(p.rule); if (rp.length) add('rule: ' + rp[0]);
+        }
       });
       if (iss.length) throw dbad('shape', 'Some playlists are invalid.', iss);
       ascending(playlists.map(p => p.id), 'playlists', 'duplicate-id');
@@ -2311,14 +2671,17 @@
         case 'openArch': go('arch', { id: d.id }); break;
         case 'goExplore': go('explore', {}); break;
         case 'newPlaylist': { const pl = await newPlaylist(); if (pl) go('playlist', { id: pl.id }); break; }
+        case 'newSmart': openSmartEditor(null); break;
+        case 'smartEdit': openSmartEditor(d.id); break;
+        case 'smartPlay': { const pl = S.playlists.find(p => p.id === d.id); if (!pl || !isSmart(pl)) break; const inf = smartInfo(pl); if (inf.tracks.length) playList(inf.tracks.map(t => t.id), 0, { shuffle: !!d.shuffle }); break; }
         case 'genre': S.view.genre = d.v; render(true); break;
         case 'archPick': S.view.pick = +d.v; render(true); break;
         case 'searchSrc': S.view.src = d.v; render(); break;
         case 'retry': render(true); break;
         case 'help': showHelp(); break;
         case 'saveAll': { S.archTracks.forEach(saveWeb); toast(`Saved ${S.archTracks.length} songs to your library`); break; }
-        case 'plRename': { const pl = S.playlists.find(p => p.id === d.id); if (!pl) break; const n = await askText('Rename playlist', pl.name, 'Rename'); if (n) { pl.name = n; dbPut('playlists', pl); renderSide(); render(true); } break; }
-        case 'plDelete': { const pl = S.playlists.find(p => p.id === d.id); if (!pl) break; if (await confirmBox(`Delete the playlist “${pl.name}”? The songs stay in your library.`, 'Delete')) { S.playlists = S.playlists.filter(p => p.id !== pl.id); dbDel('playlists', pl.id); renderSide(); S.stack = []; S.view = { name: 'library', tab: 'playlists' }; render(); } break; }
+        case 'plRename': { const pl = S.playlists.find(p => p.id === d.id); if (!pl) break; if (isSmart(pl)) { await smartRename(pl); break; } const n = await askText('Rename playlist', pl.name, 'Rename'); if (n) { pl.name = n; dbPut('playlists', pl); renderSide(); render(true); } break; }
+        case 'plDelete': { const pl = S.playlists.find(p => p.id === d.id); if (!pl) break; if (isSmart(pl)) { await smartRemove(pl); break; } if (await confirmBox(`Delete the playlist “${pl.name}”? The songs stay in your library.`, 'Delete')) { S.playlists = S.playlists.filter(p => p.id !== pl.id); dbDel('playlists', pl.id); renderSide(); S.stack = []; S.view = { name: 'library', tab: 'playlists' }; render(); } break; }
         case 'qrm': removeFromQueue(+a.closest('[data-qi]').dataset.qi); break;
         case 'qclear': { const cur = S.queue[S.qi]; S.queue = cur ? [cur] : []; S.orig = S.queue.slice(); S.qi = cur ? 0 : -1; renderNP(); saveSession(); break; }
         case 'qsave': { const ids = uniq(S.queue); if (!ids.length) break; const stamp = new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); const pl = await newPlaylistNamed(`Queue ${stamp}`, ids); if (pl) toast(`Saved as “${pl.name}”`); break; }

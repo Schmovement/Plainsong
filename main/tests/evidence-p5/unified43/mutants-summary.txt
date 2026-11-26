@@ -1,0 +1,169 @@
+== runner controls (classifier negative/positive controls)
+RUNNER CONTROLS: 100 / 100 pass
+== controls on the UNMUTATED app (one per scenario used by a mutant)
+control R1: OK - unmutated app passed all 20 checks; every needle of the scenario resolves to exactly one passing check
+control R2: OK - unmutated app passed all 17 checks; every needle of the scenario resolves to exactly one passing check
+control R3: OK - unmutated app passed all 24 checks; every needle of the scenario resolves to exactly one passing check
+control R4: OK - unmutated app passed all 18 checks; every needle of the scenario resolves to exactly one passing check
+control R5: OK - unmutated app passed all 34 checks; every needle of the scenario resolves to exactly one passing check
+control R6: OK - unmutated app passed all 23 checks; every needle of the scenario resolves to exactly one passing check
+control R7: OK - unmutated app passed all 9 checks; every needle of the scenario resolves to exactly one passing check
+control R8: OK - unmutated app passed all 24 checks; every needle of the scenario resolves to exactly one passing check
+control R9: OK - unmutated app passed all 141 checks; every needle of the scenario resolves to exactly one passing check
+control R10: OK - unmutated app passed all 16 checks; every needle of the scenario resolves to exactly one passing check
+== mutants
+E1-gt-is-gte: scenario R1 exit=1 total=20 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (3) and with 2 isolation check(s) still passing) | the numeric operator "greater than" behaves as "at least"
+      failed: Q1: plays, rating and duration × the six numeric operators × boundary values match the independent expectation
+      failed: Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation
+      failed: Q1: Duration > 5:00 AND plays ≥ 1 selects exactly the played songs longer than 300 s (301, 305, 359, 360.9→360, 410, 3600 s; not exactly 300; not 299; not the dirty recor…
+      failed: Q1: exact boundaries: duration 300 s is NOT "> 300" but IS ">= 300"; 360.9 s counts as 360; absent plays count as 0
+E2-within-edge-exclusive: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a song added exactly N days ago is no longer "within" N days (the edge flips)
+      failed: Q1: added and last × within / before with the clock at the exact stamp moment: a song exactly N days old (age == N × 86,400,000 ms) is "within" N days and NOT "before" N …
+E2b-before-edge-inclusive: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a song exactly N days old counts as "more than" N days old (the other edge flips)
+      failed: Q1: added and last × within / before with the clock at the exact stamp moment: a song exactly N days old (age == N × 86,400,000 ms) is "within" N days and NOT "before" N …
+E3-text-case-sensitive: scenario R1 exit=1 total=20 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | text conditions become case-sensitive
+      failed: Q1: title, artist, album and genre × contains / notContains / is × values (case-insensitive, non-ASCII, missing text is empty text)
+      failed: Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation
+E4-no-tie-break: scenario R2 exit=1 total=17 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | equal sort values are left in library order (no title, artist, id tie-break)
+      failed: Q2: sort by plays: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by added: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by last: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by duration: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by rating: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+E5-desc-reverses-ties: scenario R2 exit=1 total=17 failed=9 VERDICT=DETECTED (9 check(s) failed, including EVERY intended assertion (2) and with 0 isolation check(s) still passing) | descending order reverses the tie-break as well (ties come out in reverse id order)
+      failed: Q2: sort by plays: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by added: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by last: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by duration: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by rating: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+E6-limit-before-sort: scenario R2 exit=1 total=17 failed=10 VERDICT=DETECTED (10 check(s) failed, including EVERY intended assertion (1) and with 0 isolation check(s) still passing) | the limit is applied before sorting (the first N songs of the library, then sorted)
+      failed: Q2: sort by plays: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by added: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by last: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by duration: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+      failed: Q2: sort by rating: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+E7-missing-number-not-zero: scenario R1 exit=1 total=20 failed=4 VERDICT=DETECTED (4 check(s) failed, including EVERY intended assertion (2) and with 0 isolation check(s) still passing) | a missing play count is not treated as 0 (undefined propagates)
+      failed: Q1: plays, rating and duration × the six numeric operators × boundary values match the independent expectation
+      failed: Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation
+      failed: Q1: exact boundaries: duration 300 s is NOT "> 300" but IS ">= 300"; 360.9 s counts as 360; absent plays count as 0
+      failed: Q1: wrong-typed stored values count as missing (plays "7", duration null, time "yesterday"/-5, rating 3.5, genre 42 on one record) and never throw
+E8-all-any-swapped: scenario R1 exit=1 total=20 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | match "all" and "any" are swapped
+      failed: Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation
+      failed: Q1: Duration > 5:00 AND plays ≥ 1 selects exactly the played songs longer than 300 s (301, 305, 359, 360.9→360, 410, 3600 s; not exactly 300; not 299; not the dirty recor…
+E9-nine-conditions-valid: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the validator stops checking conditions beyond the 8th (nine conditions pass)
+      failed: Q1: the validator rejects every invalid rule (not an object, bad version, match, extra keys, 9 conditions, unknown field/operator, wrong value type or range, -0, NaN, unt…
+E10-negative-zero-valid: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the validator accepts -0 as a number
+      failed: Q1: the validator rejects every invalid rule (not an object, bad version, match, extra keys, 9 conditions, unknown field/operator, wrong value type or range, -0, NaN, unt…
+E11-untrimmed-text-valid: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the validator accepts untrimmed text values
+      failed: Q1: the validator rejects every invalid rule (not an object, bad version, match, extra keys, 9 conditions, unknown field/operator, wrong value type or range, -0, NaN, unt…
+E12-duration-parser-minutes-as-hours: scenario R1 exit=1 total=20 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the duration input treats m:ss as h:mm (5:00 becomes 18000 s)
+      failed: Q1: duration input: 5:00 = 300, 1:02:03 = 3723, plain seconds, whitespace trimmed, 99:59:59 is the maximum; 5:7, 5:60, abc, empty, negative, fractional and full-width dig…
+U1-preset-long-off-by-one: scenario R3 exit=1 total=24 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | the "Long songs" preset uses "at least" 5:00 instead of "greater than"
+      failed: Q3: preset "Long songs" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the dis…
+      failed: Q3: the Playlists tab shows each smart playlist as "Smart · N songs" with N equal to the independent expectation, plus the New playlist and New smart playlist cards
+U2-duration-stored-as-typed-minutes: scenario R3 exit=1 total=24 failed=6 VERDICT=DETECTED (6 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the editor stores "5:00" as 5 (minutes) instead of 300 seconds
+      failed: Q3: preset "Long songs" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the dis…
+      failed: Q3: "Duration > 5:00" AND "plays ≥ 1" typed in the editor is stored as seconds (300) and shows exactly the 6 played songs longer than 5:00, longest first
+      failed: Q3: "Duration > 5:00" OR "liked" (match any) stores match any and shows the union in title order
+      failed: Q3: the Playlists tab shows each smart playlist as "Smart · N songs" with N equal to the independent expectation, plus the New playlist and New smart playlist cards
+      failed: Q3: editing "Most played" (add Duration > 5:00, limit 2) stores the new rule on the SAME record (id, name, created, ids unchanged), and the view shows the 2 most played s…
+U3-aria-invalid-not-set: scenario R4 exit=1 total=18 failed=7 VERDICT=DETECTED (7 check(s) failed, including EVERY intended assertion (7) and with 1 isolation check(s) still passing) | invalid fields are not marked aria-invalid
+      failed: Q4: the name that is invalid (empty, only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+      failed: Q4: a Duration value that is invalid (5:7, 99:99, abc, empty, 100:00:00, -5, 5.5) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTH…
+      failed: Q4: a plays / rating value that is invalid (plays x, plays -1, plays 1.5, plays 1e3, plays 11 digits, plays empty, rating 6) is refused with a message, marked aria-invali…
+      failed: Q4: a number of days that is invalid (days 0, days 3651, days 1.5, days x, days empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and…
+      failed: Q4: a text value that is invalid (text empty, text only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+U4-focus-not-moved-to-error: scenario R4 exit=1 total=18 failed=6 VERDICT=DETECTED (6 check(s) failed, including EVERY intended assertion (6) and with 2 isolation check(s) still passing) | after a refused Save the focus stays on the Save button (not moved to the first problem)
+      failed: Q4: the name that is invalid (empty, only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+      failed: Q4: a Duration value that is invalid (5:7, 99:99, abc, empty, 100:00:00, -5, 5.5) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTH…
+      failed: Q4: a plays / rating value that is invalid (plays x, plays -1, plays 1.5, plays 1e3, plays 11 digits, plays empty, rating 6) is refused with a message, marked aria-invali…
+      failed: Q4: a number of days that is invalid (days 0, days 3651, days 1.5, days x, days empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and…
+      failed: Q4: a text value that is invalid (text empty, text only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written
+U5-add-condition-unbounded: scenario R4 exit=1 total=18 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the editor allows more than 8 conditions
+      failed: Q4: the editor stops at 8 conditions: "Add condition" becomes disabled at the eighth
+U6-double-submit-allowed: scenario R8 exit=1 total=24 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the editor can be submitted twice at once (two playlists)
+      failed: Q8: submitting the editor twice at once creates exactly one playlist (one put)
+D1-like-does-not-refresh-list: scenario R5 exit=1 total=34 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | a like toggled in a smart list does not refresh the list
+      failed: Q5: un-liking a song in the list makes it leave the list at once (no navigation), the count line follows, and the song is stored un-liked
+      failed: Q5: after that un-like the header says 2 songs and the stored song is liked:false while the smart record is unchanged
+D2-rating-does-not-refresh-list: scenario R5 exit=1 total=34 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | a rating changed in a smart list does not refresh the list
+      failed: Q5: giving a song 1 star in the list removes it from the "rating ≥ 4" list at once
+      failed: Q5: giving another song 5 stars re-orders the list at once (Alpha now ties Song One at 5 and comes first by title)
+      failed: Q5: the order after that is Alpha (5), Song One (5)
+D3-edit-does-not-refresh-list: scenario R5 exit=1 total=34 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a title edit does not refresh a smart list (BOTH independent refresh paths removed: the smartTouch call and the playlist-view re-render inside metaRefresh; either one alone is redundant with the other, which is why a single-path mutant survived)
+      failed: Q5: renaming a song to "Omega" through Edit info removes it from the "title contains alpha" list at once
+      failed: Q5: a title edit that still matches (case-insensitive) keeps the song and shows its new title
+D4-library-change-does-not-refresh-list: scenario R5 exit=1 total=34 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a song saved into the library (libStat) does not refresh an open smart list (import itself also refreshes, so only the web-song save path depends on this hook)
+      failed: Q5: a web song saved into the library while the "everything" list is open appears in it by itself, and the count follows
+D5-play-count-does-not-refresh-list: scenario R5 exit=1 total=34 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | a play counted in the background does not refresh an open smart list
+      failed: Q5: when a song has really been played long enough to count, the list re-orders itself in the background (last played first: Song Two moves to the top)
+      failed: Q5: that play was counted once (plays 0 → 1) with a last-played time, and the order is Song Two, Song One, Song Three
+D6-membership-stored-at-creation: scenario R3 exit=1 total=24 failed=13 VERDICT=DETECTED (13 check(s) failed, including EVERY intended assertion (2) and with 0 isolation check(s) still passing) | a smart playlist keeps the song ids it had when it was created (membership is stored, not live)
+      failed: Q3: preset "Most played" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the di…
+      failed: Q3: preset "Recently added" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the…
+      failed: Q3: preset "Long songs" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the dis…
+      failed: Q3: preset "Top rated" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the disp…
+      failed: Q3: preset "Never played" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the d…
+Q1-play-queues-reverse-order: scenario R7 exit=1 total=9 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | Play queues the smart list in reverse order
+      failed: Q7: Play queues the smart list as it is at the click (a title changed after the last draw is already in the order), starts the first song, and nothing else is queued
+      failed: Q7: Shuffle queues a permutation of exactly the list's songs (3, no duplicates), the unshuffled order is the list's order, and shuffle is on
+S1-writes-not-queued: scenario R8 exit=1 total=24 failed=6 VERDICT=DETECTED (6 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | smart-playlist update and delete are not queued per playlist (they run at once)
+      failed: Q8: a delete asked while a save is still held waits for it (the playlist is still there, only the save was issued)
+      failed: Q8: the earlier save applies, then the delete runs: the record is gone from storage and memory, in the order put then del
+      failed: Q8: a save that comes after the delete is refused ("no longer exists") and writes nothing: the deleted playlist is not resurrected
+      failed: Q8: a save queued behind a held delete is refused when its turn comes: the deleted playlist stays deleted and no put was issued
+      failed: Q8: two saves made from the same editor basis: the first applies, the second is refused ("changed while the editor was open"), the stored rule is the first's
+S2-apply-before-write: scenario R8 exit=1 total=24 failed=5 VERDICT=DETECTED (5 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | the shared record is changed before the write is durable (a failed write leaves the new rule in memory)
+      failed: Q8: while the save is still being written, the shared record, the stored record and the view still hold the OLD rule (a clone is written; nothing is applied early)
+      failed: Q8: a REJECTED write reports "Nothing was changed", and neither the shared record nor the stored record changed
+      failed: Q8: a delete asked while a save is still held waits for it (the playlist is still there, only the save was issued)
+      failed: Q8: the earlier save applies, then the delete runs: the record is gone from storage and memory, in the order put then del
+      failed: Q8: a save that comes after the delete is refused ("no longer exists") and writes nothing: the deleted playlist is not resurrected
+S3-clone-made-before-queue: scenario R8 exit=1 total=24 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | the record written is copied when the save is asked for, not when it runs (a queued rename overwrites an earlier rule save)
+      failed: Q8: a rename queued behind a rule save applies on top of it: the stored and shared record have the new rule AND the new name (neither write clobbers the other)
+S4-basis-not-checked: scenario R8 exit=1 total=24 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | a save no longer checks that the playlist is still as the editor saw it
+      failed: Q8: two saves made from the same editor basis: the first applies, the second is refused ("changed while the editor was open"), the stored rule is the first's
+      failed: Q8: an editor opened before another change refuses to save over it ("changed while the editor was open"), stays open with the message, and the other change is kept
+      failed: Q8: if the playlist is deleted while its editor is open, Save refuses ("no longer exists") and does not bring it back
+S5-epoch-ignored: scenario R8 exit=1 total=24 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a library replaced by a restore is not noticed by smart-playlist saves
+      failed: Q8: with the epoch of the library that was replaced, create, update and delete are all refused ("Your library was replaced"), write nothing, and the restored playlists ar…
+S6-busy-guard-removed: scenario R8 exit=1 total=24 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | smart-playlist writes are allowed while a backup or restore runs
+      failed: Q8: while a backup, a restore (either flag) or the database lock is on, create, update and delete are all refused and write nothing
+      failed: Q8: while a backup or restore runs the editor does not even open
+      failed: Q8: once the flags are cleared a save works again (the refusals left nothing stuck in the queue)
+S7-queued-save-resurrects-deleted: scenario R8 exit=1 total=24 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | a save queued behind a delete does not notice the playlist is gone (it writes the record back)
+      failed: Q8: a save queued behind a held delete is refused when its turn comes: the deleted playlist stays deleted and no put was issued
+V1-reader-ignores-rule: scenario R9 exit=1 total=141 failed=62 VERDICT=DETECTED (62 check(s) failed, including EVERY intended assertion (62) and with 3 isolation check(s) still passing) | the strict reader does not validate a playlist rule at all
+      failed: Q9 refuse bad-rule-null: "rule null" is refused naming the invalid playlists, and nothing at all changed
+      failed: Q9 refuse bad-rule-list: "rule is a list" is refused naming the invalid playlists, and nothing at all changed
+      failed: Q9 refuse bad-rule-text: "rule is text" is refused naming the invalid playlists, and nothing at all changed
+      failed: Q9 refuse bad-rule-number: "rule is a number" is refused naming the invalid playlists, and nothing at all changed
+      failed: Q9 refuse bad-rule-empty-object: "rule {} (every part missing)" is refused naming the invalid playlists, and nothing at all changed
+V2-reader-allows-songs-with-rule: scenario R9 exit=1 total=141 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 2 isolation check(s) still passing) | the strict reader accepts a smart playlist that also carries hand-picked ids
+      failed: Q9 refuse bad-smart-with-songs: "a smart playlist that also carries hand-picked ids" is refused naming the invalid playlists, and nothing at all changed
+V3-export-drops-rule: scenario R9 exit=1 total=141 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (2) and with 0 isolation check(s) still passing) | the backup is written without the playlist rules
+      failed: Q9: the oracle's reading of the backup has the live playlists exactly (every rule, every manual playlist incl. the unknown field and ghost id, in order, key order)
+      failed: Q9: in the backup the smart playlists carry the rule and ids [] and the manual ones carry no rule key
+      failed: Q9: after the restore each of the five smart playlists shows exactly the independent expectation for the restored library
+C1-add-menu-lists-smart: scenario R10 exit=1 total=16 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the "Add to playlist" menu also lists smart playlists
+      failed: Q10: the "Add to playlist" menu lists only the manual playlists (and New playlist…), never a smart playlist
+C2-add-to-smart-allowed: scenario R10 exit=1 total=16 failed=5 VERDICT=DETECTED (5 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | addToPlaylist and plRemove can change a smart playlist's ids
+      failed: Q10: addToPlaylist and plRemove on a smart playlist do nothing (no write, record unchanged: ids stay [])
+      failed: Q10: "Remove from this playlist" removes just that id from the manual record and nothing else changes (smart record byte-identical)
+      failed: Q10: deleting a manual playlist removes only it
+      failed: Q10: removing a song from the library prunes it from every manual playlist and leaves the smart record byte-identical
+      failed: Q10: and the smart list no longer contains that song
+C3-smart-menu-has-remove: scenario R10 exit=1 total=16 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | songs in a smart playlist offer "Remove from this playlist"
+      failed: Q10: in a smart playlist the song menu has NO "Remove from this playlist" (members are not hand-picked) but still offers Add to playlist, Like, Rate, Edit info, Remove fr…
+A1-remove-button-unnamed: scenario R6 exit=1 total=23 failed=3 VERDICT=DETECTED (3 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | the remove-condition buttons lose their accessible names
+      failed: Q6: each condition row is a labelled group ("Condition 3") whose field, operator, value and remove control are named with its number
+      failed: Q6: removing the middle condition renumbers the rest and puts focus on the remove button now in its place
+      failed: Q6: removing the last condition moves focus to the one before it; removing the only one moves focus to "Add condition"; the empty list says every song matches
+A2-focus-lost-after-remove: scenario R6 exit=1 total=23 failed=2 VERDICT=DETECTED (2 check(s) failed, including EVERY intended assertion (2) and with 1 isolation check(s) still passing) | removing a condition drops the keyboard focus
+      failed: Q6: removing the middle condition renumbers the rest and puts focus on the remove button now in its place
+      failed: Q6: removing the last condition moves focus to the one before it; removing the only one moves focus to "Add condition"; the empty list says every song matches
+A3-status-not-live: scenario R6 exit=1 total=23 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the live match count is not a live region
+      failed: Q6: the live status is a polite status region and the error list is an assertive alert region
+A4-dialog-unlabelled: scenario R6 exit=1 total=23 failed=1 VERDICT=DETECTED (1 check(s) failed, including EVERY intended assertion (1) and with 1 isolation check(s) still passing) | the editor dialog loses its label
+      failed: Q6: the editor opens as a modal dialog labelled by its heading, and the keyboard (Enter on the sidebar button) is enough to open it
+TOTAL: 43 mutants | DETECTED (valid, complete, intended check failed): 43 | SURVIVED or intended check not failed: 0 | ERROR/INCOMPLETE: 0 | control runs invalid: 0

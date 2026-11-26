@@ -1,0 +1,115 @@
+{
+ "complete": true,
+ "only": "1",
+ "scenariosSelected": [
+  1
+ ],
+ "scenariosFinished": [
+  1
+ ],
+ "scenariosAborted": [],
+ "total": 20,
+ "failed": 2,
+ "results": [
+  {
+   "name": "Q1: the seeded library has 13 songs (3 local, 10 saved web) with the boundary data in place (raw records)",
+   "ok": true,
+   "detail": "13 songs"
+  },
+  {
+   "name": "Q1: plays, rating and duration × the six numeric operators × boundary values match the independent expectation",
+   "ok": true,
+   "detail": "186 rules; "
+  },
+  {
+   "name": "Q1: added and last × within / before × day boundaries (exact 30-day and 7-day edges, songs with no time match neither)",
+   "ok": true,
+   "detail": "60 rules; "
+  },
+  {
+   "name": "Q1: added and last × within / before with the clock at the exact stamp moment: a song exactly N days old (age == N × 86,400,000 ms) is \"within\" N days and NOT \"before\" N days",
+   "ok": true,
+   "detail": "60 rules; "
+  },
+  {
+   "name": "Q1: title, artist, album and genre × contains / notContains / is × values (case-insensitive, non-ASCII, missing text is empty text)",
+   "ok": true,
+   "detail": "156 rules; "
+  },
+  {
+   "name": "Q1: liked yes / no and song type local / web",
+   "ok": true,
+   "detail": "4 rules; "
+  },
+  {
+   "name": "Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation",
+   "ok": false,
+   "detail": "200 rules; [{\"f\":\"genre\",\"op\":\"contains\",\"v\":\"xi\"},{\"f\":\"plays\",\"op\":\"gte\",\"v\":7},{\"f\":\"title\",\"op\":\"is\",\"v\":\"rock\"}] any: expected A1,A2,A3,A5,L1 got  || [{\"f\":\"album\",\"op\":\"contains\",\"v\":\"ä\"},{\"f\":\"added\",\"op\":\"before\",\"v\":3},{\"f\":\"genre\",\"op\":\"is\",\"v\":\"rock\"}] all: expected  got A1,A2,A3,A5,A6,A9,L1,L3,L2,A8,A7 || [{\"f\":\"duration\",\"op\":\"ne\",\"v\":0},{\"f\":\"title\",\"op\":\"is\",\"v\":\"rock\"},{\"f\":\"plays\",\"op\":\"lte\",\"v\":1},{\"f\":\"last\",\"op\":\"before\",\"v\":3}] all: expected  got A1,A2,A3,A5,D1,A6,A4,A9,L1,L3,L2,A8,A7"
+  },
+  {
+   "name": "Q1: the generated combinations are not vacuous (some match nothing, some match everything, most match a strict subset)",
+   "ok": true,
+   "detail": "[0,11,13,10,12,6,8,6,0,10,13,0,0,4,8,0,9,13,13,13,12,13,0,13,13,12,1,3,3,0,0,11,4,13,13,1,4,6,12,1]"
+  },
+  {
+   "name": "Q1: no conditions matches the whole library, for both match modes",
+   "ok": true,
+   "detail": "2 rules; "
+  },
+  {
+   "name": "Q1: Duration > 5:00 AND plays ≥ 1 selects exactly the played songs longer than 300 s (301, 305, 359, 360.9→360, 410, 3600 s; not exactly 300; not 299; not the dirty record)",
+   "ok": false,
+   "detail": "A1,A2,A3,A5,A6,L1,L3,A8,A7"
+  },
+  {
+   "name": "Q1: exact boundaries: duration 300 s is NOT \"> 300\" but IS \">= 300\"; 360.9 s counts as 360; absent plays count as 0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: wrong-typed stored values count as missing (plays \"7\", duration null, time \"yesterday\"/-5, rating 3.5, genre 42 on one record) and never throw",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: the validator accepts every valid rule shape (limits, 8 conditions, 100-character text, every sort key kind)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "Q1: the validator rejects every invalid rule (not an object, bad version, match, extra keys, 9 conditions, unknown field/operator, wrong value type or range, -0, NaN, untrimmed or control-character text, bad sort, bad limit), each with a message, none throws",
+   "ok": true,
+   "detail": "[] []"
+  },
+  {
+   "name": "Q1: duration input: 5:00 = 300, 1:02:03 = 3723, plain seconds, whitespace trimmed, 99:59:59 is the maximum; 5:7, 5:60, abc, empty, negative, fractional and full-width digits are refused",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "Q1: the rule in words reads naturally (Most played, Long songs, Duration > 5:00 combination, empty rule)",
+   "ok": true,
+   "detail": "[\"All of: Play count is at least 1 · Sorted by play count, highest first · First 25 songs\",\"All of: Duration is greater than 5:00 · Sorted by duration, longest first\",\"All of: Duration is greater than 5:00; Play count is at least 1 · Sorted by title, A to Z\",\"Every song in your library · Sorted by title, A to Z\"]"
+  },
+  {
+   "name": "Q1: evaluating rules reads the library and writes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "6 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

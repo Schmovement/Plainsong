@@ -1,0 +1,513 @@
+[
+ {
+  "id": "ok-unchanged-resealed",
+  "desc": "the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps every smart and manual playlist exactly)",
+  "file": "ok-unchanged-resealed.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-old-archive-no-rule",
+  "desc": "an OLD-style archive: no playlist carries a rule (it restores with no rule invented anywhere)",
+  "file": "ok-old-archive-no-rule.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-8-conditions-numeric",
+  "desc": "eight numeric conditions (the maximum), every numeric operator, rating 0 and duration 359999",
+  "file": "ok-8-conditions-numeric.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-time-text-bool-kind",
+  "desc": "time within/before at 1 and 3650 days, text contains/notContains/is (with non-ASCII), liked true/false, kind local/web, sort by every key kind",
+  "file": "ok-time-text-bool-kind.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-no-conditions",
+  "desc": "no conditions (the whole library), limit 0",
+  "file": "ok-no-conditions.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-text-100-chars",
+  "desc": "a text value of exactly 100 characters",
+  "file": "ok-text-100-chars.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-sort-keys",
+  "desc": "sort by last, rating and album, ascending",
+  "file": "ok-sort-keys.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-unknown-playlist-field",
+  "desc": "an unknown extra field on the smart playlist record (kept as for any record; not part of the rule)",
+  "file": "ok-unknown-playlist-field.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "ok-plays-3.0-literal",
+  "desc": "the JSON literal 3.0 for a value: JSON.parse reads the whole number 3 (documented tolerance)",
+  "file": "ok-plays-3.0-literal.zip",
+  "expect": "ACCEPT",
+  "needle": ""
+ },
+ {
+  "id": "bad-rule-null",
+  "desc": "rule null",
+  "file": "bad-rule-null.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-rule-list",
+  "desc": "rule is a list",
+  "file": "bad-rule-list.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-rule-text",
+  "desc": "rule is text",
+  "file": "bad-rule-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-rule-number",
+  "desc": "rule is a number",
+  "file": "bad-rule-number.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-rule-empty-object",
+  "desc": "rule {} (every part missing)",
+  "file": "bad-rule-empty-object.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-version-2",
+  "desc": "rule version 2",
+  "file": "bad-version-2.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-version-text",
+  "desc": "rule version \"1\" (text)",
+  "file": "bad-version-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-version-missing",
+  "desc": "rule without v",
+  "file": "bad-version-missing.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-match-some",
+  "desc": "match \"some\"",
+  "file": "bad-match-some.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-match-uppercase",
+  "desc": "match \"ALL\"",
+  "file": "bad-match-uppercase.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-match-missing",
+  "desc": "rule without match",
+  "file": "bad-match-missing.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-extra-top-key",
+  "desc": "an extra key in the rule",
+  "file": "bad-extra-top-key.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-conds-not-list",
+  "desc": "conds is an object",
+  "file": "bad-conds-not-list.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-conds-missing",
+  "desc": "rule without conds",
+  "file": "bad-conds-missing.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-9-conditions",
+  "desc": "nine conditions (the maximum is eight)",
+  "file": "bad-9-conditions.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-not-object",
+  "desc": "a condition that is a number",
+  "file": "bad-cond-not-object.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-null",
+  "desc": "a condition that is null",
+  "file": "bad-cond-null.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-missing-op",
+  "desc": "a condition without op",
+  "file": "bad-cond-missing-op.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-missing-v",
+  "desc": "a condition without v",
+  "file": "bad-cond-missing-v.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-missing-f",
+  "desc": "a condition without f",
+  "file": "bad-cond-missing-f.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-cond-extra-key",
+  "desc": "a condition with an extra key",
+  "file": "bad-cond-extra-key.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-field-unknown",
+  "desc": "unknown field \"bpm\"",
+  "file": "bad-field-unknown.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-field-proto",
+  "desc": "field \"__proto__\"",
+  "file": "bad-field-proto.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-field-constructor",
+  "desc": "field \"constructor\"",
+  "file": "bad-field-constructor.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-field-number",
+  "desc": "field is a number",
+  "file": "bad-field-number.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-op-wrong-for-field",
+  "desc": "plays \"contains\"",
+  "file": "bad-op-wrong-for-field.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-op-time-on-num",
+  "desc": "duration \"within\"",
+  "file": "bad-op-time-on-num.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-op-text-gt",
+  "desc": "title \"gt\"",
+  "file": "bad-op-text-gt.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-op-unknown",
+  "desc": "plays \"between\"",
+  "file": "bad-op-unknown.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-op-bool-eq",
+  "desc": "liked \"eq\"",
+  "file": "bad-op-bool-eq.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-text",
+  "desc": "plays value \"5\" (text)",
+  "file": "bad-plays-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-negative",
+  "desc": "plays value -1",
+  "file": "bad-plays-negative.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-fraction",
+  "desc": "plays value 1.5",
+  "file": "bad-plays-fraction.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-neg-zero",
+  "desc": "plays value -0",
+  "file": "bad-plays-neg-zero.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-null",
+  "desc": "plays value null",
+  "file": "bad-plays-null.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-plays-bool",
+  "desc": "plays value true",
+  "file": "bad-plays-bool.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-rating-6",
+  "desc": "rating value 6",
+  "file": "bad-rating-6.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-duration-360000",
+  "desc": "duration value 360000",
+  "file": "bad-duration-360000.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-duration-text-5:00",
+  "desc": "duration value \"5:00\" (text; the rule stores whole seconds)",
+  "file": "bad-duration-text-5:00.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-days-0",
+  "desc": "added within 0 days",
+  "file": "bad-days-0.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-days-3651",
+  "desc": "added before 3651 days",
+  "file": "bad-days-3651.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-days-fraction",
+  "desc": "last within 1.5 days",
+  "file": "bad-days-fraction.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-empty",
+  "desc": "title contains \"\"",
+  "file": "bad-text-empty.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-101-chars",
+  "desc": "a text value of 101 characters",
+  "file": "bad-text-101-chars.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-leading-space",
+  "desc": "a text value with a leading space (stored values are trimmed)",
+  "file": "bad-text-leading-space.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-trailing-space",
+  "desc": "a text value with a trailing space",
+  "file": "bad-text-trailing-space.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-newline",
+  "desc": "a text value with a line break",
+  "file": "bad-text-newline.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-text-number",
+  "desc": "a text value that is a number",
+  "file": "bad-text-number.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-liked-text",
+  "desc": "liked value \"yes\"",
+  "file": "bad-liked-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-liked-number",
+  "desc": "liked value 1",
+  "file": "bad-liked-number.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-kind-remote",
+  "desc": "kind \"remote\"",
+  "file": "bad-kind-remote.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-missing",
+  "desc": "rule without sort",
+  "file": "bad-sort-missing.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-not-object",
+  "desc": "sort is text",
+  "file": "bad-sort-not-object.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-key-unknown",
+  "desc": "sort by \"genre\" (not an allowed sort field)",
+  "file": "bad-sort-key-unknown.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-key-liked",
+  "desc": "sort by \"liked\"",
+  "file": "bad-sort-key-liked.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-dir",
+  "desc": "sort direction \"up\"",
+  "file": "bad-sort-dir.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-sort-extra-key",
+  "desc": "an extra key in sort",
+  "file": "bad-sort-extra-key.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-limit-501",
+  "desc": "limit 501",
+  "file": "bad-limit-501.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-limit-negative",
+  "desc": "limit -1",
+  "file": "bad-limit-negative.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-limit-fraction",
+  "desc": "limit 2.5",
+  "file": "bad-limit-fraction.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-limit-text",
+  "desc": "limit \"5\"",
+  "file": "bad-limit-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-limit-missing",
+  "desc": "rule without limit",
+  "file": "bad-limit-missing.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-smart-with-songs",
+  "desc": "a smart playlist that also carries hand-picked ids",
+  "file": "bad-smart-with-songs.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ },
+ {
+  "id": "bad-smart-ids-text",
+  "desc": "a smart playlist whose ids is text",
+  "file": "bad-smart-ids-text.zip",
+  "expect": "REFUSE",
+  "needle": "Some playlists are invalid"
+ }
+]

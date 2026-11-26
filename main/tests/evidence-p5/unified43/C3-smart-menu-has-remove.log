@@ -1,0 +1,18 @@
+PASS Q10: a manual playlist still shows its songs in its own saved order, is not labelled smart, and has Play, Shuffle, Rename and Delete but no "Edit rule"
+PASS Q10: in a manual playlist the song menu offers "Remove from this playlist"
+FAIL Q10: in a smart playlist the song menu has NO "Remove from this playlist" (members are not hand-picked) but still offers Add to playlist, Like, Rate, Edit info, Remove from library  :: ["Play next","Add to queue","Add to playlist…","Remove like","Rate…","Go to album","Go to artist","Remove from this playlist","Edit info…","Edit cover…","Remove from library"]
+PASS Q10: the "Add to playlist" menu lists only the manual playlists (and New playlist…), never a smart playlist
+PASS Q10: adding a song to a manual playlist from a smart list changes that manual record only (ids + the song), writes only playlists, and leaves the smart record byte-identical
+PASS Q10: addToPlaylist and plRemove on a smart playlist do nothing (no write, record unchanged: ids stay [])
+PASS Q10: renaming a manual playlist changes only its name (ids, created and the unknown field kept) and no rule key appears
+PASS Q10: "Remove from this playlist" removes just that id from the manual record and nothing else changes (smart record byte-identical)
+PASS Q10: a new manual playlist is exactly {id, name, ids: [], created} with no rule key
+PASS Q10: deleting a manual playlist removes only it
+PASS Q10: removing a song from the library prunes it from every manual playlist and leaves the smart record byte-identical
+PASS Q10: and the smart list no longer contains that song
+PASS Q10: Play on a manual playlist queues exactly its listed songs in order (unchanged behaviour)
+PASS Q10: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 15 / 16 pass

@@ -11,7 +11,7 @@ P=$(cd "$1" && pwd) || exit 2; mkdir -p "$2" "$3" || exit 2; EV=$(cd "$2" && pwd
 case "$WR" in "$P"|"$P"/*|/|/home|/tmp) echo "refusing work-root $WR"; exit 2;; esac
 case "$EV" in "$P"|"$P"/*) echo "evidence dir must be outside the project under test"; exit 2;; esac
 PORT=8765; FX="$P/tests/fixtures-wav"; URL="http://localhost:$PORT/index.html"
-MATRIX=${MATRIX:-"p4 p3b p3a p2c p2b-adapted p2b-original p0-original p1-original p1-adapted p2a-original p2a-adapted"}
+MATRIX=${MATRIX:-"p5 p4 p3b p3a p2c p2b-adapted p2b-original p0-original p1-original p1-adapted p2a-original p2a-adapted"}
 if curl -s -o /dev/null "http://localhost:$PORT/"; then echo "port $PORT already in use"; exit 2; fi
 python3 -I -m http.server $PORT --directory "$P" >/dev/null 2>&1 & SRV=$!
 trap 'kill $SRV 2>/dev/null' EXIT
@@ -29,6 +29,7 @@ run() { # name, then the command (run from the project dir)
   rm -rf "$w"
 }
 for m in $MATRIX; do case $m in
+  p5)           run p5           env PS_URL=$URL node tests/phase5.test.js "$FX" "$WR/p5" "$EV/p5/results.json" ;;
   p4)           run p4           env PS_URL=$URL node tests/phase4.test.js "$FX" "$WR/p4" "$EV/p4/results.json" ;;
   p3b)          run p3b          env PS_URL=$URL node tests/phase3b.test.js "$FX" "$WR/p3b" "$EV/p3b/results.json" ;;
   p3a)          run p3a          env PS_URL=$URL node tests/phase3a.test.js "$FX" "$WR/p3a" "$EV/p3a/results.json" ;;

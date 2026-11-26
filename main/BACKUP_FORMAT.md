@@ -227,3 +227,35 @@ One additive, optional field on a `tracks` record. **No database version change,
 **Older Plainsong reading a p4 backup.** An older version keeps `rating` untouched in the record (unknown fields are preserved by its reader) and simply has no rating controls.
 
 **Persistence.** `rating` is written through the same per-track write queue as likes, play counts, the info editor and the cover editor: the write takes a copy of the song as it is when it runs, changes only `rating`, stores that copy and updates the in-memory song only after the store accepted it. A failed write leaves nothing behind; a song removed or a library replaced (restore) while the write was pending is never brought back or changed.
+
+## Smart playlist rule (Phase 5)
+
+One additive, optional field on a `playlists` record. **No database version change, no ZIP/format version change, no new file in the archive.** Export already writes every playlist record exactly as stored, so a record that has a `rule` is exported with it and restored with it, byte for byte (key order kept).
+
+A **smart playlist** is an ordinary playlist record that also has `rule`. Its `ids` is always `[]`: its songs are **not stored anywhere**. They are computed, every time the list is shown, from the songs in the library at that moment (so likes, ratings, play counts, edits, imports, removals and a restore change the list by themselves). A playlist without `rule` is a manual playlist and works exactly as before.
+
+```
+{ "id": "...", "name": "Most played", "ids": [], "created": 1700000000000,
+  "rule": { "v": 1, "match": "all" | "any",
+            "conds": [ { "f": <field>, "op": <operator>, "v": <value> }, ... 0 to 8 ],
+            "sort": { "by": <sort field>, "dir": "asc" | "desc" },
+            "limit": 0 | 1..500 } }
+```
+
+The rule is **data only**. There is no expression language, no code, no regular expression, no network and no script. The reader and the app evaluate it with a fixed set of comparisons.
+
+| field `f` | operators `op` | value `v` | how a song is read |
+|---|---|---|---|
+| `plays` | `eq ne gt gte lt lte` | whole number 0..1000000000 | `plays`; missing, negative or non-number counts as 0 |
+| `rating` | same | whole number 0..5 | the star rating; never rated, cleared or invalid = 0 |
+| `duration` | same | whole seconds 0..359999 (the editor takes `5:00`, `1:02:03` or seconds) | `duration` rounded down; missing or invalid = 0 |
+| `added`, `last` | `within`, `before` | whole days 1..3650 | `within`: the time is at most v days before now; `before`: more than v days before now. A song with no (or an invalid) time matches neither |
+| `title`, `artist`, `album`, `genre` | `contains notContains is` | text, 1..100 characters, already trimmed, no control characters | case-insensitive; a missing or non-text value is the empty text |
+| `liked` | `is` | `true` or `false` | `liked` as yes/no |
+| `kind` | `is` | `"local"` or `"web"` | the kind of song |
+
+`match` `all` = every condition, `any` = at least one; with no conditions every song matches. **Order:** `sort.by` is one of `plays added last duration rating title artist album`; `desc` reverses only the primary comparison. **Ties always end title, then artist, then id, ascending, in both directions**, so the order is the same on every run. `limit` keeps the first N after sorting (`0` = no limit).
+
+**Strict reader (additive).** If a playlist record has the key `rule`: `rule` must be an object with exactly the keys `v`, `match`, `conds`, `sort`, `limit`; `v` must be `1`; every condition exactly `f`, `op`, `v` with a known field, an operator that belongs to that field and a value of the right kind and range (a whole number is a JSON number with no fraction; `-0`, text numbers, `NaN` are refused; text must be trimmed, 1..100 characters, without control characters); at most 8 conditions; `sort` exactly `by` and `dir` with allowed values; `limit` a whole number 0..500; and `ids` must be an empty list. Anything else is refused as `playlists[i]: rule: ...`, **before anything is written**, exactly like every other invalid record. A playlist **without** `rule` is read exactly as before. The editor, the reader and the loader use the same validator; a stored rule that fails it (for example from another tool) is never run: the list says it is damaged and offers Edit, Rename and Delete.
+
+**Older Plainsong reading a p5 backup.** An older version ignores the unknown field and shows the smart playlist as an empty manual playlist (its `ids` is `[]`); nothing is corrupted, and the rule is kept in the record. Restoring that archive into this version brings the smart playlist back.

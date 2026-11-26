@@ -1,0 +1,105 @@
+{
+ "complete": true,
+ "only": "4",
+ "scenariosSelected": [
+  4
+ ],
+ "scenariosFinished": [
+  4
+ ],
+ "scenariosAborted": [],
+ "total": 18,
+ "failed": 6,
+ "results": [
+  {
+   "name": "Q4: the name that is invalid (empty, only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "empty: {\"open\":true,\"err\":\"This can’t be saved yet:\\nGive the playlist a name.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || only spaces: {\"open\":true,\"err\":\"This can’t be saved yet:\\nGive the playlist a name.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: a Duration value that is invalid (5:7, 99:99, abc, empty, 100:00:00, -5, 5.5) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "5:7: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Duration needs m:ss (like 5:00), h:mm:ss or whole seconds, up to 99:59:59.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || 99:99: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Duration needs m:ss (like 5:00), h:mm:ss or whole seconds, up to 99:59:59.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: a plays / rating value that is invalid (plays x, plays -1, plays 1.5, plays 1e3, plays 11 digits, plays empty, rating 6) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "plays x: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Play count needs a whole number from 0 to 1000000000.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || plays -1: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Play count needs a whole number from 0 to 1000000000.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: a number of days that is invalid (days 0, days 3651, days 1.5, days x, days empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "days 0: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Date added needs a whole number of days from 1 to 3650.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || days 3651: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Date added needs a whole number of days from 1 to 3650.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: a text value that is invalid (text empty, text only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "text empty: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Title needs 1 to 100 characters of text with no line breaks.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || text only spaces: {\"open\":true,\"err\":\"This can’t be saved yet:\\nCondition 1: Title needs 1 to 100 characters of text with no line breaks.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: the limit that is invalid (limit 501, limit x, limit -1, limit 1.5, limit empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": false,
+   "detail": "limit 501: {\"open\":true,\"err\":\"This can’t be saved yet:\\nThe limit must be a whole number from 0 (no limit) to 500.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0 || limit x: {\"open\":true,\"err\":\"This can’t be saved yet:\\nThe limit must be a whole number from 0 (no limit) to 500.\",\"inv\":true,\"foc\":\"spSave\",\"n\":0} writes=0"
+  },
+  {
+   "name": "Q4: the name field holds at most 80 characters, a text value at most 100, the limit at most 3 digits (typing more is cut by the field itself; longer values are refused by the validator, see Q1 and Q9)",
+   "ok": true,
+   "detail": "{\"name\":80,\"nameMax\":80,\"text\":100,\"textMax\":100,\"lim\":3}"
+  },
+  {
+   "name": "Q4: the editor stops at 8 conditions: \"Add condition\" becomes disabled at the eighth",
+   "ok": true,
+   "detail": "{\"n\":8,\"dis\":true}"
+  },
+  {
+   "name": "Q4: removing a condition re-enables \"Add condition\"",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: several problems are all listed together (name, condition 1, condition 2, limit) and each field is marked",
+   "ok": true,
+   "detail": "{\"li\":[\"Give the playlist a name.\",\"Condition 1: Duration needs m:ss (like 5:00), h:mm:ss or whole seconds, up to 99:59:59.\",\"Condition 2: Play count needs a whole number from 0 to 1000000000.\",\"The limit must be a whole number from 0 (no limit) to 500.\"],\"inv\":[\"sp_c0_v\",\"sp_c1_v\",\"sp_limit\",\"sp_name\"]}"
+  },
+  {
+   "name": "Q4: nothing at all was written by any refused attempt and no playlist exists yet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: after the problems are fixed the same dialog saves exactly one playlist (one put) with the corrected rule, and no error text or aria-invalid remains",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"put\",\"key\":\"f4dbf907-9ab8-46da-b59c-4481482352cb\"}][{\"id\":\"f4dbf907-9ab8-46da-b59c-4481482352cb\",\"name\":\"Probe\",\"ids\":[],\"created\":1794341504802,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}}]"
+  },
+  {
+   "name": "Q4: the library functions refuse an invalid rule, an empty or 81-character name, nine conditions, a stale editor basis and an unknown playlist, each with a message and ok:false",
+   "ok": true,
+   "detail": "{\"badRule\":{\"ok\":false,\"msg\":\"The rule is missing “match”. Nothing was saved.\"},\"noName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"Give the playlist a name.\"},\"longName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"The name is too long (at most 80 characters).\"},\"nine\":{\"ok\":false,\"msg\":\"A rule can have at most 8 conditions. Nothing was saved.\"},\"updBad\":{\"ok\":false,\"msg\":\"The limit must be a whole number from 0 (no limit) to 500. Nothing was saved.\"},\"updName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"Give the playlist a name.\"},\"updStale\":{\"ok\":false,\"msg\":\"This playlist changed while the editor was open. Close it and"
+  },
+  {
+   "name": "Q4: those refused calls wrote nothing (no put or delete) and changed no record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: an invalid edit is refused, and cancelling afterwards leaves the stored rule and name exactly as they were (no write)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "6 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

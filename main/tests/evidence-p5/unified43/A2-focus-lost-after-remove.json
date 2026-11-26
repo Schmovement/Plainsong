@@ -1,0 +1,130 @@
+{
+ "complete": true,
+ "only": "6",
+ "scenariosSelected": [
+  6
+ ],
+ "scenariosFinished": [
+  6
+ ],
+ "scenariosAborted": [],
+ "total": 23,
+ "failed": 2,
+ "results": [
+  {
+   "name": "Q6: the editor opens as a modal dialog labelled by its heading, and the keyboard (Enter on the sidebar button) is enough to open it",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: every control in the editor has an accessible name; the two match options are in a fieldset with the legend \"Songs must match\"; focus starts in the Name field",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: the live status is a polite status region and the error list is an assertive alert region",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: typing a name and pressing Enter creates the playlist with the default rule (every song, newest first) and moves focus to the new playlist's heading",
+   "ok": true,
+   "detail": "{\"h1\":\"H1\",\"title\":\"Keyboard list\",\"recs\":[[\"Keyboard list\",\"{\\\"v\\\":1,\\\"match\\\":\\\"all\\\",\\\"conds\\\":[],\\\"sort\\\":{\\\"by\\\":\\\"added\\\",\\\"dir\\\":\\\"desc\\\"},\\\"limit\\\":0}\"]]}"
+  },
+  {
+   "name": "Q6: Escape closes the editor, writes nothing, and returns focus to the button that opened it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: the \"New smart playlist\" card opens the editor from the keyboard (Enter), and Cancel returns focus to that card",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: each condition row is a labelled group (\"Condition 3\") whose field, operator, value and remove control are named with its number",
+   "ok": true,
+   "detail": "[\"Condition 1 / Condition 1 field / Condition 1 operator / Condition 1 value / Remove condition 1\",\"Condition 2 / Condition 2 field / Condition 2 operator / Condition 2 value / Remove condition 2\",\"Condition 3 / Condition 3 field / Condition 3 operator / Condition 3 value / Remove condition 3\"]"
+  },
+  {
+   "name": "Q6: removing the middle condition renumbers the rest and puts focus on the remove button now in its place",
+   "ok": false,
+   "detail": "null [\"Condition 1 / Condition 1 field / Condition 1 operator / Condition 1 value / Remove condition 1\",\"Condition 2 / Condition 2 field / Condition 2 operator / Condition 2 value / Remove condition 2\"]"
+  },
+  {
+   "name": "Q6: removing the last condition moves focus to the one before it; removing the only one moves focus to \"Add condition\"; the empty list says every song matches",
+   "ok": false,
+   "detail": "null "
+  },
+  {
+   "name": "Q6: the live status announces \"N songs match right now.\" (N from the independent expectation) and says to fix the form when it is invalid",
+   "ok": true,
+   "detail": "6 songs match right now. | Fix the problems in the form to see how many songs match."
+  },
+  {
+   "name": "Q6: the smart view has named buttons Play, Shuffle, Edit rule, Rename, Delete, all different",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: a rule that matches nothing shows a plain empty state, not a blank page",
+   "ok": true,
+   "detail": "No songs match this rule right now. This list updates by itself as your library changes."
+  },
+  {
+   "name": "Q6: a stored rule that fails validation is never run: the view says it is damaged, shows no songs, and offers Edit rule, Rename and Delete",
+   "ok": true,
+   "detail": "D Smart playlist Damaged one  Damaged rule This rule is damaged, so it was not run. Edit it to fix it, or rename or delete it.  Play Shuffle Edit rule Rename Delete Nothing to show: the saved rule isn"
+  },
+  {
+   "name": "Q6: Play on a damaged smart playlist does nothing (no queue, no audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: editing a damaged rule starts from a blank rule (keeping the name); saving replaces it with a valid one on the same record",
+   "ok": true,
+   "detail": "{\"id\":\"dmg-1\",\"name\":\"Damaged one\",\"ids\":[],\"created\":5,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}}"
+  },
+  {
+   "name": "Q6: a smart playlist can be renamed and then deleted after repair",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: in an empty library a smart playlist can be created and says the library is empty (a different message from \"no match\")",
+   "ok": true,
+   "detail": "Your library is empty, so there is nothing to match yet. Import some music and this list fills itself."
+  },
+  {
+   "name": "Q6 empty: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: on a 390 px wide screen the editor fits the screen: no control sticks out of the dialog and the dialog does not scroll sideways",
+   "ok": true,
+   "detail": "{\"w\":390,\"dw\":356,\"left\":17,\"right\":373,\"over\":[],\"hs\":false}"
+  },
+  {
+   "name": "Q6 mobile: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "18 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

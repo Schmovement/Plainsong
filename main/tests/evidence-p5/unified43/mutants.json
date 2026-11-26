@@ -1,0 +1,558 @@
+[
+ {
+  "id": "E1-gt-is-gte",
+  "desc": "the numeric operator \"greater than\" behaves as \"at least\"",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators",
+   "Q1: Duration > 5:00 AND plays \u2265 1 selects exactly",
+   "Q1: exact boundaries: duration 300 s"
+  ],
+  "must_pass": [
+   "Q1: added and last \u00d7 within / before \u00d7 day boundaries",
+   "Q1: liked yes / no and song type"
+  ]
+ },
+ {
+  "id": "E2-within-edge-exclusive",
+  "desc": "a song added exactly N days ago is no longer \"within\" N days (the edge flips)",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: added and last \u00d7 within / before with the clock at the exact stamp moment"
+  ],
+  "must_pass": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ]
+ },
+ {
+  "id": "E2b-before-edge-inclusive",
+  "desc": "a song exactly N days old counts as \"more than\" N days old (the other edge flips)",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: added and last \u00d7 within / before with the clock at the exact stamp moment"
+  ],
+  "must_pass": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ]
+ },
+ {
+  "id": "E3-text-case-sensitive",
+  "desc": "text conditions become case-sensitive",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: title, artist, album and genre \u00d7 contains / notContains / is"
+  ],
+  "must_pass": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ]
+ },
+ {
+  "id": "E4-no-tie-break",
+  "desc": "equal sort values are left in library order (no title, artist, id tie-break)",
+  "scenario": 2,
+  "must_fail": [
+   "Q2: the order of the stored library does not matter"
+  ],
+  "must_pass": [
+   "Q2: the limit applies AFTER sorting"
+  ]
+ },
+ {
+  "id": "E5-desc-reverses-ties",
+  "desc": "descending order reverses the tie-break as well (ties come out in reverse id order)",
+  "scenario": 2,
+  "must_fail": [
+   "Q2: ties break by title, artist, id ascending in BOTH directions",
+   "Q2: descending is NOT simply the reverse of ascending"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "E6-limit-before-sort",
+  "desc": "the limit is applied before sorting (the first N songs of the library, then sorted)",
+  "scenario": 2,
+  "must_fail": [
+   "Q2: the limit applies AFTER sorting"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "E7-missing-number-not-zero",
+  "desc": "a missing play count is not treated as 0 (undefined propagates)",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: exact boundaries: duration 300 s",
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "E8-all-any-swapped",
+  "desc": "match \"all\" and \"any\" are swapped",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: 200 generated combinations"
+  ],
+  "must_pass": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ]
+ },
+ {
+  "id": "E9-nine-conditions-valid",
+  "desc": "the validator stops checking conditions beyond the 8th (nine conditions pass)",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: the validator rejects every invalid rule"
+  ],
+  "must_pass": [
+   "Q1: the validator accepts every valid rule shape"
+  ]
+ },
+ {
+  "id": "E10-negative-zero-valid",
+  "desc": "the validator accepts -0 as a number",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: the validator rejects every invalid rule"
+  ],
+  "must_pass": [
+   "Q1: the validator accepts every valid rule shape"
+  ]
+ },
+ {
+  "id": "E11-untrimmed-text-valid",
+  "desc": "the validator accepts untrimmed text values",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: the validator rejects every invalid rule"
+  ],
+  "must_pass": [
+   "Q1: the validator accepts every valid rule shape"
+  ]
+ },
+ {
+  "id": "E12-duration-parser-minutes-as-hours",
+  "desc": "the duration input treats m:ss as h:mm (5:00 becomes 18000 s)",
+  "scenario": 1,
+  "must_fail": [
+   "Q1: duration input: 5:00 = 300"
+  ],
+  "must_pass": [
+   "Q1: plays, rating and duration \u00d7 the six numeric operators"
+  ]
+ },
+ {
+  "id": "U1-preset-long-off-by-one",
+  "desc": "the \"Long songs\" preset uses \"at least\" 5:00 instead of \"greater than\"",
+  "scenario": 3,
+  "must_fail": [
+   "Q3: preset \"Long songs\""
+  ],
+  "must_pass": [
+   "Q3: preset \"Most played\"",
+   "Q3: preset \"Recently added\""
+  ]
+ },
+ {
+  "id": "U2-duration-stored-as-typed-minutes",
+  "desc": "the editor stores \"5:00\" as 5 (minutes) instead of 300 seconds",
+  "scenario": 3,
+  "must_fail": [
+   "Q3: \"Duration > 5:00\" AND \"plays \u2265 1\" typed in the editor"
+  ],
+  "must_pass": [
+   "Q3: preset \"Most played\""
+  ]
+ },
+ {
+  "id": "U3-aria-invalid-not-set",
+  "desc": "invalid fields are not marked aria-invalid",
+  "scenario": 4,
+  "must_fail": [
+   "Q4: the name that is invalid",
+   "Q4: a Duration value that is invalid",
+   "Q4: a plays / rating value that is invalid",
+   "Q4: a number of days that is invalid",
+   "Q4: a text value that is invalid",
+   "Q4: the limit that is invalid",
+   "Q4: several problems are all listed together"
+  ],
+  "must_pass": [
+   "Q4: the editor stops at 8 conditions"
+  ]
+ },
+ {
+  "id": "U4-focus-not-moved-to-error",
+  "desc": "after a refused Save the focus stays on the Save button (not moved to the first problem)",
+  "scenario": 4,
+  "must_fail": [
+   "Q4: the name that is invalid",
+   "Q4: a Duration value that is invalid",
+   "Q4: a plays / rating value that is invalid",
+   "Q4: a number of days that is invalid",
+   "Q4: a text value that is invalid",
+   "Q4: the limit that is invalid"
+  ],
+  "must_pass": [
+   "Q4: several problems are all listed together",
+   "Q4: the editor stops at 8 conditions"
+  ]
+ },
+ {
+  "id": "U5-add-condition-unbounded",
+  "desc": "the editor allows more than 8 conditions",
+  "scenario": 4,
+  "must_fail": [
+   "Q4: the editor stops at 8 conditions"
+  ],
+  "must_pass": [
+   "Q4: removing a condition re-enables"
+  ]
+ },
+ {
+  "id": "U6-double-submit-allowed",
+  "desc": "the editor can be submitted twice at once (two playlists)",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: submitting the editor twice at once creates exactly one playlist"
+  ],
+  "must_pass": [
+   "Q8: once the flags are cleared a save works again"
+  ]
+ },
+ {
+  "id": "D1-like-does-not-refresh-list",
+  "desc": "a like toggled in a smart list does not refresh the list",
+  "scenario": 5,
+  "must_fail": [
+   "Q5: un-liking a song in the list makes it leave the list at once",
+   "Q5: after that un-like the header says 2 songs"
+  ],
+  "must_pass": [
+   "Q5: a song liked in the Songs tab appears"
+  ]
+ },
+ {
+  "id": "D2-rating-does-not-refresh-list",
+  "desc": "a rating changed in a smart list does not refresh the list",
+  "scenario": 5,
+  "must_fail": [
+   "Q5: giving a song 1 star in the list removes it",
+   "Q5: giving another song 5 stars re-orders the list"
+  ],
+  "must_pass": [
+   "Q5: un-liking a song in the list makes it leave"
+  ]
+ },
+ {
+  "id": "D3-edit-does-not-refresh-list",
+  "desc": "a title edit does not refresh a smart list (BOTH independent refresh paths removed: the smartTouch call and the playlist-view re-render inside metaRefresh; either one alone is redundant with the other, which is why a single-path mutant survived)",
+  "scenario": 5,
+  "must_fail": [
+   "Q5: renaming a song to \"Omega\" through Edit info removes it"
+  ],
+  "must_pass": [
+   "Q5: giving a song 1 star in the list removes it"
+  ]
+ },
+ {
+  "id": "D4-library-change-does-not-refresh-list",
+  "desc": "a song saved into the library (libStat) does not refresh an open smart list (import itself also refreshes, so only the web-song save path depends on this hook)",
+  "scenario": 5,
+  "must_fail": [
+   "Q5: a web song saved into the library while the \"everything\" list is open appears in it by itself"
+  ],
+  "must_pass": [
+   "Q5: removing a song from the library"
+  ]
+ },
+ {
+  "id": "D5-play-count-does-not-refresh-list",
+  "desc": "a play counted in the background does not refresh an open smart list",
+  "scenario": 5,
+  "must_fail": [
+   "Q5: when a song has really been played long enough to count",
+   "Q5: that play was counted once (plays 0 \u2192 1) with a last-played time"
+  ],
+  "must_pass": [
+   "Q5: importing two songs by \"Tgt Artist\""
+  ]
+ },
+ {
+  "id": "D6-membership-stored-at-creation",
+  "desc": "a smart playlist keeps the song ids it had when it was created (membership is stored, not live)",
+  "scenario": 3,
+  "must_fail": [
+   "Q3: editing \"Most played\"",
+   "Q3: after a reload the smart view shows the same songs"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "Q1-play-queues-reverse-order",
+  "desc": "Play queues the smart list in reverse order",
+  "scenario": 7,
+  "must_fail": [
+   "Q7: Play queues the smart list as it is at the click"
+  ],
+  "must_pass": [
+   "Q7: liking and rating songs while the list is playing changes nothing"
+  ]
+ },
+ {
+  "id": "S1-writes-not-queued",
+  "desc": "smart-playlist update and delete are not queued per playlist (they run at once)",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: a delete asked while a save is still held waits for it"
+  ],
+  "must_pass": [
+   "Q8: creating through the library function stores the record"
+  ]
+ },
+ {
+  "id": "S2-apply-before-write",
+  "desc": "the shared record is changed before the write is durable (a failed write leaves the new rule in memory)",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: while the save is still being written",
+   "Q8: a REJECTED write reports \"Nothing was changed\""
+  ],
+  "must_pass": [
+   "Q8: once the write is durable both the shared record"
+  ]
+ },
+ {
+  "id": "S3-clone-made-before-queue",
+  "desc": "the record written is copied when the save is asked for, not when it runs (a queued rename overwrites an earlier rule save)",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: a rename queued behind a rule save applies on top of it"
+  ],
+  "must_pass": [
+   "Q8: two saves made from the same editor basis",
+   "Q8: a REJECTED write reports"
+  ]
+ },
+ {
+  "id": "S4-basis-not-checked",
+  "desc": "a save no longer checks that the playlist is still as the editor saw it",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: two saves made from the same editor basis",
+   "Q8: an editor opened before another change refuses to save over it"
+  ],
+  "must_pass": [
+   "Q8: a REJECTED write reports"
+  ]
+ },
+ {
+  "id": "S5-epoch-ignored",
+  "desc": "a library replaced by a restore is not noticed by smart-playlist saves",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: with the epoch of the library that was replaced, create, update and delete are all refused"
+  ],
+  "must_pass": [
+   "Q8: a real restore of the earlier backup finishes"
+  ]
+ },
+ {
+  "id": "S6-busy-guard-removed",
+  "desc": "smart-playlist writes are allowed while a backup or restore runs",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: while a backup, a restore (either flag) or the database lock is on",
+   "Q8: while a backup or restore runs the editor does not even open"
+  ],
+  "must_pass": [
+   "Q8: submitting the editor twice at once creates exactly one playlist"
+  ]
+ },
+ {
+  "id": "S7-queued-save-resurrects-deleted",
+  "desc": "a save queued behind a delete does not notice the playlist is gone (it writes the record back)",
+  "scenario": 8,
+  "must_fail": [
+   "Q8: a save queued behind a held delete is refused when its turn comes"
+  ],
+  "must_pass": [
+   "Q8: a save that comes after the delete is refused"
+  ]
+ },
+ {
+  "id": "V1-reader-ignores-rule",
+  "desc": "the strict reader does not validate a playlist rule at all",
+  "scenario": 9,
+  "must_fail": [
+   "Q9 refuse bad-rule-null:",
+   "Q9 refuse bad-rule-list:",
+   "Q9 refuse bad-rule-text:",
+   "Q9 refuse bad-rule-number:",
+   "Q9 refuse bad-rule-empty-object:",
+   "Q9 refuse bad-version-2:",
+   "Q9 refuse bad-version-text:",
+   "Q9 refuse bad-version-missing:",
+   "Q9 refuse bad-match-some:",
+   "Q9 refuse bad-match-uppercase:",
+   "Q9 refuse bad-match-missing:",
+   "Q9 refuse bad-extra-top-key:",
+   "Q9 refuse bad-conds-not-list:",
+   "Q9 refuse bad-conds-missing:",
+   "Q9 refuse bad-9-conditions:",
+   "Q9 refuse bad-cond-not-object:",
+   "Q9 refuse bad-cond-null:",
+   "Q9 refuse bad-cond-missing-op:",
+   "Q9 refuse bad-cond-missing-v:",
+   "Q9 refuse bad-cond-missing-f:",
+   "Q9 refuse bad-cond-extra-key:",
+   "Q9 refuse bad-field-unknown:",
+   "Q9 refuse bad-field-proto:",
+   "Q9 refuse bad-field-constructor:",
+   "Q9 refuse bad-field-number:",
+   "Q9 refuse bad-op-wrong-for-field:",
+   "Q9 refuse bad-op-time-on-num:",
+   "Q9 refuse bad-op-text-gt:",
+   "Q9 refuse bad-op-unknown:",
+   "Q9 refuse bad-op-bool-eq:",
+   "Q9 refuse bad-plays-text:",
+   "Q9 refuse bad-plays-negative:",
+   "Q9 refuse bad-plays-fraction:",
+   "Q9 refuse bad-plays-neg-zero:",
+   "Q9 refuse bad-plays-null:",
+   "Q9 refuse bad-plays-bool:",
+   "Q9 refuse bad-rating-6:",
+   "Q9 refuse bad-duration-360000:",
+   "Q9 refuse bad-duration-text-5:00:",
+   "Q9 refuse bad-days-0:",
+   "Q9 refuse bad-days-3651:",
+   "Q9 refuse bad-days-fraction:",
+   "Q9 refuse bad-text-empty:",
+   "Q9 refuse bad-text-101-chars:",
+   "Q9 refuse bad-text-leading-space:",
+   "Q9 refuse bad-text-trailing-space:",
+   "Q9 refuse bad-text-newline:",
+   "Q9 refuse bad-text-number:",
+   "Q9 refuse bad-liked-text:",
+   "Q9 refuse bad-liked-number:",
+   "Q9 refuse bad-kind-remote:",
+   "Q9 refuse bad-sort-missing:",
+   "Q9 refuse bad-sort-not-object:",
+   "Q9 refuse bad-sort-key-unknown:",
+   "Q9 refuse bad-sort-key-liked:",
+   "Q9 refuse bad-sort-dir:",
+   "Q9 refuse bad-sort-extra-key:",
+   "Q9 refuse bad-limit-501:",
+   "Q9 refuse bad-limit-negative:",
+   "Q9 refuse bad-limit-fraction:",
+   "Q9 refuse bad-limit-text:",
+   "Q9 refuse bad-limit-missing:"
+  ],
+  "must_pass": [
+   "Q9 refuse bad-smart-with-songs:",
+   "Q9 refuse bad-smart-ids-text:",
+   "Q9 accept ok-8-conditions-numeric:"
+  ]
+ },
+ {
+  "id": "V2-reader-allows-songs-with-rule",
+  "desc": "the strict reader accepts a smart playlist that also carries hand-picked ids",
+  "scenario": 9,
+  "must_fail": [
+   "Q9 refuse bad-smart-with-songs:"
+  ],
+  "must_pass": [
+   "Q9 refuse bad-smart-ids-text:",
+   "Q9 refuse bad-version-2:"
+  ]
+ },
+ {
+  "id": "V3-export-drops-rule",
+  "desc": "the backup is written without the playlist rules",
+  "scenario": 9,
+  "must_fail": [
+   "Q9: the oracle's reading of the backup has the live playlists exactly",
+   "Q9: in the backup the smart playlists carry the rule and ids [] and the manual ones carry no rule key"
+  ],
+  "must_pass": []
+ },
+ {
+  "id": "C1-add-menu-lists-smart",
+  "desc": "the \"Add to playlist\" menu also lists smart playlists",
+  "scenario": 10,
+  "must_fail": [
+   "Q10: the \"Add to playlist\" menu lists only the manual playlists"
+  ],
+  "must_pass": [
+   "Q10: adding a song to a manual playlist from a smart list changes that manual record only"
+  ]
+ },
+ {
+  "id": "C2-add-to-smart-allowed",
+  "desc": "addToPlaylist and plRemove can change a smart playlist's ids",
+  "scenario": 10,
+  "must_fail": [
+   "Q10: addToPlaylist and plRemove on a smart playlist do nothing"
+  ],
+  "must_pass": [
+   "Q10: a manual playlist still shows its songs"
+  ]
+ },
+ {
+  "id": "C3-smart-menu-has-remove",
+  "desc": "songs in a smart playlist offer \"Remove from this playlist\"",
+  "scenario": 10,
+  "must_fail": [
+   "Q10: in a smart playlist the song menu has NO \"Remove from this playlist\""
+  ],
+  "must_pass": [
+   "Q10: in a manual playlist the song menu offers \"Remove from this playlist\""
+  ]
+ },
+ {
+  "id": "A1-remove-button-unnamed",
+  "desc": "the remove-condition buttons lose their accessible names",
+  "scenario": 6,
+  "must_fail": [
+   "Q6: each condition row is a labelled group",
+   "Q6: removing the middle condition renumbers the rest"
+  ],
+  "must_pass": [
+   "Q6: every control in the editor has an accessible name"
+  ]
+ },
+ {
+  "id": "A2-focus-lost-after-remove",
+  "desc": "removing a condition drops the keyboard focus",
+  "scenario": 6,
+  "must_fail": [
+   "Q6: removing the middle condition renumbers the rest",
+   "Q6: removing the last condition moves focus"
+  ],
+  "must_pass": [
+   "Q6: each condition row is a labelled group"
+  ]
+ },
+ {
+  "id": "A3-status-not-live",
+  "desc": "the live match count is not a live region",
+  "scenario": 6,
+  "must_fail": [
+   "Q6: the live status is a polite status region"
+  ],
+  "must_pass": [
+   "Q6: the editor opens as a modal dialog labelled by its heading"
+  ]
+ },
+ {
+  "id": "A4-dialog-unlabelled",
+  "desc": "the editor dialog loses its label",
+  "scenario": 6,
+  "must_fail": [
+   "Q6: the editor opens as a modal dialog labelled by its heading"
+  ],
+  "must_pass": [
+   "Q6: the live status is a polite status region"
+  ]
+ }
+]

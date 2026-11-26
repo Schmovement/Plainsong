@@ -1,0 +1,95 @@
+{
+ "complete": true,
+ "only": "10",
+ "scenariosSelected": [
+  10
+ ],
+ "scenariosFinished": [
+  10
+ ],
+ "scenariosAborted": [],
+ "total": 16,
+ "failed": 1,
+ "results": [
+  {
+   "name": "Q10: a manual playlist still shows its songs in its own saved order, is not labelled smart, and has Play, Shuffle, Rename and Delete but no \"Edit rule\"",
+   "ok": true,
+   "detail": "{\"kind\":\"Playlist\",\"btns\":[\"Play\",\"Shuffle\",\"Rename\",\"Delete\"],\"rows\":[\"audius:W1\",\"931e792a-aca8-42cb-b3b5-6283ae43acf0\",\"ec679d4b-7b24-4cd8-9727-aa53f7bbecf4\",\"e9c7e4c1-df7e-428c-b6cf-35303fc1b05e\"]}"
+  },
+  {
+   "name": "Q10: in a manual playlist the song menu offers \"Remove from this playlist\"",
+   "ok": true,
+   "detail": "[\"Play next\",\"Add to queue\",\"Add to playlist…\",\"Remove like\",\"Rate…\",\"Open source page\",\"Remove from this playlist\",\"Edit info…\",\"Edit cover…\",\"Remove from library\"]"
+  },
+  {
+   "name": "Q10: in a smart playlist the song menu has NO \"Remove from this playlist\" (members are not hand-picked) but still offers Add to playlist, Like, Rate, Edit info, Remove from library",
+   "ok": true,
+   "detail": "[\"Play next\",\"Add to queue\",\"Add to playlist…\",\"Remove like\",\"Rate…\",\"Open source page\",\"Edit info…\",\"Edit cover…\",\"Remove from library\"]"
+  },
+  {
+   "name": "Q10: the \"Add to playlist\" menu lists only the manual playlists (and New playlist…), never a smart playlist",
+   "ok": false,
+   "detail": "[\"Empty 日本\",\"Älpha ✓ <i>x</i>\",\"Q10 liked\",\"New playlist…\",\"Back\"]"
+  },
+  {
+   "name": "Q10: adding a song to a manual playlist from a smart list changes that manual record only (ids + the song), writes only playlists, and leaves the smart record byte-identical",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"put\",\"key\":\"pl-b\"}]"
+  },
+  {
+   "name": "Q10: addToPlaylist and plRemove on a smart playlist do nothing (no write, record unchanged: ids stay [])",
+   "ok": true,
+   "detail": "{\"id\":\"86813bdd-79e2-4c52-9a33-21a4e4a484dd\",\"name\":\"Q10 liked\",\"ids\":[],\"created\":1794342075682,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"liked\",\"op\":\"is\",\"v\":true}],\"sort\":{\"by\":\"title\",\"dir\":\"asc\"},\"limit\":0}}"
+  },
+  {
+   "name": "Q10: renaming a manual playlist changes only its name (ids, created and the unknown field kept) and no rule key appears",
+   "ok": true,
+   "detail": "{\"id\":\"pl-a\",\"name\":\"Renamed manual\",\"ids\":[\"audius:W1\",\"931e792a-aca8-42cb-b3b5-6283ae43acf0\",\"ec679d4b-7b24-4cd8-9727-aa53f7bbecf4\",\"ghost-id\",\"e9c7e4c1-df7e-428c-b6cf-35303fc1b05e\"],\"created\":20,\"x_note\":{\"k\":\"v\",\"n\":[1,2]}}"
+  },
+  {
+   "name": "Q10: \"Remove from this playlist\" removes just that id from the manual record and nothing else changes (smart record byte-identical)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: a new manual playlist is exactly {id, name, ids: [], created} with no rule key",
+   "ok": true,
+   "detail": "{\"id\":\"a2005025-5d8b-4521-a06c-9605adcbd3e4\",\"name\":\"Fresh manual\",\"ids\":[],\"created\":1794342079956}"
+  },
+  {
+   "name": "Q10: deleting a manual playlist removes only it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: removing a song from the library prunes it from every manual playlist and leaves the smart record byte-identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: and the smart list no longer contains that song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: Play on a manual playlist queues exactly its listed songs in order (unchanged behaviour)",
+   "ok": true,
+   "detail": "{\"q\":[\"ec679d4b-7b24-4cd8-9727-aa53f7bbecf4\",\"e9c7e4c1-df7e-428c-b6cf-35303fc1b05e\"],\"view\":[\"ec679d4b-7b24-4cd8-9727-aa53f7bbecf4\",\"e9c7e4c1-df7e-428c-b6cf-35303fc1b05e\"]}"
+  },
+  {
+   "name": "Q10: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "6 blocked requests; hosts: api.audius.co, archive.org, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

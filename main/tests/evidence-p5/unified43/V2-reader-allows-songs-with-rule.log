@@ -1,0 +1,143 @@
+PASS Q9: the library under test has five smart playlists (rules of every field kind, 8 conditions, all/any, unicode, no conditions, limits 0/7/25/500) and two manual playlists, one with a ghost id and an unknown field
+PASS Q9-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS Q9-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS Q9-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS Q9: the oracle's reading of the backup has the live playlists exactly (every rule, every manual playlist incl. the unknown field and ghost id, in order, key order)
+PASS Q9: in the backup the smart playlists carry the rule and ids [] and the manual ones carry no rule key
+PASS Q9 smart-playlist backup -> populated library: real UI restore finished with "Library restored"
+PASS Q9 smart-playlist backup -> populated library: tracks identical to the backup (every field, key order, order)
+PASS Q9 smart-playlist backup -> populated library: playlists identical (ids order kept)
+PASS Q9 smart-playlist backup -> populated library: kv (everything but secret: keys) identical, including session and history
+PASS Q9 smart-playlist backup -> populated library: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+PASS Q9 smart-playlist backup -> populated library: this browser's own secret: keys are untouched
+PASS Q9 smart-playlist backup -> populated library: localStorage is exactly the policy theme and nothing else (theme policy)
+PASS Q9 smart-playlist backup -> populated library: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)
+PASS Q9 smart-playlist backup -> populated library: in-memory library has none of the target's old songs
+PASS Q9 smart-playlist backup -> populated library: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS Q9 smart-playlist backup -> populated library: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS Q9 smart-playlist backup -> populated library: UI shows the whole restored library and the policy theme
+PASS Q9: after the restore each of the five smart playlists shows exactly the independent expectation for the restored library
+PASS Q9 smart backup restored after RELOAD: tracks identical to the backup (every field, key order, order)
+PASS Q9 smart backup restored after RELOAD: playlists identical (ids order kept)
+PASS Q9 smart backup restored after RELOAD: kv (everything but secret: keys) identical, including session and history
+PASS Q9 smart backup restored after RELOAD: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+PASS Q9 smart backup restored after RELOAD: this browser's own secret: keys are untouched
+PASS Q9 smart backup restored after RELOAD: localStorage is exactly the policy theme and nothing else (theme policy)
+PASS Q9 smart backup restored after RELOAD: still all the backup's songs, the policy theme, paused, no play() call
+PASS Q9-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, "Backup downloaded", not INCOMPLETE
+PASS Q9-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem
+PASS Q9-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json
+PASS Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): oracle comparison has ZERO failures
+PASS Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): tracks records identical (order and key order), playlists identical
+PASS Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): every audio entry identical in order: key, MIME, size, SHA-256
+PASS Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): kv keys identical (the session may differ only in its allowed time field, see the allowed differences)
+PASS Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields)
+PASS Q9 populated: no page errors
+PASS Q9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with "Library restored"
+PASS Q9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS Q9 p1 full (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched
+PASS Q9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS Q9 p1 full (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme
+PASS Q9 p1 full: the old archive restores with no rule field anywhere and no smart playlist invented
+PASS Q9 p1 full: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added
+PASS Q9 p1 full: no page errors
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: real UI restore finished with "Library restored"
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: playlists identical (ids order kept)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)
+PASS Q9 p1 minimal (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme
+PASS Q9 p1 minimal: the old archive restores with no rule field anywhere and no smart playlist invented
+PASS Q9 p1 minimal: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added
+PASS Q9 p1 minimal: no page errors
+PASS Q9: the independent Python generator produced the rule archives (exit 0; at least 60 refused and 8 accepted cases)
+PASS Q9 refuse bad-rule-null: "rule null" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-rule-list: "rule is a list" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-rule-text: "rule is text" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-rule-number: "rule is a number" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-rule-empty-object: "rule {} (every part missing)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-version-2: "rule version 2" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-version-text: "rule version "1" (text)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-version-missing: "rule without v" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-match-some: "match "some"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-match-uppercase: "match "ALL"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-match-missing: "rule without match" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-extra-top-key: "an extra key in the rule" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-conds-not-list: "conds is an object" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-conds-missing: "rule without conds" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-9-conditions: "nine conditions (the maximum is eight)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-not-object: "a condition that is a number" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-null: "a condition that is null" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-missing-op: "a condition without op" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-missing-v: "a condition without v" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-missing-f: "a condition without f" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-cond-extra-key: "a condition with an extra key" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-field-unknown: "unknown field "bpm"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-field-proto: "field "__proto__"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-field-constructor: "field "constructor"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-field-number: "field is a number" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-op-wrong-for-field: "plays "contains"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-op-time-on-num: "duration "within"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-op-text-gt: "title "gt"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-op-unknown: "plays "between"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-op-bool-eq: "liked "eq"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-text: "plays value "5" (text)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-negative: "plays value -1" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-fraction: "plays value 1.5" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-neg-zero: "plays value -0" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-null: "plays value null" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-plays-bool: "plays value true" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-rating-6: "rating value 6" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-duration-360000: "duration value 360000" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-duration-text-5:00: "duration value "5:00" (text; the rule stores whole seconds)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-days-0: "added within 0 days" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-days-3651: "added before 3651 days" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-days-fraction: "last within 1.5 days" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-empty: "title contains """ is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-101-chars: "a text value of 101 characters" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-leading-space: "a text value with a leading space (stored values are trimmed)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-trailing-space: "a text value with a trailing space" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-newline: "a text value with a line break" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-text-number: "a text value that is a number" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-liked-text: "liked value "yes"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-liked-number: "liked value 1" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-kind-remote: "kind "remote"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-missing: "rule without sort" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-not-object: "sort is text" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-key-unknown: "sort by "genre" (not an allowed sort field)" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-key-liked: "sort by "liked"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-dir: "sort direction "up"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-sort-extra-key: "an extra key in sort" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-limit-501: "limit 501" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-limit-negative: "limit -1" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-limit-fraction: "limit 2.5" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-limit-text: "limit "5"" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 refuse bad-limit-missing: "rule without limit" is refused naming the invalid playlists, and nothing at all changed
+FAIL Q9 refuse bad-smart-with-songs: "a smart playlist that also carries hand-picked ids" is refused naming the invalid playlists, and nothing at all changed  :: Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK
+PASS Q9 refuse bad-smart-ids-text: "a smart playlist whose ids is text" is refused naming the invalid playlists, and nothing at all changed
+PASS Q9 accept ok-unchanged-resealed: "the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps every smart and manual playlist exactly)" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-old-archive-no-rule: "an OLD-style archive: no playlist carries a rule (it restores with no rule invented anywhere)" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-old-archive-no-rule: no rule appears anywhere after restoring the old-style archive
+PASS Q9 accept ok-8-conditions-numeric: "eight numeric conditions (the maximum), every numeric operator, rating 0 and duration 359999" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-time-text-bool-kind: "time within/before at 1 and 3650 days, text contains/notContains/is (with non-ASCII), liked true/false, kind local/web, sort by every key kind" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-no-conditions: "no conditions (the whole library), limit 0" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-no-conditions: the restored empty-rule smart playlist shows the whole restored library
+PASS Q9 accept ok-text-100-chars: "a text value of exactly 100 characters" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-sort-keys: "sort by last, rating and album, ascending" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-unknown-playlist-field: "an unknown extra field on the smart playlist record (kept as for any record; not part of the rule)" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 accept ok-plays-3.0-literal: "the JSON literal 3.0 for a value: JSON.parse reads the whole number 3 (documented tolerance)" restores ("Library restored") and the stored playlists are exactly the archive's (records, order, key order)
+PASS Q9 generated: no page errors
+PASS Q9: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 140 / 141 pass

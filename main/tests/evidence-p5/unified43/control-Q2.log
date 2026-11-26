@@ -1,0 +1,19 @@
+PASS Q2: sort by plays: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by added: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by last: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by duration: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by rating: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by title: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by artist: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: sort by album: ascending and descending, limits 0, 1, 3 and 500 equal the independent order
+PASS Q2: ties break by title, artist, id ascending in BOTH directions (A1 and A2 have equal plays, title and artist: A1 before A2 in desc and in asc; A6 and A7 tie on plays)
+PASS Q2: the order of the stored library does not matter: with the library read back to front every key, both directions and limits 0 and 3 give the independent order (ties included)
+PASS Q2: descending is NOT simply the reverse of ascending when there are ties
+PASS Q2: the limit applies AFTER sorting (the 3 most played: A5 100, then A1 and A2 25 in id order)
+PASS Q2: a limit larger than the match count returns every match; limit 0 means no limit
+PASS Q2: the same rule on the same library gives the same order every time (deterministic)
+PASS Q2: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 17 / 17 pass

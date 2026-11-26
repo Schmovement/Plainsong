@@ -1,0 +1,26 @@
+PASS Q3: preset "Most played" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation
+PASS Q3: preset "Recently added" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation
+FAIL Q3: preset "Long songs" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation  :: closed=true name=Long songs preview="7 songs match right now." shape=false rec={"id":"42abb0eb-343a-4893-89d0-8e739dc9ae4e","name":"Long songs","ids":[],"created":1794341428074,"rule":{"v":1,"match":"all","conds":[{"f":"duration","op":"gte","v":300}],"sort":{"by":"duration","dir":"desc"},"limit":0}} shown=A5,A1,A7,A6,L1,A3,L3 expected=A5,A1,A7,A6,L1,A3 sub=7 songs · 1 h 34 min All of: Duration is at least 5:00 · Sorted by duration, longest first
+PASS Q3: preset "Top rated" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation
+PASS Q3: preset "Never played" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation
+PASS Q3: preset "Heard recently" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation
+PASS Q3: every preset is non-vacuous on this library (each matches at least one song, and the presets differ in membership)
+PASS Q3: "Duration > 5:00" AND "plays ≥ 1" typed in the editor is stored as seconds (300) and shows exactly the 6 played songs longer than 5:00, longest first
+PASS Q3: "Duration > 5:00" OR "liked" (match any) stores match any and shows the union in title order
+PASS Q3: h:mm:ss input (1:00:00 = 3600 s), trimmed text, a time condition and a limit are stored and applied (only "Delta Long" matches)
+PASS Q3: the sidebar lists all nine smart playlists, each with a "Smart playlist" badge
+FAIL Q3: the Playlists tab shows each smart playlist as "Smart · N songs" with N equal to the independent expectation, plus the New playlist and New smart playlist cards  :: [["Most played","Smart · 9 songs"],["Recently added","Smart · 8 songs"],["Long songs","Smart · 7 songs"],["Top rated","Smart · 3 songs"],["Never played","Smart · 3 songs"],["Heard recently","Smart · 4 songs"],["Long and played","Smart · 6 songs"],["Long or liked","Smart · 6 songs"],["Hour and text and age","Smart · 1 song"],["New playlist","Name it, then add songs"],["New smart playlist","Fills itself from rules"]]
+PASS Q3: the edit dialog opens with the saved rule in its fields (name, match, condition, sort, direction, limit)
+PASS Q3: editing "Most played" (add Duration > 5:00, limit 2) stores the new rule on the SAME record (id, name, created, ids unchanged), and the view shows the 2 most played songs longer than 5:00
+PASS Q3: renaming a smart playlist changes only its name (rule, id, created, ids untouched), updates the title and the sidebar, and keeps the badge
+PASS Q3: creating 6 presets and 3 hand-typed rules, one edit and one rename wrote exactly 11 puts, all to the playlists store (no song, audio or settings write)
+PASS Q3: after a reload the smart playlists are exactly as saved (raw records identical) and nothing else changed
+PASS Q3: after a reload the smart view shows the same songs in the same order (members are recomputed, not stored)
+PASS Q3: cancelling the delete confirmation deletes nothing
+PASS Q3: deleting a smart playlist (after confirming; the songs stay) removes its record only: other playlists byte-identical, no song changed, the view returns to the Playlists tab, the sidebar drops it
+PASS Q3: after the reload, cancelling then confirming the delete wrote exactly one playlists delete of that record
+PASS Q3: no page errors
+PASS network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed
+PASS network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data
+
+PHASE 5: 22 / 24 pass

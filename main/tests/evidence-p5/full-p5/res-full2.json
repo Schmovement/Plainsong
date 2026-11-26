@@ -1,0 +1,1635 @@
+{
+ "complete": true,
+ "only": "",
+ "scenariosSelected": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "scenariosFinished": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "scenariosAborted": [],
+ "total": 320,
+ "failed": 0,
+ "results": [
+  {
+   "name": "Q0: the legacy library has exactly its two manual playlists and no playlist carries a rule",
+   "ok": true,
+   "detail": "[\"pl-a\",\"pl-b\"]"
+  },
+  {
+   "name": "Q0: nothing is seeded: the sidebar lists the two manual playlists only, no smart badge, no smart playlist in memory",
+   "ok": true,
+   "detail": "{\"items\":[\"Empty 日本\",\"Älpha ✓ <i>x</i>\"],\"badges\":0,\"smart\":0}"
+  },
+  {
+   "name": "Q0: viewing every Library tab and a manual playlist, and opening / filling / cancelling the smart editor (button, card, Escape) writes NOTHING (no IndexedDB write of any store)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "Q0: the raw database is byte-for-byte what it was (tracks, playlists, kv, audio, localStorage)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q0: the Playlists tab lists exactly the two manual playlists (oldest first), New playlist and New smart playlist",
+   "ok": true,
+   "detail": "[\"Empty 日本\",\"Älpha ✓ <i>x</i>\",\"New playlist\",\"New smart playlist\"]"
+  },
+  {
+   "name": "Q0: the manual playlist still shows its songs in its own saved order (ghost id skipped)",
+   "ok": true,
+   "detail": "[\"audius:W1\",\"2eb54e35-7582-444e-a229-8f7a2e4b533b\",\"98b27654-3d4e-40e9-b684-459d00731d86\",\"5033fac1-3318-4610-b24a-fcc30d65322f\"]"
+  },
+  {
+   "name": "Q0: the sidebar has separate, named buttons \"New smart playlist\" and \"New playlist\"",
+   "ok": true,
+   "detail": "{\"side\":\"New smart playlist\",\"plain\":\"New playlist\"}"
+  },
+  {
+   "name": "Q0: handleAct has no duplicated action label and has the new actions newSmart, smartEdit, smartPlay (a later duplicate silently never runs)",
+   "ok": true,
+   "detail": "{\"n\":36,\"dup\":[]}"
+  },
+  {
+   "name": "Q0: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q0: an empty library has no playlist at all (the sidebar says so) and opening the Playlists tab creates none",
+   "ok": true,
+   "detail": "No playlists yet"
+  },
+  {
+   "name": "Q0: an empty library with no interaction performs no playlist write",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q0 empty: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: the seeded library has 13 songs (3 local, 10 saved web) with the boundary data in place (raw records)",
+   "ok": true,
+   "detail": "13 songs"
+  },
+  {
+   "name": "Q1: plays, rating and duration × the six numeric operators × boundary values match the independent expectation",
+   "ok": true,
+   "detail": "186 rules; "
+  },
+  {
+   "name": "Q1: added and last × within / before × day boundaries (exact 30-day and 7-day edges, songs with no time match neither)",
+   "ok": true,
+   "detail": "60 rules; "
+  },
+  {
+   "name": "Q1: added and last × within / before with the clock at the exact stamp moment: a song exactly N days old (age == N × 86,400,000 ms) is \"within\" N days and NOT \"before\" N days",
+   "ok": true,
+   "detail": "60 rules; "
+  },
+  {
+   "name": "Q1: title, artist, album and genre × contains / notContains / is × values (case-insensitive, non-ASCII, missing text is empty text)",
+   "ok": true,
+   "detail": "156 rules; "
+  },
+  {
+   "name": "Q1: liked yes / no and song type local / web",
+   "ok": true,
+   "detail": "4 rules; "
+  },
+  {
+   "name": "Q1: 200 generated combinations of 1 to 4 conditions, all / any, match the independent expectation",
+   "ok": true,
+   "detail": "200 rules; "
+  },
+  {
+   "name": "Q1: the generated combinations are not vacuous (some match nothing, some match everything, most match a strict subset)",
+   "ok": true,
+   "detail": "[5,0,0,10,13,11,8,6,13,10,1,13,0,4,8,6,0,0,0,13,0,0,0,13,13,10,13,13,13,13,10,11,12,5,2,1,0,6,3,9]"
+  },
+  {
+   "name": "Q1: no conditions matches the whole library, for both match modes",
+   "ok": true,
+   "detail": "2 rules; "
+  },
+  {
+   "name": "Q1: Duration > 5:00 AND plays ≥ 1 selects exactly the played songs longer than 300 s (301, 305, 359, 360.9→360, 410, 3600 s; not exactly 300; not 299; not the dirty record)",
+   "ok": true,
+   "detail": "A1,A3,A5,A6,L1,A7"
+  },
+  {
+   "name": "Q1: exact boundaries: duration 300 s is NOT \"> 300\" but IS \">= 300\"; 360.9 s counts as 360; absent plays count as 0",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: wrong-typed stored values count as missing (plays \"7\", duration null, time \"yesterday\"/-5, rating 3.5, genre 42 on one record) and never throw",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: the validator accepts every valid rule shape (limits, 8 conditions, 100-character text, every sort key kind)",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "Q1: the validator rejects every invalid rule (not an object, bad version, match, extra keys, 9 conditions, unknown field/operator, wrong value type or range, -0, NaN, untrimmed or control-character text, bad sort, bad limit), each with a message, none throws",
+   "ok": true,
+   "detail": "[] []"
+  },
+  {
+   "name": "Q1: duration input: 5:00 = 300, 1:02:03 = 3723, plain seconds, whitespace trimmed, 99:59:59 is the maximum; 5:7, 5:60, abc, empty, negative, fractional and full-width digits are refused",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "Q1: the rule in words reads naturally (Most played, Long songs, Duration > 5:00 combination, empty rule)",
+   "ok": true,
+   "detail": "[\"All of: Play count is at least 1 · Sorted by play count, highest first · First 25 songs\",\"All of: Duration is greater than 5:00 · Sorted by duration, longest first\",\"All of: Duration is greater than 5:00; Play count is at least 1 · Sorted by title, A to Z\",\"Every song in your library · Sorted by title, A to Z\"]"
+  },
+  {
+   "name": "Q1: evaluating rules reads the library and writes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q1: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by plays: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by added: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by last: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by duration: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by rating: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by title: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by artist: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: sort by album: ascending and descending, limits 0, 1, 3 and 500 equal the independent order",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: ties break by title, artist, id ascending in BOTH directions (A1 and A2 have equal plays, title and artist: A1 before A2 in desc and in asc; A6 and A7 tie on plays)",
+   "ok": true,
+   "detail": "A5,A1,A2,L1,A3,A6,A7,L3,A8,D1,A4,A9,L2 | D1,A4,A9,L2,A8,L3,A6,A7,A3,L1,A1,A2,A5"
+  },
+  {
+   "name": "Q2: the order of the stored library does not matter: with the library read back to front every key, both directions and limits 0 and 3 give the independent order (ties included)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: descending is NOT simply the reverse of ascending when there are ties",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: the limit applies AFTER sorting (the 3 most played: A5 100, then A1 and A2 25 in id order)",
+   "ok": true,
+   "detail": "A5,A1,A2"
+  },
+  {
+   "name": "Q2: a limit larger than the match count returns every match; limit 0 means no limit",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: the same rule on the same library gives the same order every time (deterministic)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q2: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q3: preset \"Most played\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Most played preview=\"9 songs match right now.\" shape=true rec={\"id\":\"070a7312-0d7d-444b-a6c5-415457efa7ec\",\"name\":\"Most played\",\"ids\":[],\"created\":1794323426653,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":25}} shown=A5,A1,A2,L1,A3,A6,A7,L3,A8 expected=A5,A1,A2,L1,A3,A6,A7,L3,A8 sub=9 songs · 1 h 39 min All of: Play count is at least 1 · Sorted by play count, highest first · First 25 songs"
+  },
+  {
+   "name": "Q3: preset \"Recently added\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Recently added preview=\"8 songs match right now.\" shape=true rec={\"id\":\"4752914a-ee9e-4805-84af-e2d76c95ba5a\",\"name\":\"Recently added\",\"ids\":[],\"created\":1794323427252,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"added\",\"op\":\"within\",\"v\":30}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}} shown=A8,A1,L1,A9,A6,A2,A7,L3 expected=A8,A1,L1,A9,A6,A2,A7,L3 sub=8 songs · 35 min All of: Date added within the last 30 days · Sorted by date added, newest first"
+  },
+  {
+   "name": "Q3: preset \"Long songs\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Long songs preview=\"6 songs match right now.\" shape=true rec={\"id\":\"00cc9f88-49a0-4acb-a61e-239358b10c9f\",\"name\":\"Long songs\",\"ids\":[],\"created\":1794323427870,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"duration\",\"dir\":\"desc\"},\"limit\":0}} shown=A5,A1,A7,A6,L1,A3 expected=A5,A1,A7,A6,L1,A3 sub=6 songs · 1 h 29 min All of: Duration is greater than 5:00 · Sorted by duration, longest first"
+  },
+  {
+   "name": "Q3: preset \"Top rated\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Top rated preview=\"3 songs match right now.\" shape=true rec={\"id\":\"6c98ab32-f8b9-41c0-88d8-8a6f4608200c\",\"name\":\"Top rated\",\"ids\":[],\"created\":1794323428469,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"rating\",\"op\":\"gte\",\"v\":4}],\"sort\":{\"by\":\"rating\",\"dir\":\"desc\"},\"limit\":0}} shown=L1,A1,A2 expected=L1,A1,A2 sub=3 songs · 17 min All of: Rating is at least 4 · Sorted by rating, highest first"
+  },
+  {
+   "name": "Q3: preset \"Never played\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Never played preview=\"3 songs match right now.\" shape=true rec={\"id\":\"c3fdef0c-daa4-41a6-a8be-80c3696cc7e1\",\"name\":\"Never played\",\"ids\":[],\"created\":1794323429069,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"eq\",\"v\":0}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}} shown=A9,L2,A4 expected=A9,L2,A4 sub=3 songs · 4 min All of: Play count equals 0 · Sorted by date added, newest first"
+  },
+  {
+   "name": "Q3: preset \"Heard recently\" through the real editor: the name is pre-filled, the live preview count, the saved raw record (shape, rule, empty ids), the view title and the displayed songs in order all equal the independent expectation",
+   "ok": true,
+   "detail": "closed=true name=Heard recently preview=\"4 songs match right now.\" shape=true rec={\"id\":\"1ae1b735-7b0e-4c9f-b666-8127d2750b98\",\"name\":\"Heard recently\",\"ids\":[],\"created\":1794323429668,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"last\",\"op\":\"within\",\"v\":7}],\"sort\":{\"by\":\"last\",\"dir\":\"desc\"},\"limit\":0}} shown=A8,A1,L1,A2 expected=A8,A1,L1,A2 sub=4 songs · 17 min All of: Last played within the last 7 days · Sorted by last played, newest first"
+  },
+  {
+   "name": "Q3: every preset is non-vacuous on this library (each matches at least one song, and the presets differ in membership)",
+   "ok": true,
+   "detail": "[9,8,6,3,3,4]"
+  },
+  {
+   "name": "Q3: \"Duration > 5:00\" AND \"plays ≥ 1\" typed in the editor is stored as seconds (300) and shows exactly the 6 played songs longer than 5:00, longest first",
+   "ok": true,
+   "detail": "closed=true rec={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gt\",\"v\":300},{\"f\":\"plays\",\"op\":\"gte\",\"v\":1}],\"sort\":{\"by\":\"duration\",\"dir\":\"desc\"},\"limit\":0} shown=A5,A1,A7,A6,L1,A3 expected=A5,A1,A7,A6,L1,A3"
+  },
+  {
+   "name": "Q3: \"Duration > 5:00\" OR \"liked\" (match any) stores match any and shows the union in title order",
+   "ok": true,
+   "detail": "shown=A1,A3,A5,A6,L1,A7 expected=A1,A3,A5,A6,L1,A7"
+  },
+  {
+   "name": "Q3: h:mm:ss input (1:00:00 = 3600 s), trimmed text, a time condition and a limit are stored and applied (only \"Delta Long\" matches)",
+   "ok": true,
+   "detail": "rec={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gte\",\"v\":3600},{\"f\":\"title\",\"op\":\"contains\",\"v\":\"long\"},{\"f\":\"added\",\"op\":\"before\",\"v\":100}],\"sort\":{\"by\":\"added\",\"dir\":\"asc\"},\"limit\":5} shown=A5"
+  },
+  {
+   "name": "Q3: the sidebar lists all nine smart playlists, each with a \"Smart playlist\" badge",
+   "ok": true,
+   "detail": "[{\"t\":\"Most played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Recently added\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long songs\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Top rated\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Never played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Heard recently\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long and played\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Long or liked\",\"smart\":true,\"lab\":\"Smart playlist\"},{\"t\":\"Hour and text and age\",\"smart\":true,\"lab\":\"Smart playlist\"}]"
+  },
+  {
+   "name": "Q3: the Playlists tab shows each smart playlist as \"Smart · N songs\" with N equal to the independent expectation, plus the New playlist and New smart playlist cards",
+   "ok": true,
+   "detail": "[[\"Most played\",\"Smart · 9 songs\"],[\"Recently added\",\"Smart · 8 songs\"],[\"Long songs\",\"Smart · 6 songs\"],[\"Top rated\",\"Smart · 3 songs\"],[\"Never played\",\"Smart · 3 songs\"],[\"Heard recently\",\"Smart · 4 songs\"],[\"Long and played\",\"Smart · 6 songs\"],[\"Long or liked\",\"Smart · 6 songs\"],[\"Hour and text and age\",\"Smart · 1 song\"],[\"New playlist\",\"Name it, then add songs\"],[\"New smart playlist\",\"Fills itself from rules\"]]"
+  },
+  {
+   "name": "Q3: the edit dialog opens with the saved rule in its fields (name, match, condition, sort, direction, limit)",
+   "ok": true,
+   "detail": "{\"title\":\"Edit smart playlist\",\"name\":\"Most played\",\"match\":\"all\",\"limit\":\"25\",\"by\":\"plays\",\"dir\":\"desc\",\"conds\":[[\"plays\",\"gte\",\"1\"]]}"
+  },
+  {
+   "name": "Q3: editing \"Most played\" (add Duration > 5:00, limit 2) stores the new rule on the SAME record (id, name, created, ids unchanged), and the view shows the 2 most played songs longer than 5:00",
+   "ok": true,
+   "detail": "rule={\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1},{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":2} shown=A5,A1 expected=A5,A1"
+  },
+  {
+   "name": "Q3: renaming a smart playlist changes only its name (rule, id, created, ids untouched), updates the title and the sidebar, and keeps the badge",
+   "ok": true,
+   "detail": "{\"id\":\"070a7312-0d7d-444b-a6c5-415457efa7ec\",\"name\":\"Renamed smart\",\"ids\":[],\"created\":1794323426653,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1},{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":2}}"
+  },
+  {
+   "name": "Q3: creating 6 presets and 3 hand-typed rules, one edit and one rename wrote exactly 11 puts, all to the playlists store (no song, audio or settings write)",
+   "ok": true,
+   "detail": "[\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\",\"playlists:put\"]"
+  },
+  {
+   "name": "Q3: after a reload the smart playlists are exactly as saved (raw records identical) and nothing else changed",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q3: after a reload the smart view shows the same songs in the same order (members are recomputed, not stored)",
+   "ok": true,
+   "detail": "A5,A1"
+  },
+  {
+   "name": "Q3: cancelling the delete confirmation deletes nothing",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q3: deleting a smart playlist (after confirming; the songs stay) removes its record only: other playlists byte-identical, no song changed, the view returns to the Playlists tab, the sidebar drops it",
+   "ok": true,
+   "detail": "{\"view\":\"library\",\"tab\":\"playlists\",\"side\":[\"Recently added\",\"Long songs\",\"Top rated\",\"Never played\",\"Heard recently\",\"Long and played\",\"Long or liked\",\"Hour and text and age\"],\"mem\":8} Delete the smart playlist “Renamed smart”? Your songs stay in your library. Cancel Delete"
+  },
+  {
+   "name": "Q3: after the reload, cancelling then confirming the delete wrote exactly one playlists delete of that record",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"delete\",\"key\":\"070a7312-0d7d-444b-a6c5-415457efa7ec\"}]"
+  },
+  {
+   "name": "Q3: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: the name that is invalid (empty, only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: a Duration value that is invalid (5:7, 99:99, abc, empty, 100:00:00, -5, 5.5) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: a plays / rating value that is invalid (plays x, plays -1, plays 1.5, plays 1e3, plays 11 digits, plays empty, rating 6) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: a number of days that is invalid (days 0, days 3651, days 1.5, days x, days empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: a text value that is invalid (text empty, text only spaces) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: the limit that is invalid (limit 501, limit x, limit -1, limit 1.5, limit empty) is refused with a message, marked aria-invalid, focused, the dialog stays open, and NOTHING is written",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: the name field holds at most 80 characters, a text value at most 100, the limit at most 3 digits (typing more is cut by the field itself; longer values are refused by the validator, see Q1 and Q9)",
+   "ok": true,
+   "detail": "{\"name\":80,\"nameMax\":80,\"text\":100,\"textMax\":100,\"lim\":3}"
+  },
+  {
+   "name": "Q4: the editor stops at 8 conditions: \"Add condition\" becomes disabled at the eighth",
+   "ok": true,
+   "detail": "{\"n\":8,\"dis\":true}"
+  },
+  {
+   "name": "Q4: removing a condition re-enables \"Add condition\"",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: several problems are all listed together (name, condition 1, condition 2, limit) and each field is marked",
+   "ok": true,
+   "detail": "{\"li\":[\"Give the playlist a name.\",\"Condition 1: Duration needs m:ss (like 5:00), h:mm:ss or whole seconds, up to 99:59:59.\",\"Condition 2: Play count needs a whole number from 0 to 1000000000.\",\"The limit must be a whole number from 0 (no limit) to 500.\"],\"inv\":[\"sp_c0_v\",\"sp_c1_v\",\"sp_limit\",\"sp_name\"]}"
+  },
+  {
+   "name": "Q4: nothing at all was written by any refused attempt and no playlist exists yet",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: after the problems are fixed the same dialog saves exactly one playlist (one put) with the corrected rule, and no error text or aria-invalid remains",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"put\",\"key\":\"64c09cf0-b9c3-4d02-9566-2cef7769a48f\"}][{\"id\":\"64c09cf0-b9c3-4d02-9566-2cef7769a48f\",\"name\":\"Probe\",\"ids\":[],\"created\":1794323457550,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"duration\",\"op\":\"gt\",\"v\":300}],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}}]"
+  },
+  {
+   "name": "Q4: the library functions refuse an invalid rule, an empty or 81-character name, nine conditions, a stale editor basis and an unknown playlist, each with a message and ok:false",
+   "ok": true,
+   "detail": "{\"badRule\":{\"ok\":false,\"msg\":\"The rule is missing “match”. Nothing was saved.\"},\"noName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"Give the playlist a name.\"},\"longName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"The name is too long (at most 80 characters).\"},\"nine\":{\"ok\":false,\"msg\":\"A rule can have at most 8 conditions. Nothing was saved.\"},\"updBad\":{\"ok\":false,\"msg\":\"The limit must be a whole number from 0 (no limit) to 500. Nothing was saved.\"},\"updName\":{\"ok\":false,\"field\":\"name\",\"msg\":\"Give the playlist a name.\"},\"updStale\":{\"ok\":false,\"msg\":\"This playlist changed while the editor was open. Close it and"
+  },
+  {
+   "name": "Q4: those refused calls wrote nothing (no put or delete) and changed no record",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: an invalid edit is refused, and cancelling afterwards leaves the stored rule and name exactly as they were (no write)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q4: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5: seven smart playlists exist for the dynamic checks",
+   "ok": true,
+   "detail": "{\"liked\":\"4ec247b4-785d-41ef-8994-8cfd503fda54\",\"rated\":\"c174a77d-7afc-41a4-af23-1cca3ac3fb17\",\"alpha\":\"1162a36b-ea5e-4434-9caa-eb34fe46e1f8\",\"long\":\"ddbb2f84-06f2-4c5c-ad7e-8d5079b1f506\",\"localLast\":\"6061ae9d-2556-4349-9a09-be07ddc4b019\",\"tgt\":\"ae43f394-f7f3-4cd4-9057-17ebcf870efe\",\"everything\":\"b539a5d3-9a03-48de-bdd0-831d63e0269b\"}"
+  },
+  {
+   "name": "Q5: the Liked-songs smart list starts as exactly the liked songs, in title order",
+   "ok": true,
+   "detail": "A1,A5,L1"
+  },
+  {
+   "name": "Q5: un-liking a song in the list makes it leave the list at once (no navigation), the count line follows, and the song is stored un-liked",
+   "ok": true,
+   "detail": "Q5: un-liking a song in the list makes it leave the list at once (no navigation), the count line follows, and the song is stored un-liked: shown A1,L1 expected A1,L1"
+  },
+  {
+   "name": "Q5: after that un-like the header says 2 songs and the stored song is liked:false while the smart record is unchanged",
+   "ok": true,
+   "detail": "2 songs · 12 min All of: Liked · Sorted by title, A to Z"
+  },
+  {
+   "name": "Q5: a song liked in the Songs tab appears in the Liked-songs smart list when it is opened",
+   "ok": true,
+   "detail": "Q5: a song liked in the Songs tab appears in the Liked-songs smart list when it is opened: shown A1,A2,L1 expected A1,A2,L1"
+  },
+  {
+   "name": "Q5: the rating smart list starts as rating ≥ 4, best first (5 stars, then the two 4-star songs in title order)",
+   "ok": true,
+   "detail": "L1,A1,A2"
+  },
+  {
+   "name": "Q5: giving a song 1 star in the list removes it from the \"rating ≥ 4\" list at once",
+   "ok": true,
+   "detail": "Q5: giving a song 1 star in the list removes it from the \"rating ≥ 4\" list at once: shown L1,A1 expected L1,A1"
+  },
+  {
+   "name": "Q5: giving another song 5 stars re-orders the list at once (Alpha now ties Song One at 5 and comes first by title)",
+   "ok": true,
+   "detail": "Q5: giving another song 5 stars re-orders the list at once (Alpha now ties Song One at 5 and comes first by title): shown A1,L1 expected A1,L1"
+  },
+  {
+   "name": "Q5: the order after that is Alpha (5), Song One (5)",
+   "ok": true,
+   "detail": "A1,L1"
+  },
+  {
+   "name": "Q5: the \"title contains alpha\" list starts with the two Alpha songs (equal title and artist: id order)",
+   "ok": true,
+   "detail": "A1,A2"
+  },
+  {
+   "name": "Q5: renaming a song to \"Omega\" through Edit info removes it from the \"title contains alpha\" list at once",
+   "ok": true,
+   "detail": "Q5: renaming a song to \"Omega\" through Edit info removes it from the \"title contains alpha\" list at once: shown A1 expected A1"
+  },
+  {
+   "name": "Q5: a title edit that still matches (case-insensitive) keeps the song and shows its new title",
+   "ok": true,
+   "detail": "Q5: a title edit that still matches (case-insensitive) keeps the song and shows its new title: shown A1 expected A1"
+  },
+  {
+   "name": "Q5: the displayed title is the edited one",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5: the \"duration > 5:00\" list starts as the six songs longer than 300 s, longest first",
+   "ok": true,
+   "detail": "A5,A1,A7,A6,L1,A3"
+  },
+  {
+   "name": "Q5: removing a song from the library (⋯ menu in the smart list) drops it from the list at once",
+   "ok": true,
+   "detail": "Q5: removing a song from the library (⋯ menu in the smart list) drops it from the list at once: shown A5,A1,A6,L1,A3 expected A5,A1,A6,L1,A3"
+  },
+  {
+   "name": "Q5: the removed song is gone from the stored library and the smart record is unchanged",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5: the \"local songs, last played first\" list starts as Song One (yesterday), Song Three (9 days ago), Song Two (never)",
+   "ok": true,
+   "detail": "L1,L3,L2"
+  },
+  {
+   "name": "Q5: when a song has really been played long enough to count, the list re-orders itself in the background (last played first: Song Two moves to the top)",
+   "ok": true,
+   "detail": "Q5: when a song has really been played long enough to count, the list re-orders itself in the background (last played first: Song Two moves to the top): shown L2,L1,L3 expected L2,L1,L3"
+  },
+  {
+   "name": "Q5: that play was counted once (plays 0 → 1) with a last-played time, and the order is Song Two, Song One, Song Three",
+   "ok": true,
+   "detail": "L2,L1,L3"
+  },
+  {
+   "name": "Q5: the \"artist contains tgt\" list starts empty and says so",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5: importing two songs by \"Tgt Artist\" while the list is open fills it by itself (title order)",
+   "ok": true,
+   "detail": "Q5: importing two songs by \"Tgt Artist\" while the list is open fills it by itself (title order): shown 09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c expected 09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c"
+  },
+  {
+   "name": "Q5: exactly the two imported songs are listed",
+   "ok": true,
+   "detail": "09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c"
+  },
+  {
+   "name": "Q5-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261110-221127.zip Backup downloaded  13 songs, 7 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q5-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q5: before the restore the library was changed (one song removed): the \"everything\" list lost it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q5: the real restore of the earlier backup finishes, and the stored playlists are exactly the backup's (every rule intact)",
+   "ok": true,
+   "detail": "Library restored  13 songs, 7 playlists and 5 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q5: after the restore the smart list shows the restored library (the removed song is back; members recomputed, none stored)",
+   "ok": true,
+   "detail": "Q5: after the restore the smart list shows the restored library (the removed song is back; members recomputed, none stored): shown A1,A3,A5,A6,A4,A9,A2,L1,L3,L2,09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c,A8 expected A1,A3,A5,A6,A4,A9,A2,L1,L3,L2,09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c,A8"
+  },
+  {
+   "name": "Q5: after the restore the \"alpha\" list shows the restored (original) titles again",
+   "ok": true,
+   "detail": "Q5: after the restore the \"alpha\" list shows the restored (original) titles again: shown A1 expected A1"
+  },
+  {
+   "name": "Q5: after a reload the \"duration > 5:00\" list equals the independent expectation for the stored library",
+   "ok": true,
+   "detail": "Q5: after a reload the \"duration > 5:00\" list equals the independent expectation for the stored library: shown A5,A1,A6,L1,A3 expected A5,A1,A6,L1,A3"
+  },
+  {
+   "name": "Q5: a web song saved into the library while the \"everything\" list is open appears in it by itself, and the count follows",
+   "ok": true,
+   "detail": "Q5: a web song saved into the library while the \"everything\" list is open appears in it by itself, and the count follows: shown A1,A3,A5,A6,A4,A9,A2,L1,L3,L2,09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c,A8,audius:NEWW expected A1,A3,A5,A6,A4,A9,A2,L1,L3,L2,09f24615-7195-46c7-8b6f-ba7c812f2b53,c9e76d42-c021-4372-8a9a-5d1f94edb75c,A8,audius:NEWW"
+  },
+  {
+   "name": "Q5: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: the editor opens as a modal dialog labelled by its heading, and the keyboard (Enter on the sidebar button) is enough to open it",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: every control in the editor has an accessible name; the two match options are in a fieldset with the legend \"Songs must match\"; focus starts in the Name field",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: the live status is a polite status region and the error list is an assertive alert region",
+   "ok": true,
+   "detail": "{\"modal\":true,\"labelledby\":\"spTitle\",\"heading\":\"New smart playlist\",\"unnamed\":[],\"radios\":[\"Songs must match\",\"Songs must match\"],\"focus\":\"sp_name\",\"status\":[\"status\",\"polite\"],\"alert\":[\"alert\",\"assertive\"],\"n\":10}"
+  },
+  {
+   "name": "Q6: typing a name and pressing Enter creates the playlist with the default rule (every song, newest first) and moves focus to the new playlist's heading",
+   "ok": true,
+   "detail": "{\"h1\":\"H1\",\"title\":\"Keyboard list\",\"recs\":[[\"Keyboard list\",\"{\\\"v\\\":1,\\\"match\\\":\\\"all\\\",\\\"conds\\\":[],\\\"sort\\\":{\\\"by\\\":\\\"added\\\",\\\"dir\\\":\\\"desc\\\"},\\\"limit\\\":0}\"]]}"
+  },
+  {
+   "name": "Q6: Escape closes the editor, writes nothing, and returns focus to the button that opened it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: the \"New smart playlist\" card opens the editor from the keyboard (Enter), and Cancel returns focus to that card",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: each condition row is a labelled group (\"Condition 3\") whose field, operator, value and remove control are named with its number",
+   "ok": true,
+   "detail": "[\"Condition 1 / Condition 1 field / Condition 1 operator / Condition 1 value / Remove condition 1\",\"Condition 2 / Condition 2 field / Condition 2 operator / Condition 2 value / Remove condition 2\",\"Condition 3 / Condition 3 field / Condition 3 operator / Condition 3 value / Remove condition 3\"]"
+  },
+  {
+   "name": "Q6: removing the middle condition renumbers the rest and puts focus on the remove button now in its place",
+   "ok": true,
+   "detail": "Remove condition 2 [\"Condition 1 / Condition 1 field / Condition 1 operator / Condition 1 value / Remove condition 1\",\"Condition 2 / Condition 2 field / Condition 2 operator / Condition 2 value / Remove condition 2\"]"
+  },
+  {
+   "name": "Q6: removing the last condition moves focus to the one before it; removing the only one moves focus to \"Add condition\"; the empty list says every song matches",
+   "ok": true,
+   "detail": "Remove condition 1 spAdd"
+  },
+  {
+   "name": "Q6: the live status announces \"N songs match right now.\" (N from the independent expectation) and says to fix the form when it is invalid",
+   "ok": true,
+   "detail": "6 songs match right now. | Fix the problems in the form to see how many songs match."
+  },
+  {
+   "name": "Q6: the smart view has named buttons Play, Shuffle, Edit rule, Rename, Delete, all different",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: a rule that matches nothing shows a plain empty state, not a blank page",
+   "ok": true,
+   "detail": "No songs match this rule right now. This list updates by itself as your library changes."
+  },
+  {
+   "name": "Q6: a stored rule that fails validation is never run: the view says it is damaged, shows no songs, and offers Edit rule, Rename and Delete",
+   "ok": true,
+   "detail": "D Smart playlist Damaged one  Damaged rule This rule is damaged, so it was not run. Edit it to fix it, or rename or delete it.  Play Shuffle Edit rule Rename Delete Nothing to show: the saved rule isn"
+  },
+  {
+   "name": "Q6: Play on a damaged smart playlist does nothing (no queue, no audio)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: editing a damaged rule starts from a blank rule (keeping the name); saving replaces it with a valid one on the same record",
+   "ok": true,
+   "detail": "{\"id\":\"dmg-1\",\"name\":\"Damaged one\",\"ids\":[],\"created\":5,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[],\"sort\":{\"by\":\"added\",\"dir\":\"desc\"},\"limit\":0}}"
+  },
+  {
+   "name": "Q6: a smart playlist can be renamed and then deleted after repair",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: in an empty library a smart playlist can be created and says the library is empty (a different message from \"no match\")",
+   "ok": true,
+   "detail": "Your library is empty, so there is nothing to match yet. Import some music and this list fills itself."
+  },
+  {
+   "name": "Q6 empty: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: on a 390 px wide screen the editor fits the screen: no control sticks out of the dialog and the dialog does not scroll sideways",
+   "ok": true,
+   "detail": "{\"w\":390,\"dw\":356,\"left\":17,\"right\":373,\"over\":[],\"hs\":false}"
+  },
+  {
+   "name": "Q6 mobile: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q6: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q7: Play queues the smart list as it is at the click (a title changed after the last draw is already in the order), starts the first song, and nothing else is queued",
+   "ok": true,
+   "detail": "{\"q\":\"L2,L1,L3\",\"e\":\"L2,L1,L3\"}"
+  },
+  {
+   "name": "Q7: liking and rating songs while the list is playing changes nothing in the queue, the current song or the playback (still playing, time moving on)",
+   "ok": true,
+   "detail": "{\"c0\":{\"queue\":[\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\",\"8971cef7-c285-482a-8375-2b41ba774d57\",\"aa63e028-26bb-4467-a4e5-af4a3a3ede56\"],\"orig\":[\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\",\"8971cef7-c285-482a-8375-2b41ba774d57\",\"aa63e028-26bb-4467-a4e5-af4a3a3ede56\"],\"qi\":0,\"cur\":\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\",\"paused\":false,\"ct\":0.892355},\"c1\":{\"queue\":[\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\",\"897"
+  },
+  {
+   "name": "Q7: editing the rule so that the list becomes empty does not touch the queue or the playback",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q7: deleting the smart playlist while it is playing leaves the queue and the playback exactly as they were",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q7: Shuffle queues a permutation of exactly the list's songs (3, no duplicates), the unshuffled order is the list's order, and shuffle is on",
+   "ok": true,
+   "detail": "{\"sh\":{\"queue\":[\"8971cef7-c285-482a-8375-2b41ba774d57\",\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\",\"aa63e028-26bb-4467-a4e5-af4a3a3ede56\"],\"orig\":[\"8971cef7-c285-482a-8375-2b41ba774d57\",\"aa63e028-26bb-4467-a4e5-af4a3a3ede56\",\"d224ee4a-9fc1-411e-afdc-6fb55a148b00\"],\"shuffle\":true},\"expSh\":[\"8971cef7-c285-"
+  },
+  {
+   "name": "Q7: a smart list is NOT a playlist of ids: its stored record keeps ids [] while its view lists the live members (the liked songs now are Alpha and Delta Long: Song One was un-liked by the heart click earlier in this scenario)",
+   "ok": true,
+   "detail": "A1,A5"
+  },
+  {
+   "name": "Q7: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q8: creating through the library function stores the record (one put) and the shared list gets it only after the write",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q8: while the save is still being written, the shared record, the stored record and the view still hold the OLD rule (a clone is written; nothing is applied early)",
+   "ok": true,
+   "detail": "{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"plays\",\"op\":\"gte\",\"v\":1}],\"sort\":{\"by\":\"plays\",\"dir\":\"desc\"},\"limit\":5}"
+  },
+  {
+   "name": "Q8: once the write is durable both the shared record and the stored record hold the new rule, and the result says ok",
+   "ok": true,
+   "detail": "{\"ok\":true,\"pl\":{\"id\":\"5e2d1a08-bdb1-45e5-b93b-6abef6e0c647\",\"name\":\"X\",\"ids\":[],\"created\":1794323529371,\"rule\":{\"v\":1,\"match\":\"any\",\"conds\":[{\"f\":\"liked\",\"op\":\"is\",\"v\":true}],\"sort\":{\"by\":\"title\",\"di"
+  },
+  {
+   "name": "Q8: a REJECTED write reports \"Nothing was changed\", and neither the shared record nor the stored record changed",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"Couldn’t save the playlist (disk full). Nothing was changed.\"}"
+  },
+  {
+   "name": "Q8: a delete asked while a save is still held waits for it (the playlist is still there, only the save was issued)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q8: the earlier save applies, then the delete runs: the record is gone from storage and memory, in the order put then del",
+   "ok": true,
+   "detail": "{\"uc\":true,\"dc\":true}"
+  },
+  {
+   "name": "Q8: a save that comes after the delete is refused (\"no longer exists\") and writes nothing: the deleted playlist is not resurrected",
+   "ok": true,
+   "detail": "{\"ok\":false,\"msg\":\"This playlist no longer exists. Nothing was saved.\"}"
+  },
+  {
+   "name": "Q8: a save queued behind a held delete is refused when its turn comes: the deleted playlist stays deleted and no put was issued",
+   "ok": true,
+   "detail": "{\"dd\":true,\"ud\":{\"ok\":false,\"msg\":\"This playlist no longer exists. Nothing was saved.\"}}"
+  },
+  {
+   "name": "Q8: two saves made from the same editor basis: the first applies, the second is refused (\"changed while the editor was open\"), the stored rule is the first's",
+   "ok": true,
+   "detail": "{\"e1\":true,\"e2\":{\"ok\":false,\"msg\":\"This playlist changed while the editor was open. Close it and open it again. Nothing was saved.\"}}"
+  },
+  {
+   "name": "Q8: a rename queued behind a rule save applies on top of it: the stored and shared record have the new rule AND the new name (neither write clobbers the other)",
+   "ok": true,
+   "detail": "{\"zr\":{\"id\":\"24ee72a8-feb9-4311-84a9-77715ee7a6a0\",\"name\":\"Z renamed\",\"ids\":[],\"created\":1794323533071,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"rating\",\"op\":\"gte\",\"v\":3}],\"sort\":{\"by\":\"rating\",\"dir\":\"desc\"},\"limit\":10}},\"f1\":true,\"f2\":true}"
+  },
+  {
+   "name": "Q8: while a backup, a restore (either flag) or the database lock is on, create, update and delete are all refused and write nothing",
+   "ok": true,
+   "detail": "{\"backupBusy\":{\"c\":{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"},\"u\":{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was saved.\"},\"d\":{\"ok\":false,\"msg\":\"A backup or restore is running. Try again when it finishes. Nothing was deleted.\"},\"w\":0,\"edit\":false},\"restoreBusy\":{\"c\":{\"ok\":false,\"msg\":\"A backup or r"
+  },
+  {
+   "name": "Q8: while a backup or restore runs the editor does not even open",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q8: once the flags are cleared a save works again (the refusals left nothing stuck in the queue)",
+   "ok": true,
+   "detail": "{\"ok\":true,\"pl\":{\"id\":\"24ee72a8-feb9-4311-84a9-77715ee7a6a0\",\"name\":\"Z again\",\"ids\":[],\"created\":1794323533071,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"rating\",\"op\":\"gte\",\"v\":3}],\"sort\":{\"by\":\"rating\",\"dir\":\"desc\"},\"limit\":10}},\"memoryOnly\":false}"
+  },
+  {
+   "name": "Q8: submitting the editor twice at once creates exactly one playlist (one put)",
+   "ok": true,
+   "detail": "1"
+  },
+  {
+   "name": "Q8: an editor opened before another change refuses to save over it (\"changed while the editor was open\"), stays open with the message, and the other change is kept",
+   "ok": true,
+   "detail": "This playlist changed while the editor was open. Close it and open it again. Nothing was saved."
+  },
+  {
+   "name": "Q8: if the playlist is deleted while its editor is open, Save refuses (\"no longer exists\") and does not bring it back",
+   "ok": true,
+   "detail": "This playlist no longer exists. Nothing was saved."
+  },
+  {
+   "name": "Q8-E: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261110-221217.zip Backup downloaded  12 songs, 2 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q8-E: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q8-E: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q8: a real restore of the earlier backup finishes and the stored playlists are exactly the backup's",
+   "ok": true,
+   "detail": "Library restored\n\n12 songs, 2 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing "
+  },
+  {
+   "name": "Q8: with the epoch of the library that was replaced, create, update and delete are all refused (\"Your library was replaced\"), write nothing, and the restored playlists are untouched",
+   "ok": true,
+   "detail": "{\"epochMoved\":true,\"c\":{\"ok\":false,\"msg\":\"Your library was replaced while this was open. Nothing was saved.\"},\"u\":{\"ok\":false,\"msg\":\"Your library was replaced while this was open. Nothing was saved.\"},\"d\":{\"ok\":false,\"msg\":\"Your library was replaced while this was open. Nothing was saved.\"},\"w\":0}"
+  },
+  {
+   "name": "Q8: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: the library under test has five smart playlists (rules of every field kind, 8 conditions, all/any, unicode, no conditions, limits 0/7/25/500) and two manual playlists, one with a ghost id and an unknown field",
+   "ok": true,
+   "detail": "[\"Q9 everything\",\"Q9 unicode\",\"Q9 long and played\",\"Q9 all kinds\",\"Q9 most\",\"Manual one\",\"Manual two\"]"
+  },
+  {
+   "name": "Q9-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261110-221227.zip Backup downloaded  12 songs, 7 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q9-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q9: the oracle's reading of the backup has the live playlists exactly (every rule, every manual playlist incl. the unknown field and ghost id, in order, key order)",
+   "ok": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "name": "Q9: in the backup the smart playlists carry the rule and ids [] and the manual ones carry no rule key",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "12 vs 12"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "3 vs 3 audio entries"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}] expected 1"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"light\"}, found {\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9: after the restore each of the five smart playlists shows exactly the independent expectation for the restored library",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "12 vs 12"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "3 vs 3 audio entries"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}] expected 1"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"light\"}, found {\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: still all the backup's songs, the policy theme, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261110-221236.zip Backup downloaded  12 songs, 7 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q9-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): oracle comparison has ZERO failures",
+   "ok": true,
+   "detail": "16 exact, 7 allowed, 0 failed"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): kv keys identical (the session may differ only in its allowed time field, see the allowed differences)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields)",
+   "ok": true,
+   "detail": "7 allowed: localstorage.json: A had no ps-theme; B carries the target browser's own theme 'light' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-10T15:12:27.472Z, B 2026-11-10T15:12:36.546Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 1592447, B 1592469) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 25) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B b9bc29e6) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | man"
+  },
+  {
+   "name": "Q9 populated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6 audio entries"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 full: the old archive restores with no rule field anywhere and no smart playlist invented",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1 audio entries"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {}, found {}"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 minimal: the old archive restores with no rule field anywhere and no smart playlist invented",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: the independent Python generator produced the rule archives (exit 0; at least 60 refused and 8 accepted cases)",
+   "ok": true,
+   "detail": "exit 0: 73 cases: 9 accept, 64 refuse "
+  },
+  {
+   "name": "Q9 refuse bad-rule-null: \"rule null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-list: \"rule is a list\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-text: \"rule is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-number: \"rule is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-empty-object: \"rule {} (every part missing)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-2: \"rule version 2\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule version is not supported. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-text: \"rule version \"1\" (text)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule version is not supported. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-missing: \"rule without v\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-some: \"match \"some\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: “Match” must be all or any. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-uppercase: \"match \"ALL\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: “Match” must be all or any. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-missing: \"rule without match\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “match”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-extra-top-key: \"an extra key in the rule\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule has an unknown part “script”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-conds-not-list: \"conds is an object\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The conditions must be a list. OK"
+  },
+  {
+   "name": "Q9 refuse bad-conds-missing: \"rule without conds\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “conds”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-9-conditions: \"nine conditions (the maximum is eight)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: A rule can have at most 8 conditions. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-not-object: \"a condition that is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is not an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-null: \"a condition that is null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is not an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-op: \"a condition without op\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “op”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-v: \"a condition without v\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-f: \"a condition without f\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “f”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-extra-key: \"a condition with an extra key\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 has an unknown part “code”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-unknown: \"unknown field \"bpm\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-proto: \"field \"__proto__\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-constructor: \"field \"constructor\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-number: \"field is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-wrong-for-field: \"plays \"contains\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Play count. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-time-on-num: \"duration \"within\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Duration. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-text-gt: \"title \"gt\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Title. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-unknown: \"plays \"between\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Play count. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-bool-eq: \"liked \"eq\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Liked. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-text: \"plays value \"5\" (text)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-negative: \"plays value -1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-fraction: \"plays value 1.5\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-neg-zero: \"plays value -0\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-null: \"plays value null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-bool: \"plays value true\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rating-6: \"rating value 6\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Rating needs a whole number from 0 to 5. OK"
+  },
+  {
+   "name": "Q9 refuse bad-duration-360000: \"duration value 360000\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Duration needs a whole number from 0 to 359999. OK"
+  },
+  {
+   "name": "Q9 refuse bad-duration-text-5:00: \"duration value \"5:00\" (text; the rule stores whole seconds)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Duration needs a whole number from 0 to 359999. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-0: \"added within 0 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Date added needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-3651: \"added before 3651 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Date added needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-fraction: \"last within 1.5 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Last played needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-empty: \"title contains \"\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Title needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-101-chars: \"a text value of 101 characters\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Title needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-leading-space: \"a text value with a leading space (stored values are trimmed)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Artist needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-trailing-space: \"a text value with a trailing space\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Artist needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-newline: \"a text value with a line break\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Album needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-number: \"a text value that is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Genre needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-liked-text: \"liked value \"yes\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Liked must be yes or no. OK"
+  },
+  {
+   "name": "Q9 refuse bad-liked-number: \"liked value 1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Liked must be yes or no. OK"
+  },
+  {
+   "name": "Q9 refuse bad-kind-remote: \"kind \"remote\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Song type must be a local file or a saved web song. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-missing: \"rule without sort\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “sort”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-not-object: \"sort is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-key-unknown: \"sort by \"genre\" (not an allowed sort field)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort field is not one of the allowed fields. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-key-liked: \"sort by \"liked\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort field is not one of the allowed fields. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-dir: \"sort direction \"up\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort direction must be ascending or descending. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-extra-key: \"an extra key in sort\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort has an unknown part “nulls”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-501: \"limit 501\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-negative: \"limit -1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-fraction: \"limit 2.5\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-text: \"limit \"5\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-missing: \"rule without limit\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “limit”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-smart-with-songs: \"a smart playlist that also carries hand-picked ids\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: a smart playlist (it has a rule) must have an empty ids list OK"
+  },
+  {
+   "name": "Q9 refuse bad-smart-ids-text: \"a smart playlist whose ids is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: ids must be a list of song ids OK"
+  },
+  {
+   "name": "Q9 accept ok-unchanged-resealed: \"the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps every smart and manual playlist exactly)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-old-archive-no-rule: \"an OLD-style archive: no playlist carries a rule (it restores with no rule invented anywhere)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-old-archive-no-rule: no rule appears anywhere after restoring the old-style archive",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 accept ok-8-conditions-numeric: \"eight numeric conditions (the maximum), every numeric operator, rating 0 and duration 359999\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-time-text-bool-kind: \"time within/before at 1 and 3650 days, text contains/notContains/is (with non-ASCII), liked true/false, kind local/web, sort by every key kind\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-no-conditions: \"no conditions (the whole library), limit 0\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-no-conditions: the restored empty-rule smart playlist shows the whole restored library",
+   "ok": true,
+   "detail": "rows 12, restored songs 12, smart records Q9 everything:0,Q9 unicode:1,Q9 long and played:2,Q9 all kinds:8,Q9 most:1, view playlist:17af33e0-cc2a-49dd-af34-f8a73faabe88:Q9 everything"
+  },
+  {
+   "name": "Q9 accept ok-text-100-chars: \"a text value of exactly 100 characters\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-sort-keys: \"sort by last, rating and album, ascending\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-unknown-playlist-field: \"an unknown extra field on the smart playlist record (kept as for any record; not part of the rule)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-plays-3.0-literal: \"the JSON literal 3.0 for a value: JSON.parse reads the whole number 3 (documented tolerance)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 generated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: a manual playlist still shows its songs in its own saved order, is not labelled smart, and has Play, Shuffle, Rename and Delete but no \"Edit rule\"",
+   "ok": true,
+   "detail": "{\"kind\":\"Playlist\",\"btns\":[\"Play\",\"Shuffle\",\"Rename\",\"Delete\"],\"rows\":[\"audius:W1\",\"119ae2c4-4ffe-43c8-83ef-c60906d05460\",\"d6afe2bf-e1b7-416d-8913-8438722daf40\",\"4dfef03b-71b3-403c-ade6-7ace0f159466\"]}"
+  },
+  {
+   "name": "Q10: in a manual playlist the song menu offers \"Remove from this playlist\"",
+   "ok": true,
+   "detail": "[\"Play next\",\"Add to queue\",\"Add to playlist…\",\"Remove like\",\"Rate…\",\"Open source page\",\"Remove from this playlist\",\"Edit info…\",\"Edit cover…\",\"Remove from library\"]"
+  },
+  {
+   "name": "Q10: in a smart playlist the song menu has NO \"Remove from this playlist\" (members are not hand-picked) but still offers Add to playlist, Like, Rate, Edit info, Remove from library",
+   "ok": true,
+   "detail": "[\"Play next\",\"Add to queue\",\"Add to playlist…\",\"Remove like\",\"Rate…\",\"Open source page\",\"Edit info…\",\"Edit cover…\",\"Remove from library\"]"
+  },
+  {
+   "name": "Q10: the \"Add to playlist\" menu lists only the manual playlists (and New playlist…), never a smart playlist",
+   "ok": true,
+   "detail": "[\"Empty 日本\",\"Älpha ✓ <i>x</i>\",\"New playlist…\",\"Back\"]"
+  },
+  {
+   "name": "Q10: adding a song to a manual playlist from a smart list changes that manual record only (ids + the song), writes only playlists, and leaves the smart record byte-identical",
+   "ok": true,
+   "detail": "[{\"store\":\"playlists\",\"op\":\"put\",\"key\":\"pl-b\"}]"
+  },
+  {
+   "name": "Q10: addToPlaylist and plRemove on a smart playlist do nothing (no write, record unchanged: ids stay [])",
+   "ok": true,
+   "detail": "{\"id\":\"3984d4f1-f03d-45a7-9f39-f2d639fda278\",\"name\":\"Q10 liked\",\"ids\":[],\"created\":1794323599928,\"rule\":{\"v\":1,\"match\":\"all\",\"conds\":[{\"f\":\"liked\",\"op\":\"is\",\"v\":true}],\"sort\":{\"by\":\"title\",\"dir\":\"asc\"},\"limit\":0}}"
+  },
+  {
+   "name": "Q10: renaming a manual playlist changes only its name (ids, created and the unknown field kept) and no rule key appears",
+   "ok": true,
+   "detail": "{\"id\":\"pl-a\",\"name\":\"Renamed manual\",\"ids\":[\"audius:W1\",\"119ae2c4-4ffe-43c8-83ef-c60906d05460\",\"d6afe2bf-e1b7-416d-8913-8438722daf40\",\"ghost-id\",\"4dfef03b-71b3-403c-ade6-7ace0f159466\"],\"created\":20,\"x_note\":{\"k\":\"v\",\"n\":[1,2]}}"
+  },
+  {
+   "name": "Q10: \"Remove from this playlist\" removes just that id from the manual record and nothing else changes (smart record byte-identical)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: a new manual playlist is exactly {id, name, ids: [], created} with no rule key",
+   "ok": true,
+   "detail": "{\"id\":\"54a2e588-5bd8-4523-baf7-6151fe933aaa\",\"name\":\"Fresh manual\",\"ids\":[],\"created\":1794323604057}"
+  },
+  {
+   "name": "Q10: deleting a manual playlist removes only it",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: removing a song from the library prunes it from every manual playlist and leaves the smart record byte-identical",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: and the smart list no longer contains that song",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q10: Play on a manual playlist queues exactly its listed songs in order (unchanged behaviour)",
+   "ok": true,
+   "detail": "{\"q\":[\"d6afe2bf-e1b7-416d-8913-8438722daf40\",\"4dfef03b-71b3-403c-ade6-7ace0f159466\"],\"view\":[\"d6afe2bf-e1b7-416d-8913-8438722daf40\",\"4dfef03b-71b3-403c-ade6-7ace0f159466\"]}"
+  },
+  {
+   "name": "Q10: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "113 blocked requests; hosts: api.audius.co, archive.org, example.invalid, fonts.googleapis.com; stray: []"
+  }
+ ]
+}

@@ -1,0 +1,720 @@
+{
+ "complete": true,
+ "only": "9",
+ "scenariosSelected": [
+  9
+ ],
+ "scenariosFinished": [
+  9
+ ],
+ "scenariosAborted": [],
+ "total": 141,
+ "failed": 0,
+ "results": [
+  {
+   "name": "Q9: the library under test has five smart playlists (rules of every field kind, 8 conditions, all/any, unicode, no conditions, limits 0/7/25/500) and two manual playlists, one with a ghost id and an unknown field",
+   "ok": true,
+   "detail": "[\"Q9 everything\",\"Q9 most\",\"Q9 long and played\",\"Q9 unicode\",\"Q9 all kinds\",\"Manual one\",\"Manual two\"]"
+  },
+  {
+   "name": "Q9-E1: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261111-030752.zip Backup downloaded  12 songs, 7 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q9-E1: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9-E1: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q9: the oracle's reading of the backup has the live playlists exactly (every rule, every manual playlist incl. the unknown field and ghost id, in order, key order)",
+   "ok": true,
+   "detail": "7 vs 7"
+  },
+  {
+   "name": "Q9: in the backup the smart playlists carry the rule and ids [] and the manual ones carry no rule key",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "12 vs 12"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "3 vs 3 audio entries"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}] expected 1"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"light\"}, found {\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: obsolete target data is gone (the target's own songs, playlist, audio, orphan, kv keys; colliding kv key now holds the backup's value)",
+   "ok": true,
+   "detail": "[[\"songs\",[]],[\"playlists\",[]],[\"audio\",[]],[\"kv keys\",[]]]"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: in-memory library has none of the target's old songs",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 smart-playlist backup -> populated library: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9: after the restore each of the five smart playlists shows exactly the independent expectation for the restored library",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "12 vs 12"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "3 vs 3 audio entries"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[{\"key\":\"secret:tgt\",\"value\":{\"token\":\"S-TGT-SECRET-1b8e44a7\"}}] expected 1"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"light\"}, found {\"ps-theme\":\"light\"}"
+  },
+  {
+   "name": "Q9 smart backup restored after RELOAD: still all the backup's songs, the policy theme, paused, no play() call",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":12,\"queue\":[],\"view\":\"library\",\"theme\":\"light\",\"lsTheme\":\"light\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9-E2: export through the real Back up button: file name plainsong-backup-YYYYMMDD-HHMMSS.zip, \"Backup downloaded\", not INCOMPLETE",
+   "ok": true,
+   "detail": "plainsong-backup-20261111-030801.zip Backup downloaded  12 songs, 7 playlists, 1.6 MB. Your browser chooses where it goes, usually the Downloads folder. Keep a copy somewhere outside this browser. “Restore from backup…” can read this fil"
+  },
+  {
+   "name": "Q9-E2: independent self-check of the export (layout/order, stored, CRC-32 vs ZIP header and manifest, sizes, counts) found no problem",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9-E2: no credential value appears anywhere in the export (raw byte scan for 5 sentinels) and no secret: key is in kv.json",
+   "ok": true,
+   "detail": "[][]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): oracle comparison has ZERO failures",
+   "ok": true,
+   "detail": "16 exact, 7 allowed, 0 failed"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): tracks records identical (order and key order), playlists identical",
+   "ok": true,
+   "detail": "[\"exact\",\"exact\"]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): every audio entry identical in order: key, MIME, size, SHA-256",
+   "ok": true,
+   "detail": "[\"\"]"
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): kv keys identical (the session may differ only in its allowed time field, see the allowed differences)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: E1 vs the re-export from the restored browser (rules, manual playlists carried exactly): narrowly allowed differences, each with its stated reason (not ignored fields)",
+   "ok": true,
+   "detail": "7 allowed: localstorage.json: A had no ps-theme; B carries the target browser's own theme 'light' [a backup without a theme leaves the target's theme alone, so its re-export contains that theme] | manifest.createdAt (A 2026-11-10T20:07:52.655Z, B 2026-11-10T20:08:01.913Z) [wall-clock time of the export] | manifest.counts.localStorage (A 0, B 1) [follows the allowed theme difference and equals the real number of keys in B] | manifest.payloadBytes (A 1592447, B 1592469) [derived from an allowed file difference; B's number is proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].bytes (A 3, B 25) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | manifest.files[data/localstorage.json].crc32 (A dda1b006, B b9bc29e6) [derived from the allowed theme difference; proven against B's real bytes by the self-check] | man"
+  },
+  {
+   "name": "Q9 populated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n6 songs, 2 playlists and 6 audio files (5.8 MB) are now in this browser. Nothing is playing; press play when you are ready. Theme set to dark. (Saved separately from the library: browsers can’t include it in the database commit.)\n\nOK"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "6 vs 6"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[\"custom:pref\",\"hist\",\"session\"] vs [\"custom:pref\",\"hist\",\"session\"]"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "6 vs 6 audio entries"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {\"ps-theme\":\"dark\"}, found {\"ps-theme\":\"dark\"}"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 p1 full (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":6,\"queue\":[\"fb922971-a227-4d99-a9b1-11d2a0760f21\",\"audius:TEST1\",\"98e6ce8b-733d-4e51-b7e3-369fc8280aeb\",\"audius:QUEUE1\"],\"view\":\"library\",\"theme\":\"dark\",\"lsTheme\":\"dark\",\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 full: the old archive restores with no rule field anywhere and no smart playlist invented",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 full: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: real UI restore finished with \"Library restored\"",
+   "ok": true,
+   "detail": "Library restored\n\n1 song, 0 playlists and 1 audio file (529 KB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.\n\nOK"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: tracks identical to the backup (every field, key order, order)",
+   "ok": true,
+   "detail": "1 vs 1"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: playlists identical (ids order kept)",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: kv (everything but secret: keys) identical, including session and history",
+   "ok": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: every audio entry identical: key, MIME, size, SHA-256 (no old audio left)",
+   "ok": true,
+   "detail": "1 vs 1 audio entries"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: this browser's own secret: keys are untouched",
+   "ok": true,
+   "detail": "[] expected 0"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: localStorage is exactly the policy theme and nothing else (theme policy)",
+   "ok": true,
+   "detail": "expected {}, found {}"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: no autoplay (nothing playing, play() never called, no audio element playing)",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: the restore lands on the Library screen (not Home, whose discover fetch would contact the network)",
+   "ok": true,
+   "detail": "library"
+  },
+  {
+   "name": "Q9 p1 minimal (written by the p1 exporter) -> clean: UI shows the whole restored library and the policy theme",
+   "ok": true,
+   "detail": "{\"paused\":true,\"allPaused\":true,\"plays\":0,\"songs\":1,\"queue\":[],\"view\":\"library\",\"theme\":null,\"lsTheme\":null,\"restoring\":false,\"busy\":false,\"lock\":false}"
+  },
+  {
+   "name": "Q9 p1 minimal: the old archive restores with no rule field anywhere and no smart playlist invented",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal: on a library restored from the old archive a smart playlist can be created, and only one playlist record was added",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 p1 minimal: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: the independent Python generator produced the rule archives (exit 0; at least 60 refused and 8 accepted cases)",
+   "ok": true,
+   "detail": "exit 0: 73 cases: 9 accept, 64 refuse "
+  },
+  {
+   "name": "Q9 refuse bad-rule-null: \"rule null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-list: \"rule is a list\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-text: \"rule is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-number: \"rule is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rule-empty-object: \"rule {} (every part missing)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-2: \"rule version 2\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule version is not supported. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-text: \"rule version \"1\" (text)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule version is not supported. OK"
+  },
+  {
+   "name": "Q9 refuse bad-version-missing: \"rule without v\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-some: \"match \"some\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: “Match” must be all or any. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-uppercase: \"match \"ALL\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: “Match” must be all or any. OK"
+  },
+  {
+   "name": "Q9 refuse bad-match-missing: \"rule without match\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “match”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-extra-top-key: \"an extra key in the rule\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule has an unknown part “script”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-conds-not-list: \"conds is an object\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The conditions must be a list. OK"
+  },
+  {
+   "name": "Q9 refuse bad-conds-missing: \"rule without conds\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “conds”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-9-conditions: \"nine conditions (the maximum is eight)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: A rule can have at most 8 conditions. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-not-object: \"a condition that is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is not an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-null: \"a condition that is null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is not an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-op: \"a condition without op\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “op”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-v: \"a condition without v\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “v”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-missing-f: \"a condition without f\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 is missing “f”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-cond-extra-key: \"a condition with an extra key\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 has an unknown part “code”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-unknown: \"unknown field \"bpm\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-proto: \"field \"__proto__\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-constructor: \"field \"constructor\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-field-number: \"field is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an unknown field. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-wrong-for-field: \"plays \"contains\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Play count. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-time-on-num: \"duration \"within\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Duration. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-text-gt: \"title \"gt\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Title. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-unknown: \"plays \"between\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Play count. OK"
+  },
+  {
+   "name": "Q9 refuse bad-op-bool-eq: \"liked \"eq\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1 uses an operator that does not fit Liked. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-text: \"plays value \"5\" (text)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-negative: \"plays value -1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-fraction: \"plays value 1.5\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-neg-zero: \"plays value -0\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-null: \"plays value null\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-plays-bool: \"plays value true\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Play count needs a whole number from 0 to 1000000000. OK"
+  },
+  {
+   "name": "Q9 refuse bad-rating-6: \"rating value 6\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Rating needs a whole number from 0 to 5. OK"
+  },
+  {
+   "name": "Q9 refuse bad-duration-360000: \"duration value 360000\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Duration needs a whole number from 0 to 359999. OK"
+  },
+  {
+   "name": "Q9 refuse bad-duration-text-5:00: \"duration value \"5:00\" (text; the rule stores whole seconds)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Duration needs a whole number from 0 to 359999. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-0: \"added within 0 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Date added needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-3651: \"added before 3651 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Date added needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-days-fraction: \"last within 1.5 days\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Last played needs a whole number of days from 1 to 3650. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-empty: \"title contains \"\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Title needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-101-chars: \"a text value of 101 characters\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Title needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-leading-space: \"a text value with a leading space (stored values are trimmed)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Artist needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-trailing-space: \"a text value with a trailing space\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Artist needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-newline: \"a text value with a line break\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Album needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-text-number: \"a text value that is a number\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Genre needs 1 to 100 characters of text with no line breaks. OK"
+  },
+  {
+   "name": "Q9 refuse bad-liked-text: \"liked value \"yes\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Liked must be yes or no. OK"
+  },
+  {
+   "name": "Q9 refuse bad-liked-number: \"liked value 1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Liked must be yes or no. OK"
+  },
+  {
+   "name": "Q9 refuse bad-kind-remote: \"kind \"remote\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: Condition 1: Song type must be a local file or a saved web song. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-missing: \"rule without sort\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “sort”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-not-object: \"sort is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort must be an object. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-key-unknown: \"sort by \"genre\" (not an allowed sort field)\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort field is not one of the allowed fields. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-key-liked: \"sort by \"liked\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort field is not one of the allowed fields. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-dir: \"sort direction \"up\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort direction must be ascending or descending. OK"
+  },
+  {
+   "name": "Q9 refuse bad-sort-extra-key: \"an extra key in sort\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The sort has an unknown part “nulls”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-501: \"limit 501\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-negative: \"limit -1\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-fraction: \"limit 2.5\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-text: \"limit \"5\"\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The limit must be a whole number from 0 (no limit) to 500. OK"
+  },
+  {
+   "name": "Q9 refuse bad-limit-missing: \"rule without limit\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: rule: The rule is missing “limit”. OK"
+  },
+  {
+   "name": "Q9 refuse bad-smart-with-songs: \"a smart playlist that also carries hand-picked ids\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: a smart playlist (it has a rule) must have an empty ids list OK"
+  },
+  {
+   "name": "Q9 refuse bad-smart-ids-text: \"a smart playlist whose ids is text\" is refused naming the invalid playlists, and nothing at all changed",
+   "ok": true,
+   "detail": "This backup can’t be restored  Some playlists are invalid. Nothing was changed.  playlists[0]: ids must be a list of song ids OK"
+  },
+  {
+   "name": "Q9 accept ok-unchanged-resealed: \"the same data re-sealed by this helper (proves the helper yields an accepted archive; keeps every smart and manual playlist exactly)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-old-archive-no-rule: \"an OLD-style archive: no playlist carries a rule (it restores with no rule invented anywhere)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-old-archive-no-rule: no rule appears anywhere after restoring the old-style archive",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9 accept ok-8-conditions-numeric: \"eight numeric conditions (the maximum), every numeric operator, rating 0 and duration 359999\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-time-text-bool-kind: \"time within/before at 1 and 3650 days, text contains/notContains/is (with non-ASCII), liked true/false, kind local/web, sort by every key kind\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-no-conditions: \"no conditions (the whole library), limit 0\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-no-conditions: the restored empty-rule smart playlist shows the whole restored library",
+   "ok": true,
+   "detail": "rows 12, restored songs 12, smart records Q9 everything:0,Q9 most:1,Q9 long and played:2,Q9 unicode:1,Q9 all kinds:8, view playlist:01847499-3a27-4c23-835b-d82724205e1f:Q9 everything"
+  },
+  {
+   "name": "Q9 accept ok-text-100-chars: \"a text value of exactly 100 characters\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-sort-keys: \"sort by last, rating and album, ascending\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-unknown-playlist-field: \"an unknown extra field on the smart playlist record (kept as for any record; not part of the rule)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 accept ok-plays-3.0-literal: \"the JSON literal 3.0 for a value: JSON.parse reads the whole number 3 (documented tolerance)\" restores (\"Library restored\") and the stored playlists are exactly the archive's (records, order, key order)",
+   "ok": true,
+   "detail": "Library restored  12 songs, 7 playlists and 3 audio files (1.6 MB) are now in this browser. Nothing is playing; press play when you are ready. This backup has no saved theme, so your theme setting was left as it is.  OK"
+  },
+  {
+   "name": "Q9 generated: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "Q9: no page errors",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "network: NO request was attempted during any export or restore flow (run from the Library screen), except placeholder web-song addresses that were merely displayed",
+   "ok": true,
+   "detail": "[]"
+  },
+  {
+   "name": "network: every non-local request made by any page was blocked and went only to the app's own startup/search hosts or to a placeholder web-song address that was merely displayed; none carried a credential or library data",
+   "ok": true,
+   "detail": "32 blocked requests; hosts: api.audius.co, archive.org, example.invalid, fonts.googleapis.com; stray: []"
+  }
+ ]
+}
