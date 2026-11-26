@@ -1,5 +1,5 @@
 # Plainsong — Patch Notes
-## Phase 4 — Ratings that fit your library
+## Phase 5 — Ratings that fit your library
 - Rate saved songs from one to five stars, or clear a rating; likes remain independent.
 - Sort and filter the library by rating, including unrated songs.
 ## Phase 3 — Make the library yours
