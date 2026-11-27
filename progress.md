@@ -16,7 +16,7 @@
 **Done and promoted.** Rate songs from one to five stars or clear a rating; likes remain independent. Sort and filter the library by rating, including unrated songs.
 
 ## Phase 5 — Dynamic smart playlists and rule UI
-**In progress — not released.** Create playlists that update dynamically from library activity and song details, using rules such as most played, recently added, or duration filters.
+**Done and promoted (November 11, 2026).** Create rule-based smart playlists from presets or configurable matching and sorting rules. Membership updates live as library activity or song details change, and smart playlists are included in backup and restore.
 
 ## Phase 6 — Custom accent and LED colors
-**Queued.** Add custom accent and LED colors, with a reset option.
+**Planned — not released.** Custom accent and LED colors, with a reset option, remain queued; no verified Phase 6 implementation or promotion is present on main.
